@@ -1,29 +1,6 @@
 {
   "name": "dhis2-api-tests",
   "version": "1.0.0",
-<<<<<<< HEAD
-  "description": "DHIS2 Api Tests",
-  "main": "index.js",
-  "dependencies": {
-    "axios": "^0.16.1",
-    "chai": "^4.0.0",
-    "cucumber": "^2.2.0"
-  },
-  "devDependencies": {},
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/dhis2/api-tests.git"
-  },
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/dhis2/api-tests/issues"
-  },
-  "homepage": "https://github.com/dhis2/api-tests#readme"
-=======
   "description": "DHIS2 API Testing",
   "main": "index.js",
   "scripts": {
@@ -47,5 +24,4 @@
     "chai": "^4.0.0",
     "cucumber": "^2.2.0"
   }
->>>>>>> master
 }
