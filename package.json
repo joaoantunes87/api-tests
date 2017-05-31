@@ -1,6 +1,7 @@
 {
   "name": "dhis2-api-tests",
   "version": "1.0.0",
+<<<<<<< HEAD
   "description": "DHIS2 Api Tests",
   "main": "index.js",
   "dependencies": {
@@ -22,4 +23,29 @@
     "url": "https://github.com/dhis2/api-tests/issues"
   },
   "homepage": "https://github.com/dhis2/api-tests#readme"
+=======
+  "description": "DHIS2 API Testing",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@git.cadsh.com:dhis2/api-tests.git"
+  },
+  "keywords": [
+    "dhis2",
+    "test"
+  ],
+  "author": "Samuel Santos <ssantos@present-technologies.com>",
+  "bugs": {
+    "url": "http://git.cadsh.com/dhis2/api-tests/issues"
+  },
+  "homepage": "https://www.dhis2.org",
+  "devDependencies": {
+    "axios": "^0.16.1",
+    "chai": "^4.0.0",
+    "cucumber": "^2.2.0"
+  }
+>>>>>>> master
 }

@@ -1,3 +1,13 @@
-# api-test
-* Run npm install
-* Run ./node_modules/.bin/cucumber-js
+# DHIS2 API Testing
+
+Repository for DHIS2 API Testing.
+
+## Run tests
+
+```sh
+$ npm install
+```
+
+```sh
+$ ./node_modules/.bin/cucumber-js
+```
