@@ -1,9 +1,9 @@
 
 var {defineSupportCode} = require('cucumber');
 function CustomWorld() {
-    this.apiEndpoint = "https://play.dhis2.org/dev/";
+    this.apiEndpoint = "http://play.dhis2.org/dev/api/26/";
 }
 
 defineSupportCode(function({setWorldConstructor}) {
   setWorldConstructor(CustomWorld);
-})
+});
