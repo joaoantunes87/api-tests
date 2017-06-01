@@ -2,12 +2,16 @@
 
 Repository for DHIS2 API Testing.
 
-## Run tests
+## Running tests
+
+Install NPM dependencies:
 
 ```sh
 $ npm install
 ```
 
+Run the tests:
+
 ```sh
-$ ./node_modules/.bin/cucumber-js
+$ npm test
 ```
