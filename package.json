@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "DHIS2 API Testing",
   "homepage": "https://www.dhis2.org",
-  "license" : "BSD-3-Clause",
+  "license": "BSD-3-Clause",
   "private": true,
   "author": "Samuel Santos <ssantos@present-technologies.com>",
   "contributors": [
@@ -11,6 +11,7 @@
     "João Antunes <joao.antunes@present-technologies.com>"
   ],
   "scripts": {
+    "pretest": "./node_modules/eslint/bin/eslint.js features",
     "test": "./node_modules/.bin/cucumber-js"
   },
   "repository": {
@@ -29,9 +30,15 @@
   "devDependencies": {
     "axios": "^0.16.1",
     "chai": "^4.0.0",
-    "cucumber": "^2.2.0"
+    "cucumber": "^2.2.0",
+    "eslint": "^3.19.0",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "^2.3.0",
+    "eslint-plugin-node": "^4.2.2",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^3.0.1"
   },
-  "engines" : {
-    "node" : ">=6"
+  "engines": {
+    "node": ">=6"
   }
 }

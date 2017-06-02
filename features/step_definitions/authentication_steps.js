@@ -3,10 +3,9 @@ var axios = require('axios');
 
 var assert = chai.assert;    // Using Assert style
 
-var {defineSupportCode} = require('cucumber');
+var { defineSupportCode } = require('cucumber');
 
-defineSupportCode(function({Given, When, Then}) {
-
+defineSupportCode(function ({Given, When, Then}) {
   Given('I open up the application', function() {
 
   });

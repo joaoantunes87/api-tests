@@ -1,0 +1,23 @@
+{
+  "extends": "standard",
+  "plugins": [
+    "standard",
+    "promise"
+  ],
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "ecmaFeatures": {
+      "impliedStrict": true
+    }
+  },
+  "rules": {
+    "max-len": ["warn", 120, 2, {
+      "ignoreComments": true,
+      "ignoreUrls": true
+    }],
+    "no-var": "error",
+    "prefer-const": "warn",
+    "semi": ["error", "always"],
+    "sort-imports": "error"
+  }
+}
