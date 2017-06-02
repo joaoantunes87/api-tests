@@ -11,6 +11,7 @@
     }
   },
   "rules": {
+    "global-require": "error",
     "max-len": ["warn", 120, 2, {
       "ignoreComments": true,
       "ignoreUrls": true
