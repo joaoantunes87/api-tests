@@ -4,14 +4,24 @@ Repository for DHIS2 API Testing.
 
 ## Running tests
 
-Install NPM dependencies:
+The available CLI commands are described below.
+
+### Install NPM dependencies
 
 ```sh
 $ npm install
 ```
 
-Run the tests:
+### Run tests
+
+Run with the default API endpoint:
 
 ```sh
 $ npm test
+```
+
+Override the default API endpoint:
+
+```sh
+$ npm test -- --world-parameters  '{"apiEndpoint": "http://play.dhis2.org/dev/api/27"}'
 ```

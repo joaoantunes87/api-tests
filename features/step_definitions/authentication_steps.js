@@ -14,7 +14,7 @@ defineSupportCode(function ({Given, When, Then}) {
   });
 
   Then('I should be authenticated', function () {
-    return axios.get(this.apiEndpoint + 'me', {
+    return axios.get(this.apiEndpoint + '/me', {
       auth: {
         username: this.username,
         password: this.password
@@ -25,7 +25,7 @@ defineSupportCode(function ({Given, When, Then}) {
   });
 
   Then('I should be not be authenticated', function () {
-    return axios.get(this.apiEndpoint + 'me', {
+    return axios.get(this.apiEndpoint + '/me', {
       auth: {
         username: this.username,
         password: this.password
