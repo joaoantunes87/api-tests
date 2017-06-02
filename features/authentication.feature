@@ -1,5 +1,5 @@
 Feature: Authentication
-  
+
   Scenario: User logs in with correct credentials
     Given I open up the application
     When I login as "admin" with password as "district"
