@@ -17,7 +17,7 @@ I want to be able to add and manage organisation units
         Then I should be able to assign the existing organisation unit as a parent
         And I should be informed that the organisation unit was created.
 
-    Scenario: Update properties of an organisation unit with valid values
+    Scenario Outline: Update properties of an organisation unit with valid values
         When I update an organisation unit
         And provide valid <property> as <values>
         Then I should be informed that the organisation unit was updated.
@@ -25,10 +25,10 @@ I want to be able to add and manage organisation units
         | coordinate values | [-11.4197,8.1039] |
         | start date | 1970-01-01T00:00:00.000 |
         
-    Scenario: Update properties of an organisation unit with invalid values
+    Scenario Outline: Update properties of an organisation unit with invalid values
         When I update an organisation unit
         And provide invalid <property> as <values>
-        Then I should be informed that the organisation unit was updated.
+        Then I should be informed that the organisation unit was not updated.
         | property | values |
         | coordinate values | [-190.4197,8.1039] |
         | start date | 1970-02-31T00:00:00.000 |
