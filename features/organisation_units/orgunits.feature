@@ -17,23 +17,43 @@ I want to be able to add and manage organisation units
         Then I should be able to assign the existing organisation unit as a parent
         And I should be informed that the organisation unit was created.
 
-    Scenario Outline: Update properties of an organisation unit with valid values
+    Scenario Outline: Update valid properties of an organisation unit with valid values
         When I update an organisation unit
-        And provide valid <property> as <values>
+        And  I provide a valid <value> for a valid <property>
         Then I should be informed that the organisation unit was updated.
-        | property | values |
-        | coordinate values | [-11.4197,8.1039] |
-        | start date | 1970-01-01T00:00:00.000 |
+        #This should be a 200
+        Examples:
+        | property | value |
+        | coordinates | [-11.4197,8.1039] |
+        | startDate | 1970-01-01T00:00:00.000 |
         
     Scenario Outline: Update properties of an organisation unit with invalid values
         When I update an organisation unit
-        And provide invalid <property> as <values>
-        Then I should be informed that the organisation unit was not updated.
+        And I provide an invalid <value> of a valid <property>
+        Then I should receive an error message.
+        #A bit unknown at this point, but expect a 500. 
+        Examples:
         | property | values |
-        | coordinate values | [-190.4197,8.1039] |
-        | start date | 1970-02-31T00:00:00.000 |
+        | coordinates | [-190.4197,8.1039] |
+        | startDate | 1970-02-31T00:00:00.000 |
+    
+    Scenario Outline: Update non-existent properties of an organisation unit
+        When I update an organisation unit
+        And I provide an invalid <value> of an invalid <property>
+        Then I should be informed that the organisation unit was not updated.
+        #Also a bit unknown but assume a 204.
+        Examples:
+        | property | values |
+        | cordinate | [-190.4197,8.1039] |
+        | startTime | 1970-02-28T00:00:00.000 |
 
     Scenario: Translate an organisation unit name
         When I translate the name of an organisation unit
         And I select the same locale as I translated the organisation unit
         Then I should be able to view the translated name.
+
+    Scenario: Define an end date for an organisation unit
+        Given I have created an organisation unit
+        When I provide the date when an organisation unit closes
+        Then the system should 
+        But only if it is after the date which it opens. 
