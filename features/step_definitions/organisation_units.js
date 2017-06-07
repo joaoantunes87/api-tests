@@ -3,6 +3,32 @@ const chai = require('chai');
 const faker = require('faker');
 const assert = chai.assert;
 
+const initializeFakeObjectRequest = () => {
+  return {
+    name: faker.company.companyName(),
+    shortName: faker.company.companySuffix(),
+    openingDate: faker.date.past()
+  };
+};
+
+const initializeFakeOrganisationUnitPostPromise = (world) => {
+  return world.axios({
+    method: 'post',
+    url: world.apiEndpoint + '/organisationUnits',
+    data: initializeFakeObjectRequest(),
+    auth: world.authRequestObject
+  });
+};
+
+const initializeOrganisationUnitPatchPromise = (world, organisationUnitId, organisationUnitUpdateRequest) => {
+  return world.axios({
+    method: 'patch',
+    url: world.apiEndpoint + '/organisationUnits/' + organisationUnitId,
+    data: organisationUnitUpdateRequest,
+    auth: world.authRequestObject
+  });
+};
+
 defineSupportCode(function ({Given, When, Then}) {
   Given(/^that I am logged in$/, function () {
   });
@@ -12,9 +38,6 @@ defineSupportCode(function ({Given, When, Then}) {
   });
 
   When(/^I fill in all of the required fields correctly$/, function () {
-    this.name = faker.company.companyName();
-    this.shortName = faker.company.companySuffix();
-    this.openingDate = faker.date.past();
   });
 
   When(/^I submit the organisation unit$/, function () {
@@ -22,19 +45,7 @@ defineSupportCode(function ({Given, When, Then}) {
   });
 
   Then(/^I should be informed that the organisation unit was created.$/, function () {
-    return this.axios({
-      method: 'post',
-      url: this.apiEndpoint + '/organisationUnits',
-      data: {
-        name: this.name,
-        shortName: this.shortName,
-        openingDate: this.openingDate
-      },
-      auth: {
-        username: 'admin',
-        password: 'district'
-      }
-    }).then(function (response) {
+    return initializeFakeOrganisationUnitPostPromise(this).then(function (response) {
       assert.equal(response.status, 201, 'Organisation Unit was created');
       assert.property(response.data.response, 'uid', 'Organisation Unit Id was returned');
     });
@@ -45,19 +56,7 @@ defineSupportCode(function ({Given, When, Then}) {
     world.organisationUnitId = null;
     world.organisationUnitUpdateRequest = {};
 
-    return this.axios({
-      method: 'post',
-      url: this.apiEndpoint + '/organisationUnits',
-      data: {
-        name: faker.company.companyName(),
-        shortName: faker.company.companySuffix(),
-        openingDate: faker.date.past()
-      },
-      auth: {
-        username: 'admin',
-        password: 'district'
-      }
-    }).then(function (response) {
+    return initializeFakeOrganisationUnitPostPromise(this).then(function (response) {
       world.organisationUnitId = response.data.response.uid;
     });
   });
@@ -67,15 +66,10 @@ defineSupportCode(function ({Given, When, Then}) {
   });
 
   Then(/^I should be informed that the organisation unit was updated.$/, function () {
-    return this.axios({
-      method: 'patch',
-      url: this.apiEndpoint + '/organisationUnits/' + this.organisationUnitId,
-      data: this.organisationUnitUpdateRequest,
-      auth: {
-        username: 'admin',
-        password: 'district'
-      }
-    }).then(function (response) {
+    return initializeOrganisationUnitPatchPromise(this,
+      this.organisationUnitId,
+      this.organisationUnitUpdateRequest
+    ).then(function (response) {
       assert.equal(response.status, 200, 'Organisation Unit was updated');
     });
   });
@@ -85,15 +79,10 @@ defineSupportCode(function ({Given, When, Then}) {
   });
 
   Then(/^I should receive an error message.$/, function () {
-    return this.axios({
-      method: 'patch',
-      url: this.apiEndpoint + '/organisationUnits/' + this.organisationUnitId,
-      data: this.organisationUnitUpdateRequest,
-      auth: {
-        username: 'admin',
-        password: 'district'
-      }
-    }).then(function (response) {
+    return initializeOrganisationUnitPatchPromise(this,
+      this.organisationUnitId,
+      this.organisationUnitUpdateRequest
+    ).then(function (response) {
       throw new Error('The request should have failed');   // it should fail
     }).catch(function (error) {
       // request failed
@@ -112,15 +101,10 @@ defineSupportCode(function ({Given, When, Then}) {
   });
 
   Then(/^I should be informed that the organisation unit was not updated.$/, function () {
-    return this.axios({
-      method: 'patch',
-      url: this.apiEndpoint + '/organisationUnits/' + this.organisationUnitId,
-      data: this.organisationUnitUpdateRequest,
-      auth: {
-        username: 'admin',
-        password: 'district'
-      }
-    }).then(function (response) {
+    return initializeOrganisationUnitPatchPromise(this,
+      this.organisationUnitId,
+      this.organisationUnitUpdateRequest
+    ).then(function (response) {
       assert.equal(response.status, 204, 'Organisation Unit was not updated');
     });
   });
@@ -130,19 +114,7 @@ defineSupportCode(function ({Given, When, Then}) {
     world.organisationUnitId = null;
     world.organisationUnitUpdateRequest = {};
 
-    return this.axios({
-      method: 'post',
-      url: this.apiEndpoint + '/organisationUnits',
-      data: {
-        name: faker.company.companyName(),
-        shortName: faker.company.companySuffix(),
-        openingDate: openingDate
-      },
-      auth: {
-        username: 'admin',
-        password: 'district'
-      }
-    }).then(function (response) {
+    return initializeFakeOrganisationUnitPostPromise(this).then(function (response) {
       world.organisationUnitId = response.data.response.uid;
     });
   });
