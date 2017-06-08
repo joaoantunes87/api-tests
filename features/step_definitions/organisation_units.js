@@ -68,6 +68,23 @@ defineSupportCode(function ({Before, Given, When, Then}) {
     });
   });
 
+  When(/^an existing parent organisation unit exists$/, function () {
+    const world = this;
+    world.organisationUnitId = null;
+
+    return initializeOrganisationUnitPostPromise(this, initializeFakeOrganizationUnit()).then(function (response) {
+      world.organisationUnitId = response.data.response.uid;
+    });
+  });
+
+  When(/^I create a new organisation unit$/, function () {
+    this.organisationUnitData = initializeFakeOrganizationUnit();
+  });
+
+  When(/^I should be able to assign the existing organisation unit as a parent$/, function () {
+    this.organisationUnitData.parent = this.organisationUnitId;
+  });
+
   When(/^I update an organisation unit$/, function () {
     const world = this;
     world.organisationUnitId = null;
