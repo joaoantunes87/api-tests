@@ -3,7 +3,7 @@ const chai = require('chai');
 const faker = require('faker');
 const assert = chai.assert;
 
-const initializeFakeObjectRequest = () => {
+const initializeFakeOrganizationUnit = () => {
   return {
     name: faker.company.companyName(),
     shortName: faker.company.companySuffix(),
@@ -11,11 +11,11 @@ const initializeFakeObjectRequest = () => {
   };
 };
 
-const initializeFakeOrganisationUnitPostPromise = (world) => {
+const initializeOrganisationUnitPostPromise = (world, organisationUnitData) => {
   return world.axios({
     method: 'post',
     url: world.apiEndpoint + '/organisationUnits',
-    data: initializeFakeObjectRequest(),
+    data: organisationUnitData,
     auth: world.authRequestObject
   });
 };
@@ -54,7 +54,7 @@ defineSupportCode(function ({Before, Given, When, Then}) {
   });
 
   When(/^I fill in all of the required fields correctly$/, function () {
-
+    this.organisationUnitData = initializeFakeOrganizationUnit();
   });
 
   When(/^I submit the organisation unit$/, function () {
@@ -62,7 +62,7 @@ defineSupportCode(function ({Before, Given, When, Then}) {
   });
 
   Then(/^I should be informed that the organisation unit was created.$/, function () {
-    return initializeFakeOrganisationUnitPostPromise(this).then(function (response) {
+    return initializeOrganisationUnitPostPromise(this, this.organisationUnitData).then(function (response) {
       assert.equal(response.status, 201, 'Organisation Unit was created');
       assert.property(response.data.response, 'uid', 'Organisation Unit Id was returned');
     });
@@ -73,7 +73,7 @@ defineSupportCode(function ({Before, Given, When, Then}) {
     world.organisationUnitId = null;
     world.organisationUnitUpdateRequest = {};
 
-    return initializeFakeOrganisationUnitPostPromise(this).then(function (response) {
+    return initializeOrganisationUnitPostPromise(this, initializeFakeOrganizationUnit()).then(function (response) {
       world.organisationUnitId = response.data.response.uid;
     });
   });
@@ -131,7 +131,7 @@ defineSupportCode(function ({Before, Given, When, Then}) {
     world.organisationUnitId = null;
     world.organisationUnitUpdateRequest = {};
 
-    return initializeFakeOrganisationUnitPostPromise(this).then(function (response) {
+    return initializeOrganisationUnitPostPromise(this, initializeFakeOrganizationUnit()).then(function (response) {
       world.organisationUnitId = response.data.response.uid;
     });
   });
