@@ -29,8 +29,24 @@ const initializeOrganisationUnitPatchPromise = (world, organisationUnitId, organ
   });
 };
 
-defineSupportCode(function ({Given, When, Then}) {
+defineSupportCode(function ({Before, Given, When, Then}) {
+  /* Before(function () {
+    const world = this;
+
+    return world.axios({
+      method: 'get',
+      url: world.apiEndpoint + '/schemas/organisationUnit.json',
+      auth: {
+        username: 'admin',
+        password: 'district'
+      }
+    }).then(function (response) {
+      world.organisationUnitSchema = response.data;
+    });
+  }); */
+
   Given(/^that I am logged in$/, function () {
+
   });
 
   When(/^that I have the necessary permissions to add an organisation unit$/, function () {
@@ -38,6 +54,7 @@ defineSupportCode(function ({Given, When, Then}) {
   });
 
   When(/^I fill in all of the required fields correctly$/, function () {
+
   });
 
   When(/^I submit the organisation unit$/, function () {
@@ -120,6 +137,6 @@ defineSupportCode(function ({Given, When, Then}) {
   });
 
   When(/^I provide a closed date as (.+)$/, function (closedDate) {
-    this.organisationUnitUpdateRequest['closedDate'] = closedDate;
+    this.organisationUnitUpdateRequest.closedDate = closedDate;
   });
 });
