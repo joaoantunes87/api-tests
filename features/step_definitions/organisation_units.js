@@ -1,13 +1,29 @@
 const { defineSupportCode } = require('cucumber');
 const chai = require('chai');
 const faker = require('faker');
+const moment = require('moment');
+
 const assert = chai.assert;
 
-const initializeFakeOrganizationUnit = () => {
+/* just a test for now. Possible to be removed. At least to be moved to a reasuble place  */
+const generateIds = (numberOfIds) => {
+  const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+  const currentTimestamp = Math.floor(Date.now() / 1000);   // 10 digits
+  const ids = [];
+  const numberOfIdsTemp = numberOfIds || 1;
+  for (let seed = 0; seed < numberOfIdsTemp; seed++) {
+    const letter = alphabet[seed % alphabet.length];
+    ids.push(letter + currentTimestamp);
+  }
+
+  return numberOfIds ? ids : ids[0];
+};
+
+const initializeFakeOrganizationUnit = (world) => {
   return {
     name: faker.company.companyName(),
     shortName: faker.company.companySuffix(),
-    openingDate: faker.date.past()
+    openingDate: moment(faker.date.past()).format(world.momentDateFormat)
   };
 };
 
@@ -29,6 +45,14 @@ const initializeOrganisationUnitPatchPromise = (world, organisationUnitId, organ
   });
 };
 
+const initializeOrganisationUnitGetPromise = (world, organisationUnitId) => {
+  return world.axios({
+    method: 'get',
+    url: world.apiEndpoint + '/organisationUnits/' + organisationUnitId,
+    auth: world.authRequestObject
+  });
+};
+
 defineSupportCode(function ({Before, Given, When, Then}) {
   /* Before(function () {
     const world = this;
@@ -45,6 +69,15 @@ defineSupportCode(function ({Before, Given, When, Then}) {
     });
   }); */
 
+  const organisationUnitId = generateIds();
+
+  Before(function () {
+    const world = this;
+
+    world.organisationUnitData = {};
+    world.organisationUnitUpdateRequest = {};
+  });
+
   Given(/^that I am logged in$/, function () {
 
   });
@@ -54,7 +87,8 @@ defineSupportCode(function ({Before, Given, When, Then}) {
   });
 
   When(/^I fill in all of the required fields correctly$/, function () {
-    this.organisationUnitData = initializeFakeOrganizationUnit();
+    this.organisationUnitData = initializeFakeOrganizationUnit(this);
+    this.organisationUnitData.id = organisationUnitId;
   });
 
   When(/^I submit the organisation unit$/, function () {
@@ -62,9 +96,16 @@ defineSupportCode(function ({Before, Given, When, Then}) {
   });
 
   Then(/^I should be informed that the organisation unit was created.$/, function () {
+    const world = this;
+
     return initializeOrganisationUnitPostPromise(this, this.organisationUnitData).then(function (response) {
-      assert.equal(response.status, 201, 'Organisation Unit was created');
-      assert.property(response.data.response, 'uid', 'Organisation Unit Id was returned');
+      assert.equal(response.status, 201, 'Status should be 201');
+      assert.property(response.data.response, 'uid', 'Organisation Unit Id must be returned');
+      return initializeOrganisationUnitGetPromise(world, response.data.response.uid).then(function (response) {
+        assert.equal(response.data.name, world.organisationUnitData.name, 'Organisation Unit name must be equal to name sent');
+        assert.equal(response.data.shortName, world.organisationUnitData.shortName, 'Organisation Unit short name sent');
+        assert.equal(moment(response.data.openingDate).format(world.momentDateFormat), world.organisationUnitData.openingDate, 'OrganisationUnit Opening Date is correct');
+      });
     });
   });
 
@@ -72,27 +113,23 @@ defineSupportCode(function ({Before, Given, When, Then}) {
     const world = this;
     world.organisationUnitId = null;
 
-    return initializeOrganisationUnitPostPromise(this, initializeFakeOrganizationUnit()).then(function (response) {
+    return initializeOrganisationUnitPostPromise(this, initializeFakeOrganizationUnit(this)).then(function (response) {
       world.organisationUnitId = response.data.response.uid;
     });
   });
 
   When(/^I create a new organisation unit$/, function () {
-    this.organisationUnitData = initializeFakeOrganizationUnit();
+    this.organisationUnitData = initializeFakeOrganizationUnit(this);
   });
 
   When(/^I should be able to assign the existing organisation unit as a parent$/, function () {
-    this.organisationUnitData.parent = this.organisationUnitId;
+    this.organisationUnitData.parent = {
+      id: this.organisationUnitId
+    };
   });
 
   When(/^I update an organisation unit$/, function () {
-    const world = this;
-    world.organisationUnitId = null;
-    world.organisationUnitUpdateRequest = {};
-
-    return initializeOrganisationUnitPostPromise(this, initializeFakeOrganizationUnit()).then(function (response) {
-      world.organisationUnitId = response.data.response.uid;
-    });
+    this.organisationUnitUpdateRequest = {};
   });
 
   When(/^I provide a valid (.+) for a valid (.+)$/, function (value, property) {
@@ -101,7 +138,7 @@ defineSupportCode(function ({Before, Given, When, Then}) {
 
   Then(/^I should be informed that the organisation unit was updated.$/, function () {
     return initializeOrganisationUnitPatchPromise(this,
-      this.organisationUnitId,
+      organisationUnitId,
       this.organisationUnitUpdateRequest
     ).then(function (response) {
       assert.equal(response.status, 200, 'Organisation Unit was updated');
@@ -114,7 +151,7 @@ defineSupportCode(function ({Before, Given, When, Then}) {
 
   Then(/^I should receive an error message.$/, function () {
     return initializeOrganisationUnitPatchPromise(this,
-      this.organisationUnitId,
+      organisationUnitId,
       this.organisationUnitUpdateRequest
     ).then(function (response) {
       throw new Error('The request should have failed');   // it should fail
@@ -136,7 +173,7 @@ defineSupportCode(function ({Before, Given, When, Then}) {
 
   Then(/^I should be informed that the organisation unit was not updated.$/, function () {
     return initializeOrganisationUnitPatchPromise(this,
-      this.organisationUnitId,
+      organisationUnitId,
       this.organisationUnitUpdateRequest
     ).then(function (response) {
       assert.equal(response.status, 204, 'Organisation Unit was not updated');
@@ -144,13 +181,7 @@ defineSupportCode(function ({Before, Given, When, Then}) {
   });
 
   When(/^I have created an organisation unit with an opening date as (.+)$/, function (openingDate) {
-    const world = this;
-    world.organisationUnitId = null;
-    world.organisationUnitUpdateRequest = {};
-
-    return initializeOrganisationUnitPostPromise(this, initializeFakeOrganizationUnit()).then(function (response) {
-      world.organisationUnitId = response.data.response.uid;
-    });
+    this.organisationUnitUpdateRequest = {};
   });
 
   When(/^I provide a closed date as (.+)$/, function (closedDate) {
