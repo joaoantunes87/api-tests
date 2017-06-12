@@ -102,9 +102,9 @@ defineSupportCode(function ({Before, Given, When, Then}) {
       assert.equal(response.status, 201, 'Status should be 201');
       assert.property(response.data.response, 'uid', 'Organisation Unit Id must be returned');
       return initializeOrganisationUnitGetPromise(world, response.data.response.uid).then(function (response) {
-        assert.equal(response.data.name, world.organisationUnitData.name, 'Organisation Unit name must be equal to name sent');
-        assert.equal(response.data.shortName, world.organisationUnitData.shortName, 'Organisation Unit short name sent');
-        assert.equal(moment(response.data.openingDate).format(world.momentDateFormat), world.organisationUnitData.openingDate, 'OrganisationUnit Opening Date is correct');
+        assert.equal(response.data.name, world.organisationUnitData.name, 'Name is wrong');
+        assert.equal(response.data.shortName, world.organisationUnitData.shortName, 'Short name is wrong');
+        assert.equal(moment(response.data.openingDate).format(world.momentDateFormat), world.organisationUnitData.openingDate, 'Opening Date is wrong');
       });
     });
   });
@@ -137,11 +137,18 @@ defineSupportCode(function ({Before, Given, When, Then}) {
   });
 
   Then(/^I should be informed that the organisation unit was updated.$/, function () {
-    return initializeOrganisationUnitPatchPromise(this,
+    const world = this;
+    return initializeOrganisationUnitPatchPromise(world,
       organisationUnitId,
-      this.organisationUnitUpdateRequest
+      world.organisationUnitUpdateRequest
     ).then(function (response) {
       assert.equal(response.status, 200, 'Organisation Unit was updated');
+      return initializeOrganisationUnitGetPromise(world, organisationUnitId).then(function (response) {
+        const keys = Object.keys(world.organisationUnitUpdateRequest);
+        keys.forEach(function (key) {
+          assert.equal(response.data[key], world.organisationUnitUpdateRequest[key], key + ' is wrong');
+        });
+      });
     });
   });
 
@@ -158,9 +165,9 @@ defineSupportCode(function ({Before, Given, When, Then}) {
     }).catch(function (error) {
       // request failed
       if (error.response) {
-        assert.equal(error.response.status, 500, 'A error happened');
-        assert.equal(error.response.data.status, 'ERROR', 'A error happened');
-        assert.property(error.response.data, 'message', 'User id was returned');
+        assert.equal(error.response.status, 500, 'It should have returned error status');
+        assert.equal(error.response.data.status, 'ERROR', 'It should have returned error status');
+        assert.property(error.response.data, 'message', 'It should have returned error message');
       } else {  // error thrown at then callback
         throw error;
       }
