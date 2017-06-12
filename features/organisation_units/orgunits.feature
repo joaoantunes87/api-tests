@@ -7,9 +7,12 @@ I want to be able to add and manage organisation units
       And that I have the necessary permissions to add an organisation unit
 
       Scenario: Add an organisation unit
-        When I fill in all of the required fields correctly
+        When I fill in all of the required fields with data:
+        | name            | shortName       | openingDate |
+        | Organization 1  | ORG             | 2016-09-23  |
         And I submit the organisation unit
-        Then I should be informed that the organisation unit was created.
+        Then I should be informed that the organisation unit was created
+        And The returned data is the same as submitted.
 
       Scenario: Assign a parent to an organsiation unit
         When an existing parent organisation unit exists
