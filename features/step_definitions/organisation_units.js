@@ -129,6 +129,48 @@ defineSupportCode(function ({Before, Given, When, Then}) {
   When(/^I provide a closed date as (.+)$/, function (closedDate) {
     this.organisationUnitUpdateRequest.closedDate = closedDate;
   });
+
+  When(/^I translate the name of an organisation unit for (.+) as (.+)$/, function (locale, translationValue) {
+    const world = this;
+
+    world.locale = locale;
+    world.translationValue = translationValue;
+
+    return initializeOrganisationUnitGetPromise(world, organisationUnitId).then(function (response) {
+      world.organisationUnitData = response.data;
+      world.organisationUnitData.translations = [
+        {
+          property: 'NAME',
+          locale: locale,
+          value: translationValue
+        }
+      ];
+
+      return initializeOrganisationUnitPutPromise(world, organisationUnitId, world.organisationUnitData);
+    }).then(function (response) {
+      assert.equal(response.status, 200, 'Organisation Unit was not updated');
+    }).catch(function (error) {
+      console.log('Error: ' + JSON.stringify(error.response.data));
+    });
+  });
+
+  When(/^I select the same locale as I translated the organisation unit$/, function () {
+    return this.axios({
+      method: 'post',
+      url: this.apiEndpoint + '/userSettings/keyDbLocale?value=' + this.locale,
+      auth: this.authRequestObject
+    }).then(function (response) {
+      assert.equal(response.status, 200, 'Locale setting was not updated');
+    });
+  });
+
+  Then(/^I should be able to view the translated name.$/, function () {
+    const world = this;
+
+    return initializeOrganisationUnitGetPromise(world, organisationUnitId).then(function (response) {
+      assert.equal(response.data.displayName, world.translationValue, 'Name is not translated');
+    });
+  });
 });
 
 /* just a test for now. Possible to be removed. At least to be moved to a reasuble place  */
@@ -165,6 +207,15 @@ const initializeOrganisationUnitGetPromise = (world, organisationUnitId) => {
 const initializeOrganisationUnitPatchPromise = (world, organisationUnitId, organisationUnitUpdateRequest) => {
   return world.axios({
     method: 'patch',
+    url: world.apiEndpoint + '/organisationUnits/' + organisationUnitId,
+    data: organisationUnitUpdateRequest,
+    auth: world.authRequestObject
+  });
+};
+
+const initializeOrganisationUnitPutPromise = (world, organisationUnitId, organisationUnitUpdateRequest) => {
+  return world.axios({
+    method: 'put',
     url: world.apiEndpoint + '/organisationUnits/' + organisationUnitId,
     data: organisationUnitUpdateRequest,
     auth: world.authRequestObject

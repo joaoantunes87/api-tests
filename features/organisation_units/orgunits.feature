@@ -54,11 +54,6 @@ I want to be able to add and manage organisation units
         | cordinate | [-190.4197,8.1039] |
         | startTime | 1970-02-28T00:00:00.000 |
 
-      Scenario: Translate an organisation unit name
-        When I translate the name of an organisation unit
-        And I select the same locale as I translated the organisation unit
-        Then I should be able to view the translated name.
-
       Scenario Outline: Define an end date for an organisation unit
         When I update an existing organisation unit
         And I provide a closed date as <pastDate>
@@ -76,3 +71,12 @@ I want to be able to add and manage organisation units
         | futureDate |
         | 2017-06-12T00:00:00.000 |
         | 2017-06-13T00:00:00.000 |
+
+      Scenario Outline: Translate an organisation unit name
+        When I translate the name of an organisation unit for <locale> as <translation>
+        And I select the same locale as I translated the organisation unit
+        Then I should be able to view the translated name.
+        Examples:
+        | locale | translation |
+        | pt | Organização 1 |
+        | es | Organización 1 |        
