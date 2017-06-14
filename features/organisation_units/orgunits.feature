@@ -9,16 +9,25 @@ I want to be able to add and manage organisation units
       Scenario: Add an organisation unit
         When I fill in all of the required fields with data:
         | name            | shortName       | openingDate |
-        | Organization 1  | ORG             | 2016-09-23  |
+        | Organization 1  | ORG             | 2016-09-23T00:00:00.000  |
         And I submit the organisation unit
         Then I should be informed that the organisation unit was created
+        And The returned data is the same as submitted.
+
+      Scenario: Update added organisation unit
+        Given I got the existing organisation unit to update
+        When I fill in some fileds to change with data:
+        | name                    | shortName       | openingDate |
+        | Organization 1 Updated  | ORGU            | 2016-09-24T00:00:00.000  |
+        And I submit the organisation unit
+        Then I should be informed that the organisation unit was updated
         And The returned data is the same as submitted.
 
       Scenario: Assign a parent to an organsiation unit
         When an existing parent organisation unit exists
         And I fill in all of the required fields with data:
         | name            | shortName       | openingDate |
-        | Organization 2  | ORG             | 2016-06-23  |
+        | Organization 2  | ORG             | 2016-06-23T00:00:00.000  |
         Then I should be able to assign the existing organisation unit as a parent
         And I submit the organisation unit
         Then I should be informed that the organisation unit was created
@@ -27,7 +36,9 @@ I want to be able to add and manage organisation units
       Scenario Outline: Update valid properties of an organisation unit with valid values
         When I update an existing organisation unit
         And  I provide a valid <value> for a valid <property>
-        Then I should be informed that the organisation unit was updated.
+        And I submit the organisation unit
+        Then I should be informed that the organisation unit was updated
+        And The returned data is the same as submitted.
         #This should be a 200
         Examples:
         | property | value |
@@ -37,6 +48,7 @@ I want to be able to add and manage organisation units
       Scenario Outline: Update properties of an organisation unit with invalid values
         When I update an existing organisation unit
         And I provide an invalid <value> of a valid <property>
+        And I submit the organisation unit
         Then I should receive an error message.
         #A bit unknown at this point, but expect a 500.
         Examples:
@@ -47,6 +59,7 @@ I want to be able to add and manage organisation units
       Scenario Outline: Update non-existent properties of an organisation unit
         When I update an existing organisation unit
         And I provide an invalid <value> of an invalid <property>
+        And I submit the organisation unit
         Then I should be informed that the organisation unit was not updated.
         #Also a bit unknown but assume a 204.
         Examples:
@@ -57,6 +70,7 @@ I want to be able to add and manage organisation units
       Scenario Outline: Define an end date for an organisation unit
         When I update an existing organisation unit
         And I provide a closed date as <pastDate>
+        And I submit the organisation unit
         Then I should receive an error message.
         Examples:
         | pastDate |
@@ -66,6 +80,7 @@ I want to be able to add and manage organisation units
       Scenario Outline: Define an end date for an organisation unit
         When I update an existing organisation unit
         And I provide a closed date as <futureDate>
+        And I submit the organisation unit
         Then I should be informed that the organisation unit was updated.
         Examples:
         | futureDate |
