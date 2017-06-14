@@ -8,12 +8,13 @@ defineSupportCode(function ({Before, Given, When, Then}) {
   let organisationUnitWasCreated = false;
 
   Given(/^that I am logged in$/, function () {
+    /* Test done at authentication.feature. Basic Auth in all requests */
     this.organisationUnitData = {};
     this.organisationUnitUpdateRequest = {};
   });
 
   Given(/^that I have the necessary permissions to add an organisation unit$/, function () {
-    /* Test done at authentication.feature. Basic Auth in all requests */
+
   });
 
   When(/^I fill in all of the required fields with data:$/, function (data) {
