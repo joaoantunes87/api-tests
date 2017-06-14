@@ -25,7 +25,7 @@ I want to be able to add and manage organisation units
         And The returned data is the same as submitted.
 
       Scenario Outline: Update valid properties of an organisation unit with valid values
-        When I update an organisation unit
+        When I update an existing organisation unit
         And  I provide a valid <value> for a valid <property>
         Then I should be informed that the organisation unit was updated.
         #This should be a 200
@@ -79,4 +79,4 @@ I want to be able to add and manage organisation units
         Examples:
         | locale | translation |
         | pt | Organização 1 |
-        | es | Organización 1 |        
+        | es | Organización 1 |
