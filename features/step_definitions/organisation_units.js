@@ -8,13 +8,22 @@ defineSupportCode(function ({Before, Given, When, Then}) {
   let organisationUnitWasCreated = false;
 
   Given(/^that I am logged in$/, function () {
-    /* Test done at authentication.feature. Basic Auth in all requests */
     this.organisationUnitData = {};
-    this.organisationUnitUpdateRequest = {};
+
+    return this.axios.get(this.apiEndpoint + '/me', {
+      auth: this.authRequestObject
+    }).then(function (response) {
+      assert.equal(response.status, 200, 'Response Status is ok');
+      assert.property(response, 'data', 'User id was returned');
+    });
   });
 
   Given(/^that I have the necessary permissions to add an organisation unit$/, function () {
-
+    return this.axios.get(this.apiEndpoint + '/me?fields=userCredentials[userRoles[*]]', {
+      auth: this.authRequestObject
+    }).then(function (response) {
+      assert.isOk(isAuthorisedToAddOrganisationUnitWith(response.data.userCredentials.userRoles), 'Not Authorized to create OrganisationUnit');
+    });
   });
 
   When(/^I fill in all of the required fields with data:$/, function (data) {
@@ -69,37 +78,36 @@ defineSupportCode(function ({Before, Given, When, Then}) {
 
   When(/^I update an existing organisation unit$/, function () {
     assert.equal(organisationUnitWasCreated, true, 'Organisation Unit does not exist');
-    this.organisationUnitUpdateRequest = {};
   });
 
   When(/^I provide a valid (.+) for a valid (.+)$/, function (value, property) {
-    this.organisationUnitUpdateRequest[property] = value;
+    this.organisationUnitData[property] = value;
   });
 
   Then(/^I should be informed that the organisation unit was updated.$/, function () {
     const world = this;
     return initializeOrganisationUnitPatchPromise(world,
       organisationUnitId,
-      world.organisationUnitUpdateRequest
+      world.organisationUnitData
     ).then(function (response) {
       assert.equal(response.status, 200, 'Organisation Unit was updated');
       return initializeOrganisationUnitGetPromise(world, organisationUnitId).then(function (response) {
-        const keys = Object.keys(world.organisationUnitUpdateRequest);
+        const keys = Object.keys(world.organisationUnitData);
         keys.forEach(function (key) {
-          assert.equal(response.data[key], world.organisationUnitUpdateRequest[key], key + ' is wrong');
+          assert.equal(response.data[key], world.organisationUnitData[key], key + ' is wrong');
         });
       });
     });
   });
 
   When(/^I provide an invalid (.+) of a valid (.+)$/, function (value, property) {
-    this.organisationUnitUpdateRequest[property] = value;
+    this.organisationUnitData[property] = value;
   });
 
   Then(/^I should receive an error message.$/, function () {
     return initializeOrganisationUnitPatchPromise(this,
       organisationUnitId,
-      this.organisationUnitUpdateRequest
+      this.organisationUnitData
     ).then(function (response) {
       throw new Error('The request should have failed');   // it should fail
     }).catch(function (error) {
@@ -115,20 +123,20 @@ defineSupportCode(function ({Before, Given, When, Then}) {
   });
 
   When(/^I provide an invalid (.+) of an invalid (.+)$/, function (value, property) {
-    this.organisationUnitUpdateRequest[property] = value;
+    this.organisationUnitData[property] = value;
   });
 
   Then(/^I should be informed that the organisation unit was not updated.$/, function () {
     return initializeOrganisationUnitPatchPromise(this,
       organisationUnitId,
-      this.organisationUnitUpdateRequest
+      this.organisationUnitData
     ).then(function (response) {
       assert.equal(response.status, 204, 'Organisation Unit was not updated');
     });
   });
 
   When(/^I provide a closed date as (.+)$/, function (closedDate) {
-    this.organisationUnitUpdateRequest.closedDate = closedDate;
+    this.organisationUnitData.closedDate = closedDate;
   });
 
   When(/^I translate the name of an organisation unit for (.+) as (.+)$/, function (locale, translationValue) {
@@ -150,8 +158,6 @@ defineSupportCode(function ({Before, Given, When, Then}) {
       return initializeOrganisationUnitPutPromise(world, organisationUnitId, world.organisationUnitData);
     }).then(function (response) {
       assert.equal(response.status, 200, 'Organisation Unit was not updated');
-    }).catch(function (error) {
-      console.log('Error: ' + JSON.stringify(error.response.data));
     });
   });
 
@@ -205,20 +211,30 @@ const initializeOrganisationUnitGetPromise = (world, organisationUnitId) => {
   });
 };
 
-const initializeOrganisationUnitPatchPromise = (world, organisationUnitId, organisationUnitUpdateRequest) => {
+const initializeOrganisationUnitPatchPromise = (world, organisationUnitId, organisationUnitData) => {
   return world.axios({
     method: 'patch',
     url: world.apiEndpoint + '/organisationUnits/' + organisationUnitId,
-    data: organisationUnitUpdateRequest,
+    data: organisationUnitData,
     auth: world.authRequestObject
   });
 };
 
-const initializeOrganisationUnitPutPromise = (world, organisationUnitId, organisationUnitUpdateRequest) => {
+const initializeOrganisationUnitPutPromise = (world, organisationUnitId, organisationUnitData) => {
   return world.axios({
     method: 'put',
     url: world.apiEndpoint + '/organisationUnits/' + organisationUnitId,
-    data: organisationUnitUpdateRequest,
+    data: organisationUnitData,
     auth: world.authRequestObject
   });
+};
+
+const isAuthorisedToAddOrganisationUnitWith = (userRoles = []) => {
+  for (const index in userRoles) {
+    const authorities = userRoles[index].authorities || [];
+    if (authorities.includes('F_ORGANISATIONUNIT_ADD')) {
+      return true;
+    }
+  }
+  return false;
 };
