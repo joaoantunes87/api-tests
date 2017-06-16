@@ -35,11 +35,10 @@ I want to be able to add and manage organisation units
 
       Scenario Outline: Update valid properties of an organisation unit with valid values
         When I update an existing organisation unit
-        And  I provide a valid <value> for a valid <property>
+        And  I provide a valid value: <value> for a valid property: <property>
         And I submit the organisation unit
         Then I should be informed that the organisation unit was updated
         And The returned data is the same as submitted.
-        #This should be a 200
         Examples:
         | property | value |
         | coordinates | [-11.4197,8.1039] |
@@ -47,10 +46,9 @@ I want to be able to add and manage organisation units
 
       Scenario Outline: Update properties of an organisation unit with invalid values
         When I update an existing organisation unit
-        And I provide an invalid <value> of a valid <property>
+        And I provide an invalid value: <value> of a valid property: <property>
         And I submit the organisation unit
         Then I should receive an error message.
-        #A bit unknown at this point, but expect a 500.
         Examples:
         | property | value |
         | coordinates | [-190.4197,8.1039] |
@@ -58,10 +56,9 @@ I want to be able to add and manage organisation units
 
       Scenario Outline: Update non-existent properties of an organisation unit
         When I update an existing organisation unit
-        And I provide an invalid <value> of an invalid <property>
+        And I provide an invalid value: <value> of an invalid property: <property>
         And I submit the organisation unit
         Then I should be informed that the organisation unit was not updated.
-        #Also a bit unknown but assume a 204.
         Examples:
         | property | value |
         | cordinate | [-190.4197,8.1039] |
@@ -69,7 +66,7 @@ I want to be able to add and manage organisation units
 
       Scenario Outline: Define an end date for an organisation unit
         When I update an existing organisation unit
-        And I provide a closed date as <pastDate>
+        And I provide a previous closed date as <pastDate>
         And I submit the organisation unit
         Then I should receive an error message.
         Examples:
@@ -79,9 +76,10 @@ I want to be able to add and manage organisation units
 
       Scenario Outline: Define an end date for an organisation unit
         When I update an existing organisation unit
-        And I provide a closed date as <futureDate>
+        And I provide a later closed date as <futureDate>
         And I submit the organisation unit
-        Then I should be informed that the organisation unit was updated.
+        Then I should be informed that the organisation unit was updated
+        And The returned data is the same as submitted.
         Examples:
         | futureDate |
         | 2017-06-12T00:00:00.000 |
