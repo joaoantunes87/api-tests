@@ -103,8 +103,8 @@ defineSupportCode(function ({Given, When, Then, Before}) {
     const world = this;
 
     return initializeOptionSetPromise(world, null, 'get', world.resourceId).then(function (response) {
-      world.resourceOptionsBefore = response.data.options.length;
-      assert.isAtLeast(world.resourceOptionsBefore, 1, 'It shoud have at least one options');
+      world.resourceOptionsCountBefore = response.data.options.length;
+      assert.isAtLeast(world.resourceOptionsCountBefore, 1, 'It shoud have at least one options');
       world.resourceIdToDelete = response.data.options[0].id;
     });
   });
@@ -129,12 +129,17 @@ defineSupportCode(function ({Given, When, Then, Before}) {
   });
 
   Then(/^It was really deleted.$/, function () {
-    return this.axios({
+    const world = this;
+
+    return world.axios({
       method: 'get',
-      url: this.apiEndpoint + '/optionSets/' + this.resourceId + '/options/' + this.resourceIdToDelete,
-      auth: this.authRequestObject
+      url: world.apiEndpoint + '/optionSets/' + world.resourceId + '/options/' + world.resourceIdToDelete,
+      auth: world.authRequestObject
     }).catch(function (error) {
       assert.equal(error.response.status, 404, 'Status should be 404');
+      return initializeOptionSetPromise(world, null, 'get', world.resourceId);
+    }).then(function (response) {
+      assert.equal(response.data.options.length, world.resourceOptionsCountBefore - 1, 'Option Set does not have the right options');
     });
   });
 
