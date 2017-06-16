@@ -18,15 +18,6 @@ defineSupportCode(function ({Given, When, Then, Before}) {
     this.method = null;                           // http method to be used in later request
   });
 
-  Given(/^that I am logged in$/, function () {
-    return this.axios.get(this.apiEndpoint + '/me', {
-      auth: this.authRequestObject
-    }).then(function (response) {
-      assert.equal(response.status, 200, 'Response Status is ok');
-      assert.property(response, 'data', 'User id was returned');
-    });
-  });
-
   Given(/^that I have the necessary permissions to add an organisation unit$/, function () {
     return this.axios.get(this.apiEndpoint + '/me?fields=userCredentials[userRoles[*]]', {
       auth: this.authRequestObject
@@ -55,7 +46,6 @@ defineSupportCode(function ({Given, When, Then, Before}) {
       world.organisationUnitResponseStatus = response.status;
       world.organisationUnitResponseData = response.data;
     }).catch(function (error) {
-      console.log('Error: ' + error);
       world.organisationUnitErrorResponse = error;
     });
   });
@@ -128,9 +118,7 @@ defineSupportCode(function ({Given, When, Then, Before}) {
   });
 
   Then(/^I should be informed that the organisation unit was updated$/, function () {
-    const world = this;
-
-    assert.equal(world.organisationUnitResponseStatus, 200, 'Organisation Unit was updated');
+    assert.equal(this.organisationUnitResponseStatus, 200, 'It should have been updated');
   });
 
   When(/^I provide an invalid value: (.+) of a valid property: (.+)$/, function (value, property) {

@@ -33,4 +33,13 @@ defineSupportCode(function ({Given, When, Then}) {
       assert.equal(error.response.status, 401, 'Success');
     });
   });
+
+  Given(/^that I am logged in$/, function () {
+    return this.axios.get(this.apiEndpoint + '/me', {
+      auth: this.authRequestObject
+    }).then(function (response) {
+      assert.equal(response.status, 200, 'Response Status is ok');
+      assert.property(response, 'data', 'User id was returned');
+    });
+  });
 });
