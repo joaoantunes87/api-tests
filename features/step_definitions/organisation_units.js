@@ -51,10 +51,9 @@ defineSupportCode(function ({Given, When, Then, Before}) {
   When(/^I submit the organisation unit$/, function () {
     const world = this;
 
-    return initializeOrganisationUnitPromiseWithData(world, world.organisationUnitData, world.method, world.organisationUnitId).then(function (response) {
+    return initializeOrganisationUnitPromise(world, world.organisationUnitData, world.method, world.organisationUnitId).then(function (response) {
       world.organisationUnitResponseStatus = response.status;
       world.organisationUnitResponseData = response.data;
-      console.log('Status Response: ' + world.organisationUnitResponseStatus + ':' + response.status);
     }).catch(function (error) {
       console.log('Error: ' + error);
       world.organisationUnitErrorResponse = error;
@@ -72,7 +71,7 @@ defineSupportCode(function ({Given, When, Then, Before}) {
   Then(/^The returned data is the same as submitted.$/, function () {
     const world = this;
 
-    return initializeOrganisationUnitGetPromise(world, world.organisationUnitId).then(function (response) {
+    return initializeOrganisationUnitPromise(world, null, 'get', world.organisationUnitId).then(function (response) {
       Object.keys(world.updatedDataToAssert).forEach(function (propertyKey) {
         assert.equal(response.data[propertyKey], world.updatedDataToAssert[propertyKey], propertyKey + ' is wrong');
       });
@@ -87,7 +86,7 @@ defineSupportCode(function ({Given, When, Then, Before}) {
     assert.isOk(generatedOrganisationUnitId, 'Organisation Unit Id does not exist');
 
     world.organisationUnitId = generatedOrganisationUnitId;
-    return initializeOrganisationUnitGetPromise(world, world.organisationUnitId).then(function (response) {
+    return initializeOrganisationUnitPromise(world, null, 'get', world.organisationUnitId).then(function (response) {
       assert.equal(response.status, 200, 'Status should be 200');
       world.organisationUnitData = response.data;
     });
@@ -172,7 +171,7 @@ defineSupportCode(function ({Given, When, Then, Before}) {
     world.locale = locale;
     world.translationValue = translationValue;
 
-    return initializeOrganisationUnitGetPromise(world, generatedOrganisationUnitId).then(function (response) {
+    return initializeOrganisationUnitPromise(world, null, 'get', generatedOrganisationUnitId).then(function (response) {
       world.organisationUnitData = response.data;
       world.organisationUnitData.translations = [
         {
@@ -182,7 +181,7 @@ defineSupportCode(function ({Given, When, Then, Before}) {
         }
       ];
 
-      return initializeOrganisationUnitPromiseWithData(world, world.organisationUnitData, 'put', generatedOrganisationUnitId);
+      return initializeOrganisationUnitPromise(world, world.organisationUnitData, 'put', generatedOrganisationUnitId);
     }).then(function (response) {
       assert.equal(response.status, 200, 'Organisation Unit was not updated');
     });
@@ -201,7 +200,7 @@ defineSupportCode(function ({Given, When, Then, Before}) {
   Then(/^I should be able to view the translated name.$/, function () {
     const world = this;
 
-    return initializeOrganisationUnitGetPromise(world, generatedOrganisationUnitId).then(function (response) {
+    return initializeOrganisationUnitPromise(world, null, 'get', generatedOrganisationUnitId).then(function (response) {
       assert.equal(response.data.displayName, world.translationValue, 'Name is not translated');
     });
   });
@@ -221,15 +220,7 @@ const generateIds = (numberOfIds) => {
   return numberOfIds ? ids : ids[0];
 };
 
-const initializeOrganisationUnitGetPromise = (world, organisationUnitId) => {
-  return world.axios({
-    method: 'get',
-    url: world.apiEndpoint + '/organisationUnits/' + organisationUnitId,
-    auth: world.authRequestObject
-  });
-};
-
-const initializeOrganisationUnitPromiseWithData = (world, organisationUnitData, method, organisationUnitId = '') => {
+const initializeOrganisationUnitPromise = (world, organisationUnitData, method, organisationUnitId = '') => {
   const url = world.apiEndpoint + '/organisationUnits/' + (organisationUnitId === null ? '' : organisationUnitId);
 
   return world.axios({
