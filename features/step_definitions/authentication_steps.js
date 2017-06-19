@@ -1,31 +1,30 @@
 const { defineSupportCode } = require('cucumber');
 const chai = require('chai');
-const axios = require('axios');
-
 const assert = chai.assert;
 
 defineSupportCode(function ({Given, When, Then}) {
-  Given('I open up the application', function () {
+  Given(/^I open up the application$/, function () {
   });
 
-  When('I login as {stringInDoubleQuotes} with password as {stringInDoubleQuotes}', function (username, password) {
+  When(/^I login as "(.+)" with password as "(.+)"$/, function (username, password) {
     this.username = username;
     this.password = password;
   });
 
-  Then('I should be authenticated', function () {
-    return axios.get(this.apiEndpoint + '/me', {
+  Then(/^I should be authenticated$/, function () {
+    return this.axios.get(this.apiEndpoint + '/me', {
       auth: {
         username: this.username,
         password: this.password
       }
     }).then(function (response) {
-      assert.equal(response.status, 200, 'Success');
+      assert.equal(response.status, 200, 'Response Status is ok');
+      assert.property(response, 'data', 'User id was returned');
     });
   });
 
-  Then('I should be not be authenticated', function () {
-    return axios.get(this.apiEndpoint + '/me', {
+  Then(/^I should be not be authenticated$/, function () {
+    return this.axios.get(this.apiEndpoint + '/me', {
       auth: {
         username: this.username,
         password: this.password
