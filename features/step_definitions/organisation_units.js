@@ -23,7 +23,7 @@ defineSupportCode(function ({Given, When, Then, Before}) {
       auth: this.authRequestObject
     }).then(function (response) {
       assert.equal(response.status, 200, 'Response Status is ok');
-      assert.property(response, 'data', 'User id was returned');
+      assert.property(response.data, 'id', 'User id was returned');
     });
   });
 
@@ -38,6 +38,7 @@ defineSupportCode(function ({Given, When, Then, Before}) {
   When(/^I fill in all of the required fields with data:$/, function (data) {
     const properties = data.rawTable[0];
     const values = data.rawTable[1];
+    this.method = 'post';
 
     properties.forEach(function (propertyKey, index) {
       this.updatedDataToAssert[propertyKey] = values[index];
@@ -45,7 +46,6 @@ defineSupportCode(function ({Given, When, Then, Before}) {
     }, this);
 
     this.organisationUnitData.id = generatedOrganisationUnitId;
-    this.method = 'post';
   });
 
   When(/^I submit the organisation unit$/, function () {
@@ -55,7 +55,6 @@ defineSupportCode(function ({Given, When, Then, Before}) {
       world.organisationUnitResponseStatus = response.status;
       world.organisationUnitResponseData = response.data;
     }).catch(function (error) {
-      console.log('Error: ' + error);
       world.organisationUnitErrorResponse = error;
     });
   });
@@ -92,7 +91,7 @@ defineSupportCode(function ({Given, When, Then, Before}) {
     });
   });
 
-  When(/^I fill in some fileds to change with data:$/, function (data) {
+  When(/^I fill in some fields to change with data:$/, function (data) {
     const properties = data.rawTable[0];
     const values = data.rawTable[1];
 
@@ -101,6 +100,12 @@ defineSupportCode(function ({Given, When, Then, Before}) {
       this.updatedDataToAssert[propertyKey] = values[index];
       this.organisationUnitData[propertyKey] = values[index];
     }, this);
+  });
+
+  Then(/^I should be informed that the organisation unit was updated$/, function () {
+    const world = this;
+
+    assert.equal(world.organisationUnitResponseStatus, 200, 'Organisation Unit was updated');
   });
 
   When(/^an existing parent organisation unit exists$/, function () {
@@ -127,12 +132,6 @@ defineSupportCode(function ({Given, When, Then, Before}) {
     this.method = 'patch';
   });
 
-  Then(/^I should be informed that the organisation unit was updated$/, function () {
-    const world = this;
-
-    assert.equal(world.organisationUnitResponseStatus, 200, 'Organisation Unit was updated');
-  });
-
   When(/^I provide an invalid value: (.+) of a valid property: (.+)$/, function (value, property) {
     this.organisationUnitData[property] = value;
     this.method = 'patch';
@@ -151,12 +150,12 @@ defineSupportCode(function ({Given, When, Then, Before}) {
   });
 
   Then(/^I should be informed that the organisation unit was not updated.$/, function () {
-    assert.equal(this.organisationUnitResponseStatus, 204, 'Organisation Unit was not updated');
+    assert.equal(this.organisationUnitResponseStatus, 204, 'Organisation Unit should not be updated');
   });
 
   When(/^I provide a previous closed date as (.+)$/, function (previousDate) {
     this.organisationUnitData.closedDate = previousDate;
-    this.updatedDataToAssert['closedDate'] = previousDate;
+    this.updatedDataToAssert.closedDate = previousDate;
     this.method = 'patch';
   });
 
@@ -220,8 +219,11 @@ const generateIds = (numberOfIds) => {
   return numberOfIds ? ids : ids[0];
 };
 
-const initializeOrganisationUnitPromise = (world, organisationUnitData, method, organisationUnitId = '') => {
-  const url = world.apiEndpoint + '/organisationUnits/' + (organisationUnitId === null ? '' : organisationUnitId);
+const initializeOrganisationUnitPromise = (world, organisationUnitData, method, organisationUnitId) => {
+  let url = world.apiEndpoint + '/organisationUnits/';
+  if (organisationUnitId) {
+    url = url.concat(organisationUnitId);
+  }
 
   return world.axios({
     method: method,

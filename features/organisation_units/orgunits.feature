@@ -16,7 +16,7 @@ I want to be able to add and manage organisation units
 
       Scenario: Update added organisation unit
         Given I got the existing organisation unit to update
-        When I fill in some fileds to change with data:
+        When I fill in some fields to change with data:
         | name                    | shortName       | openingDate |
         | Organization 1 Updated  | ORGU            | 2016-09-24T00:00:00.000  |
         And I submit the organisation unit
