@@ -117,31 +117,26 @@ defineSupportCode(function ({Given, When, Then, Before}) {
     this.organisationUnitId = generatedOrganisationUnitId;
   });
 
-  When(/^I provide a valid value: (.+) for a valid property: (.+)$/, function (value, property) {
+  When(/^I provide a valid value: (.+), for a valid property: (.+)$/, function (value, property) {
     this.organisationUnitData[property] = value;
     this.updatedDataToAssert[property] = value;
     this.method = 'patch';
   });
 
-  When(/^I provide an invalid value: (.+) of a valid property: (.+)$/, function (value, property) {
+  When(/^I provide an invalid value: (.+), for a valid property: (.+)$/, function (value, property) {
     this.organisationUnitData[property] = value;
     this.method = 'patch';
   });
 
-  Then(/^I should receive an error message.$/, function () {
-    assert.isOk(this.organisationUnitErrorResponse, 'It should have returned an error');
-    assert.equal(this.organisationUnitErrorResponse.response.status, 500, 'It should have returned error status of 500');
+  Then(/^I should receive an error message equal to: (.+).$/, function (errorMessage) {
+    assert.equal(this.organisationUnitErrorResponse.response.status, 400, 'It should have returned error status of 400');
     assert.equal(this.organisationUnitErrorResponse.response.data.status, 'ERROR', 'It should have returned error status');
-    assert.property(this.organisationUnitErrorResponse.response.data, 'message', 'It should have returned error message');
+    assert.equal(this.organisationUnitErrorResponse.response.data.message, errorMessage, 'Error message should be ' + errorMessage);
   });
 
-  When(/^I provide an invalid value: (.+) of an invalid property: (.+)$/, function (value, property) {
+  When(/^I provide an invalid value: (.+), for an invalid property: (.+)$/, function (value, property) {
     this.organisationUnitData[property] = value;
     this.method = 'patch';
-  });
-
-  Then(/^I should be informed that the organisation unit was not updated.$/, function () {
-    assert.equal(this.organisationUnitResponseStatus, 204, 'Organisation Unit should not be updated');
   });
 
   When(/^I provide a previous closed date as (.+)$/, function (previousDate) {

@@ -35,7 +35,7 @@ I want to be able to add and manage organisation units
 
       Scenario Outline: Update valid properties of an organisation unit with valid values
         When I update an existing organisation unit
-        And  I provide a valid value: <value> for a valid property: <property>
+        And  I provide a valid value: <value>, for a valid property: <property>
         And I submit the organisation unit
         Then I should be informed that the organisation unit was updated
         And The returned data is the same as submitted.
@@ -46,44 +46,42 @@ I want to be able to add and manage organisation units
 
       Scenario Outline: Update properties of an organisation unit with invalid values
         When I update an existing organisation unit
-        And I provide an invalid value: <value> of a valid property: <property>
+        And I provide an invalid value: <value>, for a valid property: <property>
         And I submit the organisation unit
-        Then I should receive an error message.
+        Then I should receive an error message equal to: <error_message>.
         Examples:
-        | property | value |
-        | coordinates | [-190.4197,8.1039] |
-        | openingDate | 1970-02-31T00:00:00.000 |
+        | property | value | error_message |
+        | coordinates | [-190.4197,8.1039] | The coordinates value is not valid |
+        | openingDate | 1970-02-31T00:00:00.000 | The openingDate value is not valid |
 
       Scenario Outline: Update non-existent properties of an organisation unit
         When I update an existing organisation unit
-        And I provide an invalid value: <value> of an invalid property: <property>
+        And I provide an invalid value: <value>, for an invalid property: <property>
         And I submit the organisation unit
-        Then I should be informed that the organisation unit was not updated.
+        Then I should receive an error message equal to: <error_message>.
         Examples:
-        | property | value |
-        | cordinate | [-190.4197,8.1039] |
-        | startTime | 1970-02-28T00:00:00.000 |
+        | property | value | error_message |
+        | cordinate | [-190.4197,8.1039] | The property cordinate does not exist |
+        | startTime | 1970-02-28T00:00:00.000 | The property startTime does not exist |
 
       Scenario Outline: Define an end date for an organisation unit
         When I update an existing organisation unit
-        And I provide a previous closed date as <pastDate>
+        And I provide a previous closed date as <pastClosedDate>
         And I submit the organisation unit
-        Then I should receive an error message.
+        Then I should receive an error message equal to: <error_message>.
         Examples:
-        | pastDate |
-        | 2015-01-30T00:00:00.000 |
-        | 1970-02-25T00:00:00.000 |
+        | pastClosedDate | error_message |
+        | 2015-01-30T00:00:00.000 | The value for closedDate should be later than openingDate |
 
       Scenario Outline: Define an end date for an organisation unit
         When I update an existing organisation unit
-        And I provide a later closed date as <futureDate>
+        And I provide a later closed date as <futureClosedDate>
         And I submit the organisation unit
         Then I should be informed that the organisation unit was updated
         And The returned data is the same as submitted.
         Examples:
-        | futureDate |
+        | futureClosedDate |
         | 2017-06-12T00:00:00.000 |
-        | 2017-06-13T00:00:00.000 |
 
       Scenario Outline: Translate an organisation unit name
         When I translate the name of an organisation unit for <locale> as <translation>
