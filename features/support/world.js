@@ -3,7 +3,6 @@ const axios = require('axios');
 
 function CustomWorld ({ parameters }) {
   this.apiEndpoint = parameters.apiEndpoint || 'http://play.dhis2.org/dev/api/27';
-  this.momentDateFormat = 'YYYY-MM-DD';
   this.authRequestObject = {
     username: 'admin',
     password: 'district'

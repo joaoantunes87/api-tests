@@ -10,7 +10,7 @@ I want to be able to add and manage option sets.
         Scenario: Add an option set
             When I fill in all of the required fields for an option set with data:
             | name     | valueType |
-            | Color_34 | TEXT      |
+            | Color_35 | TEXT      |
             And I submit the option set
             Then I should be informed that the option set was created
             And The current option set data is the same as submitted.
@@ -19,8 +19,8 @@ I want to be able to add and manage option sets.
             Given that I have created an option set
             And that I specify some options to add:
             | name      | valueType |
-            | Color_44  | TEXT      |
-            | Size_44   | TEXT      |
+            | Color_45  | TEXT      |
+            | Size_45   | TEXT      |
             Then I submit the option set
             And I should be informed that the option set was updated
             And The current option set data is the same as submitted.
@@ -44,8 +44,8 @@ I want to be able to add and manage option sets.
             And The current option set data is the same as submitted.
             Examples:
             | name |
-            | Color95 |
-            | Color96 |
+            | Color97 |
+            | Color98 |
 
         # But I should not be able to change the option's code.
         # It should be tested with a test that tries to change an option's code

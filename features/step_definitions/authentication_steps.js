@@ -39,7 +39,7 @@ defineSupportCode(function ({Given, When, Then}) {
       auth: this.authRequestObject
     }).then(function (response) {
       assert.equal(response.status, 200, 'Response Status is ok');
-      assert.property(response, 'data', 'User id was returned');
+      assert.property(response.data, 'id', 'User id was returned');
     });
   });
 });
