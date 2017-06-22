@@ -1,6 +1,7 @@
 const { defineSupportCode } = require('cucumber');
 const dhis2 = require('./utils.js');
 const axios = require('axios');
+const reporter = require('cucumber-html-reporter');
 
 function CustomWorld ({ parameters }) {
   if (parameters.apiEndpoint) {
@@ -16,7 +17,7 @@ function CustomWorld ({ parameters }) {
   this.axios.defaults.headers.post['Accept'] = 'application/json';
 }
 
-defineSupportCode(function ({ setWorldConstructor, Given, When, Then, Before }) {
+defineSupportCode(function ({ setWorldConstructor, registerHandler, Given, When, Then, Before, After }) {
   setWorldConstructor(CustomWorld);
 
   Before(function () {
@@ -28,6 +29,19 @@ defineSupportCode(function ({ setWorldConstructor, Given, When, Then, Before }) 
     this.responseData = {};               // http response body returned on previous request
     this.errorResponse = null;            // axios error returned on previous promise
     this.method = null;                   // http method to be used in later request
+  });
+
+  // html reports
+  registerHandler('AfterFeatures', function (features, callback) {
+    const options = {
+      theme: 'bootstrap',
+      jsonFile: 'test/report/cucumber_report.json',
+      output: 'test/report/cucumber_report.html',
+      reportSuiteAsScenarios: true,
+      launchReport: true
+    };
+
+    reporter.generate(options);
   });
 
   When(/^I submit the (.+)$/, function (resourceType) {

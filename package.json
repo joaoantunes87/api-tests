@@ -12,7 +12,7 @@
   ],
   "scripts": {
     "pretest": "./node_modules/eslint/bin/eslint.js features",
-    "test": "./node_modules/.bin/cucumber-js"
+    "test": "./node_modules/.bin/cucumber-js -f json:test/report/cucumber_report.json"
   },
   "repository": {
     "type": "git",
@@ -31,6 +31,7 @@
     "axios": "^0.16.1",
     "chai": "^4.0.0",
     "cucumber": "^2.2.0",
+    "cucumber-html-reporter": "^2.0.0",
     "eslint": "^3.19.0",
     "eslint-config-standard": "^10.2.1",
     "eslint-plugin-import": "^2.3.0",

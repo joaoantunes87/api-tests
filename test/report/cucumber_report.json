@@ -1,0 +1,2507 @@
+[
+  {
+    "keyword": "Feature",
+    "line": 1,
+    "name": "Authentication",
+    "tags": [],
+    "uri": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/authentication.feature",
+    "elements": [
+      {
+        "keyword": "Scenario",
+        "line": 3,
+        "name": "User logs in with correct credentials",
+        "tags": [],
+        "id": "authentication;user-logs-in-with-correct-credentials",
+        "steps": [
+          {
+            "arguments": [],
+            "keyword": "Before",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "hidden": true,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/option_sets.js:11"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Before",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "hidden": true,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/support/world.js:23"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "name": "I open up the application",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "line": 4,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/authentication_steps.js:7"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "name": "I login as \"admin\" with password as \"district\"",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "line": 5,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/authentication_steps.js:10"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "name": "I should be authenticated",
+            "result": {
+              "status": "passed",
+              "duration": 179
+            },
+            "line": 6,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/authentication_steps.js:15"
+            }
+          }
+        ]
+      },
+      {
+        "keyword": "Scenario",
+        "line": 8,
+        "name": "User logs in with bad credentials",
+        "tags": [],
+        "id": "authentication;user-logs-in-with-bad-credentials",
+        "steps": [
+          {
+            "arguments": [],
+            "keyword": "Before",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "hidden": true,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/option_sets.js:11"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Before",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "hidden": true,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/support/world.js:23"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "name": "I open up the application",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "line": 9,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/authentication_steps.js:7"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "name": "I login as \"foo\" with password as \"bar\"",
+            "result": {
+              "status": "passed",
+              "duration": 1
+            },
+            "line": 10,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/authentication_steps.js:10"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "name": "I should be not be authenticated",
+            "result": {
+              "status": "passed",
+              "duration": 127
+            },
+            "line": 11,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/authentication_steps.js:27"
+            }
+          }
+        ]
+      }
+    ],
+    "id": "authentication"
+  },
+  {
+    "description": "As as user of DHIS2\nI want to be able to add and manage option sets.",
+    "keyword": "Feature",
+    "line": 1,
+    "name": "Option set maintenance",
+    "tags": [],
+    "uri": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/option_sets/option_set.feature",
+    "elements": [
+      {
+        "keyword": "Scenario",
+        "line": 8,
+        "name": "Add an option set",
+        "tags": [],
+        "id": "option-set-maintenance;add-an-option-set",
+        "steps": [
+          {
+            "arguments": [],
+            "keyword": "Before",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "hidden": true,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/option_sets.js:11"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Before",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "hidden": true,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/support/world.js:23"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "name": "that I am logged in",
+            "result": {
+              "status": "passed",
+              "duration": 127
+            },
+            "isBackground": true,
+            "line": 6,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/authentication_steps.js:38"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "that I have the necessary permissions to add an option set",
+            "result": {
+              "status": "passed",
+              "duration": 181
+            },
+            "line": 9,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/option_sets.js:17"
+            }
+          },
+          {
+            "arguments": [
+              {
+                "rows": [
+                  {
+                    "cells": [
+                      "name",
+                      "valueType"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "Color_60",
+                      "TEXT"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "keyword": "When ",
+            "name": "I fill in all of the required fields for an option set with data:",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "line": 10,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/option_sets.js:33"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "I submit the option set",
+            "result": {
+              "status": "passed",
+              "duration": 214
+            },
+            "line": 13,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/support/world.js:47"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "name": "I should be informed that the option set was created",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "line": 14,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/option_sets.js:46"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "The current option set data is the same as submitted.",
+            "result": {
+              "status": "passed",
+              "duration": 153
+            },
+            "line": 15,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/option_sets.js:54"
+            }
+          }
+        ]
+      },
+      {
+        "keyword": "Scenario",
+        "line": 17,
+        "name": "Add options to an option set",
+        "tags": [],
+        "id": "option-set-maintenance;add-options-to-an-option-set",
+        "steps": [
+          {
+            "arguments": [],
+            "keyword": "Before",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "hidden": true,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/option_sets.js:11"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Before",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "hidden": true,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/support/world.js:23"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "name": "that I am logged in",
+            "result": {
+              "status": "passed",
+              "duration": 137
+            },
+            "isBackground": true,
+            "line": 6,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/authentication_steps.js:38"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "that I have the necessary permissions to add an option set",
+            "result": {
+              "status": "passed",
+              "duration": 166
+            },
+            "line": 18,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/option_sets.js:17"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "that I have created an option set",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "line": 19,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/option_sets.js:65"
+            }
+          },
+          {
+            "arguments": [
+              {
+                "rows": [
+                  {
+                    "cells": [
+                      "name",
+                      "valueType"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "Color_70",
+                      "TEXT"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "Size_70",
+                      "TEXT"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "keyword": "And ",
+            "name": "that I specify some options to add:",
+            "result": {
+              "status": "passed",
+              "duration": 1
+            },
+            "line": 20,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/option_sets.js:71"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "name": "I submit the option set",
+            "result": {
+              "status": "passed",
+              "duration": 175
+            },
+            "line": 24,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/support/world.js:47"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "I should be informed that the option set was updated",
+            "result": {
+              "status": "passed",
+              "duration": 2
+            },
+            "line": 25,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/option_sets.js:91"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "The current option set data is the same as submitted.",
+            "result": {
+              "status": "passed",
+              "duration": 153
+            },
+            "line": 26,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/option_sets.js:54"
+            }
+          }
+        ]
+      },
+      {
+        "keyword": "Scenario",
+        "line": 28,
+        "name": "Remove an option with no data associated",
+        "tags": [],
+        "id": "option-set-maintenance;remove-an-option-with-no-data-associated",
+        "steps": [
+          {
+            "arguments": [],
+            "keyword": "Before",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "hidden": true,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/option_sets.js:11"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Before",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "hidden": true,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/support/world.js:23"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "name": "that I am logged in",
+            "result": {
+              "status": "passed",
+              "duration": 136
+            },
+            "isBackground": true,
+            "line": 6,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/authentication_steps.js:38"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "that I have the necessary permissions to delete an option set",
+            "result": {
+              "status": "passed",
+              "duration": 163
+            },
+            "line": 29,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/option_sets.js:25"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "that I have created an option set",
+            "result": {
+              "status": "passed",
+              "duration": 1
+            },
+            "line": 30,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/option_sets.js:65"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "it has at least one option",
+            "result": {
+              "status": "passed",
+              "duration": 193
+            },
+            "line": 31,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/option_sets.js:95"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "name": "I delete the option from the option set",
+            "result": {
+              "status": "passed",
+              "duration": 164
+            },
+            "line": 32,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/option_sets.js:106"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "I should be informed that the option set was delete",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "line": 33,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/option_sets.js:121"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "It was really deleted.",
+            "result": {
+              "status": "passed",
+              "duration": 313
+            },
+            "line": 34,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/option_sets.js:125"
+            }
+          }
+        ]
+      },
+      {
+        "keyword": "Scenario",
+        "line": 44,
+        "name": "Remove an option with data associated",
+        "tags": [],
+        "id": "option-set-maintenance;remove-an-option-with-data-associated",
+        "steps": [
+          {
+            "arguments": [],
+            "keyword": "Before",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "hidden": true,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/option_sets.js:11"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Before",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "hidden": true,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/support/world.js:23"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "name": "that I am logged in",
+            "result": {
+              "status": "passed",
+              "duration": 141
+            },
+            "isBackground": true,
+            "line": 6,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/authentication_steps.js:38"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "that I have the necessary permissions to delete an option set",
+            "result": {
+              "status": "passed",
+              "duration": 175
+            },
+            "line": 37,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/option_sets.js:25"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "that I have created an option set",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "line": 38,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/option_sets.js:65"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "it has at least one option with data associated",
+            "result": {
+              "status": "undefined"
+            },
+            "line": 39
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "name": "I delete the option from the option set",
+            "result": {
+              "status": "skipped"
+            },
+            "line": 40,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/option_sets.js:106"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "I should receive an error message equal to: The option can not be removed.",
+            "result": {
+              "status": "skipped"
+            },
+            "line": 41,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:113"
+            }
+          }
+        ]
+      },
+      {
+        "keyword": "Scenario",
+        "line": 55,
+        "name": "Rename an option",
+        "tags": [],
+        "id": "option-set-maintenance;rename-an-option",
+        "steps": [
+          {
+            "arguments": [],
+            "keyword": "Before",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "hidden": true,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/option_sets.js:11"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Before",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "hidden": true,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/support/world.js:23"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "name": "that I am logged in",
+            "result": {
+              "status": "passed",
+              "duration": 138
+            },
+            "isBackground": true,
+            "line": 6,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/authentication_steps.js:38"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "name": "that I have created an option set",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "line": 47,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/option_sets.js:65"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "it has at least one option",
+            "result": {
+              "status": "passed",
+              "duration": 158
+            },
+            "line": 48,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/option_sets.js:95"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "I change the name of the option to Color114",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "line": 49,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/option_sets.js:142"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "I submit the option set",
+            "result": {
+              "status": "passed",
+              "duration": 157
+            },
+            "line": 50,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/support/world.js:47"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "name": "I should be informed that the option set was updated",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "line": 51,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/option_sets.js:91"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "The current option set data is the same as submitted.",
+            "result": {
+              "status": "passed",
+              "duration": 156
+            },
+            "line": 52,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/option_sets.js:54"
+            }
+          }
+        ]
+      },
+      {
+        "keyword": "Scenario",
+        "line": 65,
+        "name": "Update code of an option",
+        "tags": [],
+        "id": "option-set-maintenance;update-code-of-an-option",
+        "steps": [
+          {
+            "arguments": [],
+            "keyword": "Before",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "hidden": true,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/option_sets.js:11"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Before",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "hidden": true,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/support/world.js:23"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "name": "that I am logged in",
+            "result": {
+              "status": "passed",
+              "duration": 133
+            },
+            "isBackground": true,
+            "line": 6,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/authentication_steps.js:38"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "name": "that I have created an option set",
+            "result": {
+              "status": "passed",
+              "duration": 1
+            },
+            "line": 58,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/option_sets.js:65"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "it has at least one option",
+            "result": {
+              "status": "passed",
+              "duration": 186
+            },
+            "line": 59,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/option_sets.js:95"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "I change the code of the option to COLOR",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "line": 60,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/option_sets.js:148"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "I submit the option set",
+            "result": {
+              "status": "passed",
+              "duration": 173
+            },
+            "line": 61,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/support/world.js:47"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "name": "I should receive an error message equal to: The property code can not be changed.",
+            "result": {
+              "status": "failed",
+              "duration": 2,
+              "error_message": "AssertionError: It should have returned error status of 400: expected 500 to equal 400\n    at CustomWorld.<anonymous> (/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:114:12)"
+            },
+            "line": 62,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:113"
+            }
+          }
+        ]
+      }
+    ],
+    "id": "option-set-maintenance"
+  },
+  {
+    "description": "As as user of DHIS2\nI want to be able to add and manage organisation units",
+    "keyword": "Feature",
+    "line": 1,
+    "name": "Organisation unit maintenance",
+    "tags": [],
+    "uri": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/organisation_units/orgunits.feature",
+    "elements": [
+      {
+        "keyword": "Scenario",
+        "line": 9,
+        "name": "Add an organisation unit",
+        "tags": [],
+        "id": "organisation-unit-maintenance;add-an-organisation-unit",
+        "steps": [
+          {
+            "arguments": [],
+            "keyword": "Before",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "hidden": true,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/option_sets.js:11"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Before",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "hidden": true,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/support/world.js:23"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "name": "that I am logged in",
+            "result": {
+              "status": "passed",
+              "duration": 142
+            },
+            "isBackground": true,
+            "line": 6,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/authentication_steps.js:38"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "that I have the necessary permissions to add an organisation unit",
+            "result": {
+              "status": "passed",
+              "duration": 172
+            },
+            "isBackground": true,
+            "line": 7,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:10"
+            }
+          },
+          {
+            "arguments": [
+              {
+                "rows": [
+                  {
+                    "cells": [
+                      "name",
+                      "shortName",
+                      "openingDate"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "Organization 1",
+                      "ORG",
+                      "2016-09-23T00:00:00.000"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "keyword": "When ",
+            "name": "I fill in all of the required fields with data:",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "line": 10,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:18"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "I submit the organisation unit",
+            "result": {
+              "status": "passed",
+              "duration": 549
+            },
+            "line": 13,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/support/world.js:47"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "name": "I should be informed that the organisation unit was created",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "line": 14,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:31"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "The returned data is the same as submitted.",
+            "result": {
+              "status": "passed",
+              "duration": 169
+            },
+            "line": 15,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:39"
+            }
+          }
+        ]
+      },
+      {
+        "keyword": "Scenario",
+        "line": 17,
+        "name": "Update added organisation unit",
+        "tags": [],
+        "id": "organisation-unit-maintenance;update-added-organisation-unit",
+        "steps": [
+          {
+            "arguments": [],
+            "keyword": "Before",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "hidden": true,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/option_sets.js:11"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Before",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "hidden": true,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/support/world.js:23"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "name": "that I am logged in",
+            "result": {
+              "status": "passed",
+              "duration": 142
+            },
+            "isBackground": true,
+            "line": 6,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/authentication_steps.js:38"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "that I have the necessary permissions to add an organisation unit",
+            "result": {
+              "status": "passed",
+              "duration": 197
+            },
+            "isBackground": true,
+            "line": 7,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:10"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "name": "I got the existing organisation unit to update",
+            "result": {
+              "status": "passed",
+              "duration": 149
+            },
+            "line": 18,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:51"
+            }
+          },
+          {
+            "arguments": [
+              {
+                "rows": [
+                  {
+                    "cells": [
+                      "name",
+                      "shortName",
+                      "openingDate"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "Organization 1 Updated",
+                      "ORGU",
+                      "2016-09-24T00:00:00.000"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "keyword": "When ",
+            "name": "I fill in some fields to change with data:",
+            "result": {
+              "status": "passed",
+              "duration": 1
+            },
+            "line": 19,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:67"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "I submit the organisation unit",
+            "result": {
+              "status": "passed",
+              "duration": 539
+            },
+            "line": 22,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/support/world.js:47"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "name": "I should be informed that the organisation unit was updated",
+            "result": {
+              "status": "passed",
+              "duration": 1
+            },
+            "line": 23,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:78"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "The returned data is the same as submitted.",
+            "result": {
+              "status": "passed",
+              "duration": 154
+            },
+            "line": 24,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:39"
+            }
+          }
+        ]
+      },
+      {
+        "keyword": "Scenario",
+        "line": 26,
+        "name": "Assign a parent to an organsiation unit",
+        "tags": [],
+        "id": "organisation-unit-maintenance;assign-a-parent-to-an-organsiation-unit",
+        "steps": [
+          {
+            "arguments": [],
+            "keyword": "Before",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "hidden": true,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/option_sets.js:11"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Before",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "hidden": true,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/support/world.js:23"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "name": "that I am logged in",
+            "result": {
+              "status": "passed",
+              "duration": 130
+            },
+            "isBackground": true,
+            "line": 6,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/authentication_steps.js:38"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "that I have the necessary permissions to add an organisation unit",
+            "result": {
+              "status": "passed",
+              "duration": 180
+            },
+            "isBackground": true,
+            "line": 7,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:10"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "name": "an existing parent organisation unit exists",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "line": 27,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:84"
+            }
+          },
+          {
+            "arguments": [
+              {
+                "rows": [
+                  {
+                    "cells": [
+                      "name",
+                      "shortName",
+                      "openingDate"
+                    ]
+                  },
+                  {
+                    "cells": [
+                      "Organization 2",
+                      "ORG",
+                      "2016-06-23T00:00:00.000"
+                    ]
+                  }
+                ]
+              }
+            ],
+            "keyword": "And ",
+            "name": "I fill in all of the required fields with data:",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "line": 28,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:18"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "name": "I should be able to assign the existing organisation unit as a parent",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "line": 31,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:89"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "I submit the organisation unit",
+            "result": {
+              "status": "passed",
+              "duration": 549
+            },
+            "line": 32,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/support/world.js:47"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "name": "I should be informed that the organisation unit was created",
+            "result": {
+              "status": "passed",
+              "duration": 1
+            },
+            "line": 33,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:31"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "The returned data is the same as submitted.",
+            "result": {
+              "status": "passed",
+              "duration": 159
+            },
+            "line": 34,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:39"
+            }
+          }
+        ]
+      },
+      {
+        "keyword": "Scenario",
+        "line": 44,
+        "name": "Update valid properties of an organisation unit with valid values",
+        "tags": [],
+        "id": "organisation-unit-maintenance;update-valid-properties-of-an-organisation-unit-with-valid-values",
+        "steps": [
+          {
+            "arguments": [],
+            "keyword": "Before",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "hidden": true,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/option_sets.js:11"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Before",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "hidden": true,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/support/world.js:23"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "name": "that I am logged in",
+            "result": {
+              "status": "passed",
+              "duration": 150
+            },
+            "isBackground": true,
+            "line": 6,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/authentication_steps.js:38"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "that I have the necessary permissions to add an organisation unit",
+            "result": {
+              "status": "passed",
+              "duration": 170
+            },
+            "isBackground": true,
+            "line": 7,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:10"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "name": "I update an existing organisation unit",
+            "result": {
+              "status": "passed",
+              "duration": 1
+            },
+            "line": 37,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:96"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "I provide a valid value: [-11.4197,8.1039], for a valid property: coordinates",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "line": 38,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:102"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "I submit the organisation unit",
+            "result": {
+              "status": "passed",
+              "duration": 165
+            },
+            "line": 39,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/support/world.js:47"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "name": "I should be informed that the organisation unit was updated",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "line": 40,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:78"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "The returned data is the same as submitted.",
+            "result": {
+              "status": "passed",
+              "duration": 148
+            },
+            "line": 41,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:39"
+            }
+          }
+        ]
+      },
+      {
+        "keyword": "Scenario",
+        "line": 45,
+        "name": "Update valid properties of an organisation unit with valid values",
+        "tags": [],
+        "id": "organisation-unit-maintenance;update-valid-properties-of-an-organisation-unit-with-valid-values",
+        "steps": [
+          {
+            "arguments": [],
+            "keyword": "Before",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "hidden": true,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/option_sets.js:11"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Before",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "hidden": true,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/support/world.js:23"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "name": "that I am logged in",
+            "result": {
+              "status": "passed",
+              "duration": 142
+            },
+            "isBackground": true,
+            "line": 6,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/authentication_steps.js:38"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "that I have the necessary permissions to add an organisation unit",
+            "result": {
+              "status": "passed",
+              "duration": 151
+            },
+            "isBackground": true,
+            "line": 7,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:10"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "name": "I update an existing organisation unit",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "line": 37,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:96"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "I provide a valid value: 1970-01-01T00:00:00.000, for a valid property: openingDate",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "line": 38,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:102"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "I submit the organisation unit",
+            "result": {
+              "status": "passed",
+              "duration": 205
+            },
+            "line": 39,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/support/world.js:47"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "name": "I should be informed that the organisation unit was updated",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "line": 40,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:78"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "The returned data is the same as submitted.",
+            "result": {
+              "status": "passed",
+              "duration": 156
+            },
+            "line": 41,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:39"
+            }
+          }
+        ]
+      },
+      {
+        "keyword": "Scenario",
+        "line": 54,
+        "name": "Update properties of an organisation unit with invalid values",
+        "tags": [],
+        "id": "organisation-unit-maintenance;update-properties-of-an-organisation-unit-with-invalid-values",
+        "steps": [
+          {
+            "arguments": [],
+            "keyword": "Before",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "hidden": true,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/option_sets.js:11"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Before",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "hidden": true,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/support/world.js:23"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "name": "that I am logged in",
+            "result": {
+              "status": "passed",
+              "duration": 135
+            },
+            "isBackground": true,
+            "line": 6,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/authentication_steps.js:38"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "that I have the necessary permissions to add an organisation unit",
+            "result": {
+              "status": "passed",
+              "duration": 180
+            },
+            "isBackground": true,
+            "line": 7,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:10"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "name": "I update an existing organisation unit",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "line": 48,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:96"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "I provide an invalid value: [-190.4197,8.1039], for a valid property: coordinates",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "line": 49,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:108"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "I submit the organisation unit",
+            "result": {
+              "status": "passed",
+              "duration": 161
+            },
+            "line": 50,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/support/world.js:47"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "name": "I should receive an error message equal to: The coordinates value is not valid.",
+            "result": {
+              "status": "failed",
+              "duration": 0,
+              "error_message": "TypeError: Cannot read property 'response' of null\n    at CustomWorld.<anonymous> (/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:114:36)"
+            },
+            "line": 51,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:113"
+            }
+          }
+        ]
+      },
+      {
+        "keyword": "Scenario",
+        "line": 55,
+        "name": "Update properties of an organisation unit with invalid values",
+        "tags": [],
+        "id": "organisation-unit-maintenance;update-properties-of-an-organisation-unit-with-invalid-values",
+        "steps": [
+          {
+            "arguments": [],
+            "keyword": "Before",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "hidden": true,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/option_sets.js:11"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Before",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "hidden": true,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/support/world.js:23"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "name": "that I am logged in",
+            "result": {
+              "status": "passed",
+              "duration": 134
+            },
+            "isBackground": true,
+            "line": 6,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/authentication_steps.js:38"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "that I have the necessary permissions to add an organisation unit",
+            "result": {
+              "status": "passed",
+              "duration": 150
+            },
+            "isBackground": true,
+            "line": 7,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:10"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "name": "I update an existing organisation unit",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "line": 48,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:96"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "I provide an invalid value: 1970-02-31T00:00:00.000, for a valid property: openingDate",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "line": 49,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:108"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "I submit the organisation unit",
+            "result": {
+              "status": "passed",
+              "duration": 144
+            },
+            "line": 50,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/support/world.js:47"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "name": "I should receive an error message equal to: The openingDate value is not valid.",
+            "result": {
+              "status": "failed",
+              "duration": 1,
+              "error_message": "AssertionError: It should have returned error status of 400: expected 500 to equal 400\n    at CustomWorld.<anonymous> (/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:114:12)"
+            },
+            "line": 51,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:113"
+            }
+          }
+        ]
+      },
+      {
+        "keyword": "Scenario",
+        "line": 64,
+        "name": "Update non-existent properties of an organisation unit",
+        "tags": [],
+        "id": "organisation-unit-maintenance;update-non-existent-properties-of-an-organisation-unit",
+        "steps": [
+          {
+            "arguments": [],
+            "keyword": "Before",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "hidden": true,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/option_sets.js:11"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Before",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "hidden": true,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/support/world.js:23"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "name": "that I am logged in",
+            "result": {
+              "status": "passed",
+              "duration": 125
+            },
+            "isBackground": true,
+            "line": 6,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/authentication_steps.js:38"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "that I have the necessary permissions to add an organisation unit",
+            "result": {
+              "status": "passed",
+              "duration": 149
+            },
+            "isBackground": true,
+            "line": 7,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:10"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "name": "I update an existing organisation unit",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "line": 58,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:96"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "I provide an invalid value: [-190.4197,8.1039], for an invalid property: cordinate",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "line": 59,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:119"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "I submit the organisation unit",
+            "result": {
+              "status": "passed",
+              "duration": 145
+            },
+            "line": 60,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/support/world.js:47"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "name": "I should receive an error message equal to: The property cordinate does not exist.",
+            "result": {
+              "status": "failed",
+              "duration": 0,
+              "error_message": "TypeError: Cannot read property 'response' of null\n    at CustomWorld.<anonymous> (/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:114:36)"
+            },
+            "line": 61,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:113"
+            }
+          }
+        ]
+      },
+      {
+        "keyword": "Scenario",
+        "line": 65,
+        "name": "Update non-existent properties of an organisation unit",
+        "tags": [],
+        "id": "organisation-unit-maintenance;update-non-existent-properties-of-an-organisation-unit",
+        "steps": [
+          {
+            "arguments": [],
+            "keyword": "Before",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "hidden": true,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/option_sets.js:11"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Before",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "hidden": true,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/support/world.js:23"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "name": "that I am logged in",
+            "result": {
+              "status": "passed",
+              "duration": 135
+            },
+            "isBackground": true,
+            "line": 6,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/authentication_steps.js:38"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "that I have the necessary permissions to add an organisation unit",
+            "result": {
+              "status": "passed",
+              "duration": 147
+            },
+            "isBackground": true,
+            "line": 7,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:10"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "name": "I update an existing organisation unit",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "line": 58,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:96"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "I provide an invalid value: 1970-02-28T00:00:00.000, for an invalid property: startTime",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "line": 59,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:119"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "I submit the organisation unit",
+            "result": {
+              "status": "passed",
+              "duration": 134
+            },
+            "line": 60,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/support/world.js:47"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "name": "I should receive an error message equal to: The property startTime does not exist.",
+            "result": {
+              "status": "failed",
+              "duration": 0,
+              "error_message": "TypeError: Cannot read property 'response' of null\n    at CustomWorld.<anonymous> (/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:114:36)"
+            },
+            "line": 61,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:113"
+            }
+          }
+        ]
+      },
+      {
+        "keyword": "Scenario",
+        "line": 74,
+        "name": "Define an end date for an organisation unit",
+        "tags": [],
+        "id": "organisation-unit-maintenance;define-an-end-date-for-an-organisation-unit",
+        "steps": [
+          {
+            "arguments": [],
+            "keyword": "Before",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "hidden": true,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/option_sets.js:11"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Before",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "hidden": true,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/support/world.js:23"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "name": "that I am logged in",
+            "result": {
+              "status": "passed",
+              "duration": 128
+            },
+            "isBackground": true,
+            "line": 6,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/authentication_steps.js:38"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "that I have the necessary permissions to add an organisation unit",
+            "result": {
+              "status": "passed",
+              "duration": 142
+            },
+            "isBackground": true,
+            "line": 7,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:10"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "name": "I update an existing organisation unit",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "line": 68,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:96"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "I provide a previous closed date as 2015-01-30T00:00:00.000",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "line": 69,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:124"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "I submit the organisation unit",
+            "result": {
+              "status": "passed",
+              "duration": 152
+            },
+            "line": 70,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/support/world.js:47"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "name": "I should receive an error message equal to: <errorMessage>.",
+            "result": {
+              "status": "failed",
+              "duration": 0,
+              "error_message": "TypeError: Cannot read property 'response' of null\n    at CustomWorld.<anonymous> (/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:114:36)"
+            },
+            "line": 71,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:113"
+            }
+          }
+        ]
+      },
+      {
+        "keyword": "Scenario",
+        "line": 84,
+        "name": "Define an end date for an organisation unit",
+        "tags": [],
+        "id": "organisation-unit-maintenance;define-an-end-date-for-an-organisation-unit",
+        "steps": [
+          {
+            "arguments": [],
+            "keyword": "Before",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "hidden": true,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/option_sets.js:11"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Before",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "hidden": true,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/support/world.js:23"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "name": "that I am logged in",
+            "result": {
+              "status": "passed",
+              "duration": 138
+            },
+            "isBackground": true,
+            "line": 6,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/authentication_steps.js:38"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "that I have the necessary permissions to add an organisation unit",
+            "result": {
+              "status": "passed",
+              "duration": 143
+            },
+            "isBackground": true,
+            "line": 7,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:10"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "name": "I update an existing organisation unit",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "line": 77,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:96"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "I provide a later closed date as 2017-06-12T00:00:00.000",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "line": 78,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:130"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "I submit the organisation unit",
+            "result": {
+              "status": "passed",
+              "duration": 167
+            },
+            "line": 79,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/support/world.js:47"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "name": "I should be informed that the organisation unit was updated",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "line": 80,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:78"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "The returned data is the same as submitted.",
+            "result": {
+              "status": "passed",
+              "duration": 140
+            },
+            "line": 81,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:39"
+            }
+          }
+        ]
+      },
+      {
+        "keyword": "Scenario",
+        "line": 92,
+        "name": "Translate an organisation unit name",
+        "tags": [],
+        "id": "organisation-unit-maintenance;translate-an-organisation-unit-name",
+        "steps": [
+          {
+            "arguments": [],
+            "keyword": "Before",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "hidden": true,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/option_sets.js:11"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Before",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "hidden": true,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/support/world.js:23"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "name": "that I am logged in",
+            "result": {
+              "status": "passed",
+              "duration": 131
+            },
+            "isBackground": true,
+            "line": 6,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/authentication_steps.js:38"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "that I have the necessary permissions to add an organisation unit",
+            "result": {
+              "status": "passed",
+              "duration": 144
+            },
+            "isBackground": true,
+            "line": 7,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:10"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "name": "I translate the name of an organisation unit for pt as Organização 1",
+            "result": {
+              "status": "passed",
+              "duration": 695
+            },
+            "line": 87,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:135"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "I select the same locale as I translated the organisation unit",
+            "result": {
+              "status": "passed",
+              "duration": 161
+            },
+            "line": 88,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:160"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "name": "I should be able to view the translated name.",
+            "result": {
+              "status": "passed",
+              "duration": 169
+            },
+            "line": 89,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:170"
+            }
+          }
+        ]
+      },
+      {
+        "keyword": "Scenario",
+        "line": 93,
+        "name": "Translate an organisation unit name",
+        "tags": [],
+        "id": "organisation-unit-maintenance;translate-an-organisation-unit-name",
+        "steps": [
+          {
+            "arguments": [],
+            "keyword": "Before",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "hidden": true,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/option_sets.js:11"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Before",
+            "result": {
+              "status": "passed",
+              "duration": 0
+            },
+            "hidden": true,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/support/world.js:23"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Given ",
+            "name": "that I am logged in",
+            "result": {
+              "status": "passed",
+              "duration": 147
+            },
+            "isBackground": true,
+            "line": 6,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/authentication_steps.js:38"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "that I have the necessary permissions to add an organisation unit",
+            "result": {
+              "status": "passed",
+              "duration": 173
+            },
+            "isBackground": true,
+            "line": 7,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:10"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "When ",
+            "name": "I translate the name of an organisation unit for es as Organización 1",
+            "result": {
+              "status": "passed",
+              "duration": 744
+            },
+            "line": 87,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:135"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "And ",
+            "name": "I select the same locale as I translated the organisation unit",
+            "result": {
+              "status": "passed",
+              "duration": 175
+            },
+            "line": 88,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:160"
+            }
+          },
+          {
+            "arguments": [],
+            "keyword": "Then ",
+            "name": "I should be able to view the translated name.",
+            "result": {
+              "status": "passed",
+              "duration": 174
+            },
+            "line": 89,
+            "match": {
+              "location": "/Users/joaoantunes/GoogleDrive/ProjectosProfissionais/PresentTechnologies/dhis2/api-tests/features/step_definitions/organisation_units.js:170"
+            }
+          }
+        ]
+      }
+    ],
+    "id": "organisation-unit-maintenance"
+  }
+]
