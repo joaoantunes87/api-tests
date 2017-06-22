@@ -70,7 +70,7 @@ I want to be able to add and manage organisation units
         And I submit the organisation unit
         Then I should receive an error message equal to: <errorMessage>.
         Examples:
-        | pastClosedDate | errorMessage |
+        | pastClosedDate | erroressage |
         | 2015-01-30T00:00:00.000 | The value for closedDate should be later than openingDate |
 
       Scenario Outline: Define an end date for an organisation unit

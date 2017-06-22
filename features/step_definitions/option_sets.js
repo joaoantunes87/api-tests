@@ -15,7 +15,7 @@ defineSupportCode(function ({Given, When, Then, Before}) {
   });
 
   Given(/^that I have the necessary permissions to add an option set$/, function () {
-    return this.axios.get(dhis2.apiEndpoint + '/me?fields=userCredentials[userRoles[*]]', {
+    return this.axios.get(dhis2.getApiEndpoint() + '/me?fields=userCredentials[userRoles[*]]', {
       auth: this.authRequestObject
     }).then(function (response) {
       assert.isOk(isAuthorisedToAddOptionSetWith(response.data.userCredentials.userRoles), 'Not Authorized to create OrganisationUnit');
@@ -23,7 +23,7 @@ defineSupportCode(function ({Given, When, Then, Before}) {
   });
 
   Given(/^that I have the necessary permissions to delete an option set$/, function () {
-    return this.axios.get(dhis2.apiEndpoint + '/me?fields=userCredentials[userRoles[*]]', {
+    return this.axios.get(dhis2.getApiEndpoint() + '/me?fields=userCredentials[userRoles[*]]', {
       auth: this.authRequestObject
     }).then(function (response) {
       assert.isOk(isAuthorisedToDeleteOptionSetWith(response.data.userCredentials.userRoles), 'Not Authorized to create OrganisationUnit');
@@ -43,17 +43,6 @@ defineSupportCode(function ({Given, When, Then, Before}) {
     this.method = 'post';
   });
 
-  When(/^I submit the option set$/, function () {
-    const world = this;
-
-    return dhis2.initializePromiseUrlUsingWorldContext(world, generateUrlForOptionSetWithId(world.resourceId)).then(function (response) {
-      world.responseStatus = response.status;
-      world.responseData = response.data;
-    }).catch(function (error) {
-      world.errorResponse = error;
-    });
-  });
-
   Then(/^I should be informed that the option set was created$/, function () {
     assert.equal(this.responseStatus, 201, 'Status should be 201');
     assert.isOk(this.responseData.response.uid, 'Id was not returned');
@@ -67,7 +56,7 @@ defineSupportCode(function ({Given, When, Then, Before}) {
     world.method = 'get';
     world.requestData = {};
 
-    return dhis2.initializePromiseUrlUsingWorldContext(world, generateUrlForOptionSetWithId(world.resourceId)).then(function (response) {
+    return dhis2.initializePromiseUrlUsingWorldContext(world, dhis2.generateUrlForOptionSetWithId(world.resourceId)).then(function (response) {
       world.responseData = response.data;
       assertUpdateDataWithResponseData(world);
     });
@@ -107,7 +96,7 @@ defineSupportCode(function ({Given, When, Then, Before}) {
     const world = this;
     world.method = 'get';
 
-    return dhis2.initializePromiseUrlUsingWorldContext(world, generateUrlForOptionSetWithId(world.resourceId)).then(function (response) {
+    return dhis2.initializePromiseUrlUsingWorldContext(world, dhis2.generateUrlForOptionSetWithId(world.resourceId)).then(function (response) {
       world.resourceOptionsCountBefore = response.data.options.length;
       assert.isAtLeast(world.resourceOptionsCountBefore, 1, 'It shoud have at least one options');
       world.resourceIdToDelete = response.data.options[0].id;
@@ -119,7 +108,7 @@ defineSupportCode(function ({Given, When, Then, Before}) {
 
     return world.axios({
       method: 'delete',
-      url: dhis2.apiEndpoint + '/optionSets/' + world.resourceId + '/options/' + world.resourceIdToDelete,
+      url: dhis2.getApiEndpoint() + '/optionSets/' + world.resourceId + '/options/' + world.resourceIdToDelete,
       auth: world.authRequestObject
     }).then(function (response) {
       world.responseStatus = response.status;
@@ -138,13 +127,13 @@ defineSupportCode(function ({Given, When, Then, Before}) {
 
     return world.axios({
       method: 'get',
-      url: dhis2.apiEndpoint + '/optionSets/' + world.resourceId + '/options/' + world.resourceIdToDelete,
+      url: dhis2.getApiEndpoint() + '/optionSets/' + world.resourceId + '/options/' + world.resourceIdToDelete,
       auth: world.authRequestObject
     }).catch(function (error) {
       assert.equal(error.response.status, 404, 'Status should be 404');
       world.method = 'get';
       world.requestData = {};
-      return dhis2.initializePromiseUrlUsingWorldContext(world, generateUrlForOptionSetWithId(world.resourceId));
+      return dhis2.initializePromiseUrlUsingWorldContext(world, dhis2.generateUrlForOptionSetWithId(world.resourceId));
     }).then(function (response) {
       assert.equal(response.data.options.length, world.resourceOptionsCountBefore - 1, 'Option Set does not have the right options');
     });
@@ -161,15 +150,6 @@ defineSupportCode(function ({Given, When, Then, Before}) {
     this.method = 'patch';
   });
 });
-
-const generateUrlForOptionSetWithId = (optionSetId) => {
-  const url = dhis2.apiEndpoint + '/optionSets/';
-  if (optionSetId) {
-    return url.concat(optionSetId);
-  }
-
-  return url;
-};
 
 const isAuthorisedToAddOptionSetWith = (userRoles = []) => {
   return dhis2.authorityExistsInUserRoles('F_OPTIONSET_PUBLIC_ADD', userRoles);

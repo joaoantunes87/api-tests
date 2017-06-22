@@ -13,7 +13,7 @@ defineSupportCode(function ({Given, When, Then}) {
   });
 
   Then(/^I should be authenticated$/, function () {
-    return this.axios.get(dhis2.apiEndpoint + '/me', {
+    return this.axios.get(dhis2.getApiEndpoint() + '/me', {
       auth: {
         username: this.username,
         password: this.password
@@ -25,7 +25,7 @@ defineSupportCode(function ({Given, When, Then}) {
   });
 
   Then(/^I should be not be authenticated$/, function () {
-    return this.axios.get(dhis2.apiEndpoint + '/me', {
+    return this.axios.get(dhis2.getApiEndpoint() + '/me', {
       auth: {
         username: this.username,
         password: this.password
@@ -36,7 +36,7 @@ defineSupportCode(function ({Given, When, Then}) {
   });
 
   Given(/^that I am logged in$/, function () {
-    return this.axios.get(dhis2.apiEndpoint + '/me', {
+    return this.axios.get(dhis2.getApiEndpoint() + '/me', {
       auth: this.authRequestObject
     }).then(function (response) {
       assert.equal(response.status, 200, 'Response Status is ok');

@@ -9,7 +9,7 @@ I want to be able to add and manage option sets.
             And that I have the necessary permissions to add an option set
             When I fill in all of the required fields for an option set with data:
             | name     | valueType |
-            | Color_48 | TEXT      |
+            | Color_49 | TEXT      |
             And I submit the option set
             Then I should be informed that the option set was created
             And The current option set data is the same as submitted.
@@ -19,8 +19,8 @@ I want to be able to add and manage option sets.
             And that I have created an option set
             And that I specify some options to add:
             | name      | valueType |
-            | Color_58  | TEXT      |
-            | Size_58   | TEXT      |
+            | Color_59  | TEXT      |
+            | Size_59   | TEXT      |
             Then I submit the option set
             And I should be informed that the option set was updated
             And The current option set data is the same as submitted.
@@ -52,7 +52,7 @@ I want to be able to add and manage option sets.
             And The current option set data is the same as submitted.
             Examples:
             | name |
-            | Color112 |
+            | Color113 |
 
         Scenario Outline: Update code of an option
             Given that I have created an option set

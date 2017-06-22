@@ -4,7 +4,7 @@ const axios = require('axios');
 
 function CustomWorld ({ parameters }) {
   if (parameters.apiEndpoint) {
-    dhis2.apiEndpoint = parameters.apiEndpoint;
+    dhis2.setApiEndpoint(parameters.apiEndpoint);
   }
 
   this.authRequestObject = {
@@ -16,7 +16,7 @@ function CustomWorld ({ parameters }) {
   this.axios.defaults.headers.post['Accept'] = 'application/json';
 }
 
-defineSupportCode(function ({ setWorldConstructor, Before }) {
+defineSupportCode(function ({ setWorldConstructor, Given, When, Then, Before }) {
   setWorldConstructor(CustomWorld);
 
   Before(function () {
@@ -28,5 +28,23 @@ defineSupportCode(function ({ setWorldConstructor, Before }) {
     this.responseData = {};               // http response body returned on previous request
     this.errorResponse = null;            // axios error returned on previous promise
     this.method = null;                   // http method to be used in later request
+  });
+
+  When(/^I submit the (.+)$/, function (resourceType) {
+    const world = this;
+
+    let url = '';
+    if (resourceType === 'option set') {
+      url = dhis2.generateUrlForOptionSetWithId(world.resourceId);
+    } else if (resourceType === 'organisation unit') {
+      url = dhis2.generateUrlForOrganisationUnitWithId(world.resourceId);
+    }
+
+    return dhis2.initializePromiseUrlUsingWorldContext(world, url).then(function (response) {
+      world.responseStatus = response.status;
+      world.responseData = response.data;
+    }).catch(function (error) {
+      world.errorResponse = error;
+    });
   });
 });
