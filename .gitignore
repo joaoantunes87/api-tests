@@ -48,3 +48,6 @@ allure-report
 
 # Mac
 .DS_Store
+
+# Test Reports
+reports/*
