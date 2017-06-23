@@ -1,7 +1,9 @@
 const { defineSupportCode } = require('cucumber');
-const dhis2 = require('./utils.js');
+const chai = require('chai');
 const axios = require('axios');
 const reporter = require('cucumber-html-reporter');
+const dhis2 = require('./utils.js');
+const assert = chai.assert;
 
 function CustomWorld ({ parameters }) {
   if (parameters.apiEndpoint) {
@@ -35,8 +37,8 @@ defineSupportCode(function ({ setWorldConstructor, registerHandler, Given, When,
   registerHandler('AfterFeatures', function (features, callback) {
     const options = {
       theme: 'bootstrap',
-      jsonFile: 'test/report/cucumber_report.json',
-      output: 'test/report/cucumber_report.html',
+      jsonFile: 'reports/cucumber_report.json',
+      output: 'reports/cucumber_report.html',
       reportSuiteAsScenarios: true,
       launchReport: true
     };
@@ -60,5 +62,11 @@ defineSupportCode(function ({ setWorldConstructor, registerHandler, Given, When,
     }).catch(function (error) {
       world.errorResponse = error;
     });
+  });
+
+  Then(/^I should receive an error message equal to: (.+).$/, function (errorMessage) {
+    assert.equal(this.errorResponse.response.status, 400, 'It should have returned error status of 400');
+    assert.equal(this.errorResponse.response.data.status, 'ERROR', 'It should have returned error status');
+    assert.equal(this.errorResponse.response.data.message, errorMessage, 'Error message should be ' + errorMessage);
   });
 });

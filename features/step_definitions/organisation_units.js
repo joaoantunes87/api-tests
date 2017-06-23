@@ -110,12 +110,6 @@ defineSupportCode(function ({Given, When, Then, Before}) {
     this.method = 'patch';
   });
 
-  Then(/^I should receive an error message equal to: (.+).$/, function (errorMessage) {
-    assert.equal(this.errorResponse.response.status, 400, 'It should have returned error status of 400');
-    assert.equal(this.errorResponse.response.data.status, 'ERROR', 'It should have returned error status');
-    assert.equal(this.errorResponse.response.data.message, errorMessage, 'Error message should be ' + errorMessage);
-  });
-
   When(/^I provide an invalid value: (.+), for an invalid property: (.+)$/, function (value, property) {
     this.requestData[property] = value;
     this.method = 'patch';

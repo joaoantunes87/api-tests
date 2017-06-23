@@ -11,7 +11,6 @@ defineSupportCode(function ({Given, When, Then, Before}) {
   Before(function () {
     // auxiliar var for assertions
     this.resourceIdToDelete = null;       // resource id to be deleted
-    this.resourceOptionsCountBefore = 0;  // options count before test done
   });
 
   Given(/^that I have the necessary permissions to add an option set$/, function () {
@@ -19,14 +18,6 @@ defineSupportCode(function ({Given, When, Then, Before}) {
       auth: this.authRequestObject
     }).then(function (response) {
       assert.isOk(isAuthorisedToAddOptionSetWith(response.data.userCredentials.userRoles), 'Not Authorized to create OrganisationUnit');
-    });
-  });
-
-  Given(/^that I have the necessary permissions to delete an option set$/, function () {
-    return this.axios.get(dhis2.getApiEndpoint() + '/me?fields=userCredentials[userRoles[*]]', {
-      auth: this.authRequestObject
-    }).then(function (response) {
-      assert.isOk(isAuthorisedToDeleteOptionSetWith(response.data.userCredentials.userRoles), 'Not Authorized to create OrganisationUnit');
     });
   });
 
@@ -92,13 +83,20 @@ defineSupportCode(function ({Given, When, Then, Before}) {
     assert.equal(this.responseStatus, 200, 'It should have been updated');
   });
 
+  Given(/^that I have the necessary permissions to delete an option set$/, function () {
+    return this.axios.get(dhis2.getApiEndpoint() + '/me?fields=userCredentials[userRoles[*]]', {
+      auth: this.authRequestObject
+    }).then(function (response) {
+      assert.isOk(isAuthorisedToDeleteOptionSetWith(response.data.userCredentials.userRoles), 'Not Authorized to create OrganisationUnit');
+    });
+  });
+
   Then(/^it has at least one option$/, function () {
     const world = this;
     world.method = 'get';
 
     return dhis2.initializePromiseUrlUsingWorldContext(world, dhis2.generateUrlForOptionSetWithId(world.resourceId)).then(function (response) {
-      world.resourceOptionsCountBefore = response.data.options.length;
-      assert.isAtLeast(world.resourceOptionsCountBefore, 1, 'It shoud have at least one options');
+      assert.isAtLeast(response.data.options.length, 1, 'It shoud have at least one options');
       world.resourceIdToDelete = response.data.options[0].id;
     });
   });
@@ -131,11 +129,6 @@ defineSupportCode(function ({Given, When, Then, Before}) {
       auth: world.authRequestObject
     }).catch(function (error) {
       assert.equal(error.response.status, 404, 'Status should be 404');
-      world.method = 'get';
-      world.requestData = {};
-      return dhis2.initializePromiseUrlUsingWorldContext(world, dhis2.generateUrlForOptionSetWithId(world.resourceId));
-    }).then(function (response) {
-      assert.equal(response.data.options.length, world.resourceOptionsCountBefore - 1, 'Option Set does not have the right options');
     });
   });
 
@@ -148,6 +141,18 @@ defineSupportCode(function ({Given, When, Then, Before}) {
   Then(/^I change the code of the option to (.+)$/, function (value) {
     this.requestData['code'] = value;
     this.method = 'patch';
+  });
+
+  Then(/^I delete the option set$/, function () {
+    const world = this;
+    world.method = 'delete';
+
+    return dhis2.initializePromiseUrlUsingWorldContext(world, dhis2.generateUrlForOptionSetWithId(generatedOptionSetId)).then(function (response) {
+      world.responseStatus = response.status;
+      world.responseData = response.data;
+    }).catch(function (error) {
+      world.errorResponse = error;
+    });
   });
 });
 
