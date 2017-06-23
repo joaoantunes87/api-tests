@@ -45,3 +45,9 @@ allure-report
 
 # Idea
 .idea
+
+# Mac
+.DS_Store
+
+# Test Reports
+reports/*
