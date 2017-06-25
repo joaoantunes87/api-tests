@@ -1,4 +1,5 @@
 const { defineSupportCode } = require('cucumber');
+const dhis2 = require('../support/utils.js');
 const chai = require('chai');
 const assert = chai.assert;
 
@@ -12,7 +13,7 @@ defineSupportCode(function ({Given, When, Then}) {
   });
 
   Then(/^I should be authenticated$/, function () {
-    return this.axios.get(this.apiEndpoint + '/me', {
+    return this.axios.get(dhis2.getApiEndpoint() + '/me', {
       auth: {
         username: this.username,
         password: this.password
@@ -24,13 +25,22 @@ defineSupportCode(function ({Given, When, Then}) {
   });
 
   Then(/^I should be not be authenticated$/, function () {
-    return this.axios.get(this.apiEndpoint + '/me', {
+    return this.axios.get(dhis2.getApiEndpoint() + '/me', {
       auth: {
         username: this.username,
         password: this.password
       }
     }).catch(function (error) {
       assert.equal(error.response.status, 401, 'Success');
+    });
+  });
+
+  Given(/^that I am logged in$/, function () {
+    return this.axios.get(dhis2.getApiEndpoint() + '/me', {
+      auth: this.authRequestObject
+    }).then(function (response) {
+      assert.equal(response.status, 200, 'Response Status is ok');
+      assert.property(response.data, 'id', 'User id was returned');
     });
   });
 });

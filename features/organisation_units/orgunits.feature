@@ -48,9 +48,9 @@ I want to be able to add and manage organisation units
         When I update an existing organisation unit
         And I provide an invalid value: <value>, for a valid property: <property>
         And I submit the organisation unit
-        Then I should receive an error message equal to: <error_message>.
+        Then I should receive an error message equal to: <errorMessage>.
         Examples:
-        | property | value | error_message |
+        | property | value | errorMessage |
         | coordinates | [-190.4197,8.1039] | The coordinates value is not valid |
         | openingDate | 1970-02-31T00:00:00.000 | The openingDate value is not valid |
 
@@ -58,9 +58,9 @@ I want to be able to add and manage organisation units
         When I update an existing organisation unit
         And I provide an invalid value: <value>, for an invalid property: <property>
         And I submit the organisation unit
-        Then I should receive an error message equal to: <error_message>.
+        Then I should receive an error message equal to: <errorMessage>.
         Examples:
-        | property | value | error_message |
+        | property | value | errorMessage |
         | cordinate | [-190.4197,8.1039] | The property cordinate does not exist |
         | startTime | 1970-02-28T00:00:00.000 | The property startTime does not exist |
 
@@ -68,9 +68,9 @@ I want to be able to add and manage organisation units
         When I update an existing organisation unit
         And I provide a previous closed date as <pastClosedDate>
         And I submit the organisation unit
-        Then I should receive an error message equal to: <error_message>.
+        Then I should receive an error message equal to: <errorMessage>.
         Examples:
-        | pastClosedDate | error_message |
+        | pastClosedDate | errorMessage |
         | 2015-01-30T00:00:00.000 | The value for closedDate should be later than openingDate |
 
       Scenario Outline: Define an end date for an organisation unit
