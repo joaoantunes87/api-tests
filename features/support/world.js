@@ -2,7 +2,7 @@ const { defineSupportCode } = require('cucumber');
 const axios = require('axios');
 
 function CustomWorld ({ parameters }) {
-  this.apiEndpoint = parameters.apiEndpoint || 'http://play.dhis2.org/dev/api/27';
+  this.apiEndpoint = parameters.apiEndpoint || 'https://play.dhis2.org/demo/api/26';
   this.authRequestObject = {
     username: 'admin',
     password: 'district'
