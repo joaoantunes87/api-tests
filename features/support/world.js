@@ -6,14 +6,10 @@ const dhis2 = require('./utils.js');
 const assert = chai.assert;
 
 function CustomWorld ({ parameters }) {
-<<<<<<< HEAD
-  this.apiEndpoint = parameters.apiEndpoint || 'https://play.dhis2.org/demo/api/26';
-=======
   if (parameters.apiEndpoint) {
     dhis2.setApiEndpoint(parameters.apiEndpoint);
   }
 
->>>>>>> origin/master
   this.authRequestObject = {
     username: 'admin',
     password: 'district'
