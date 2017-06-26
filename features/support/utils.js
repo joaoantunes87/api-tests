@@ -33,9 +33,6 @@ module.exports = (() => {
       return false;
     },
     initializePromiseUrlUsingWorldContext: (world, url) => {
-      // console.log('URL: ' + url);
-      // console.log('METHOD: ' + world.method);
-      // console.log('BODY: ' + JSON.stringify(world.requestData));
       return world.axios({
         method: world.method || 'get',
         url: url,

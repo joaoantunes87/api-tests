@@ -26,7 +26,7 @@ I want to be able to add and manage data elements
       Scenario Outline: Translate a data element
         Given I got the existing data element to update
         When I translate the name of a data element for <locale> as <translation>
-        And I select the same locale
+        And I select the correct locale for the logged user
         Then I should see the translated name of the data element.
         Examples:
         | locale | translation |
