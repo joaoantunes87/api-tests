@@ -48,13 +48,7 @@ defineSupportCode(function ({ setWorldConstructor, registerHandler, Given, When,
 
   When(/^I submit the (.+)$/, function (resourceType) {
     const world = this;
-
-    let url = '';
-    if (resourceType === 'option set') {
-      url = dhis2.generateUrlForOptionSetWithId(world.resourceId);
-    } else if (resourceType === 'organisation unit') {
-      url = dhis2.generateUrlForOrganisationUnitWithId(world.resourceId);
-    }
+    const url = dhis2.generateUrlForResourceTypeWithId(resourceType, world.resourceId);
 
     return dhis2.initializePromiseUrlUsingWorldContext(world, url).then(function (response) {
       world.responseStatus = response.status;

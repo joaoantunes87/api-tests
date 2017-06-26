@@ -3,7 +3,7 @@ const dhis2 = require('../support/utils.js');
 const chai = require('chai');
 const assert = chai.assert;
 
-defineSupportCode(function ({Given, When, Then, Before}) {
+defineSupportCode(function ({Given, When, Then}) {
   const generatedOrganisationUnitId = dhis2.generateUniqIds();
   let organisationUnitWasCreated = false;
 
@@ -15,7 +15,7 @@ defineSupportCode(function ({Given, When, Then, Before}) {
     });
   });
 
-  When(/^I fill in all of the required fields with data:$/, function (data) {
+  When(/^I fill in all of the required fields for an organisation unit with data:$/, function (data) {
     const properties = data.rawTable[0];
     const values = data.rawTable[1];
     this.method = 'post';
@@ -41,7 +41,7 @@ defineSupportCode(function ({Given, When, Then, Before}) {
     world.method = 'get';
     world.requestData = {};
 
-    return dhis2.initializePromiseUrlUsingWorldContext(world, dhis2.generateUrlForOrganisationUnitWithId(world.resourceId)).then(function (response) {
+    return dhis2.initializePromiseUrlUsingWorldContext(world, dhis2.generateUrlForResourceTypeWithId('organisation unit', world.resourceId)).then(function (response) {
       Object.keys(world.updatedDataToAssert).forEach(function (propertyKey) {
         assert.equal(response.data[propertyKey], world.updatedDataToAssert[propertyKey], propertyKey + ' is wrong');
       });
@@ -57,7 +57,7 @@ defineSupportCode(function ({Given, When, Then, Before}) {
     assert.isOk(generatedOrganisationUnitId, 'Organisation Unit Id does not exist');
 
     world.resourceId = generatedOrganisationUnitId;
-    return dhis2.initializePromiseUrlUsingWorldContext(world, dhis2.generateUrlForOrganisationUnitWithId(world.resourceId)).then(function (response) {
+    return dhis2.initializePromiseUrlUsingWorldContext(world, dhis2.generateUrlForResourceTypeWithId('organisation unit', world.resourceId)).then(function (response) {
       assert.equal(response.status, 200, 'Status should be 200');
       world.requestData = response.data;
       world.method = 'put';
@@ -134,7 +134,7 @@ defineSupportCode(function ({Given, When, Then, Before}) {
     world.locale = locale;
     world.translationValue = translationValue;
 
-    return dhis2.initializePromiseUrlUsingWorldContext(world, dhis2.generateUrlForOrganisationUnitWithId(generatedOrganisationUnitId)).then(function (response) {
+    return dhis2.initializePromiseUrlUsingWorldContext(world, dhis2.generateUrlForResourceTypeWithId('organisation unit', generatedOrganisationUnitId)).then(function (response) {
       world.requestData = response.data;
       world.requestData.translations = [
         {
@@ -145,7 +145,7 @@ defineSupportCode(function ({Given, When, Then, Before}) {
       ];
 
       world.method = 'put';
-      return dhis2.initializePromiseUrlUsingWorldContext(world, dhis2.generateUrlForOrganisationUnitWithId(generatedOrganisationUnitId));
+      return dhis2.initializePromiseUrlUsingWorldContext(world, dhis2.generateUrlForResourceTypeWithId('organisation unit', generatedOrganisationUnitId));
     }).then(function (response) {
       assert.equal(response.status, 200, 'Organisation Unit was not updated');
     });
@@ -166,7 +166,7 @@ defineSupportCode(function ({Given, When, Then, Before}) {
     world.method = 'get';
     world.requestData = {};
 
-    return dhis2.initializePromiseUrlUsingWorldContext(world, dhis2.generateUrlForOrganisationUnitWithId(generatedOrganisationUnitId)).then(function (response) {
+    return dhis2.initializePromiseUrlUsingWorldContext(world, dhis2.generateUrlForResourceTypeWithId('organisation unit', generatedOrganisationUnitId)).then(function (response) {
       assert.equal(response.data.displayName, world.translationValue, 'Name is not translated');
     });
   });

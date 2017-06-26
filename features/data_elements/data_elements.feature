@@ -4,14 +4,15 @@ I want to be able to add and manage data elements
 
     Background:
       Given that I am logged in
-      And that I have the necessary permissions to add a data elment
+      And that I have the necessary permissions to add a data element
 
       Scenario: Add a data element
-        When I provide all of the required fields of a data element:
+        When I fill in all of the required fields for a data element with data:
         | name            | shortName       | domainType | valueType    | aggregationType   |
-        | Foo data element| FOO             | AGGREGATE  | NUMBER       | SUM               | 
+        | Foo data element| FOO             | AGGREGATE  | NUMBER       | SUM               |
+        And I submit the data element
         Then I should be informed that the data element was created
-        And corresponds to what I submitted.
+        And The current data element data is the same as submitted.
 
       Scenario: Update an existing data element
         Given  a data element called "Foo data element" exists

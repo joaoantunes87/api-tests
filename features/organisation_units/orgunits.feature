@@ -7,7 +7,7 @@ I want to be able to add and manage organisation units
       And that I have the necessary permissions to add an organisation unit
 
       Scenario: Add an organisation unit
-        When I fill in all of the required fields with data:
+        When I fill in all of the required fields for an organisation unit with data:
         | name            | shortName       | openingDate |
         | Organization 1  | ORG             | 2016-09-23T00:00:00.000  |
         And I submit the organisation unit
