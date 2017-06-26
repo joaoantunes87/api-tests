@@ -54,7 +54,7 @@ defineSupportCode(function ({ setWorldConstructor, registerHandler, Given, When,
       world.responseStatus = response.status;
       world.responseData = response.data;
     }).catch(function (error) {
-      console.log('ERROR: ' + error);
+      // console.log('ERROR: ' + error);
       world.errorResponse = error;
     });
   });
@@ -80,7 +80,7 @@ defineSupportCode(function ({ setWorldConstructor, registerHandler, Given, When,
     assert.equal(this.responseStatus, 200, 'The ' + resourceType + ' should have been updated');
   });
 
-  When(/^I select the same locale as I translated the organisation unit$/, function () {
+  When(/^I select the same locale$/, function () {
     return this.axios({
       method: 'post',
       url: dhis2.getApiEndpoint() + '/userSettings/keyDbLocale?value=' + this.locale,

@@ -1,7 +1,7 @@
 'use strict';
 
 module.exports = (() => {
-  let apiEndpoint = 'http://play.dhis2.org/dev/api/27'; // default
+  let apiEndpoint = 'https://play.dhis2.org/demo/api/26'; // default
 
   return {
     getApiEndpoint: () => {
@@ -33,9 +33,9 @@ module.exports = (() => {
       return false;
     },
     initializePromiseUrlUsingWorldContext: (world, url) => {
-      console.log('URL: ' + url);
-      console.log('METHOD: ' + world.method);
-      console.log('BODY: ' + JSON.stringify(world.requestData));
+      // console.log('URL: ' + url);
+      // console.log('METHOD: ' + world.method);
+      // console.log('BODY: ' + JSON.stringify(world.requestData));
       return world.axios({
         method: world.method || 'get',
         url: url,
