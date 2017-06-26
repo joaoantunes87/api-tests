@@ -7,7 +7,7 @@ I want to be able to add and manage organisation units
       And that I have the necessary permissions to add an organisation unit
 
       Scenario: Add an organisation unit
-        When I fill in all of the required fields with data:
+        When I fill in all of the required fields for an organisation unit with data:
         | name            | shortName       | openingDate |
         | Organization 1  | ORG             | 2016-09-23T00:00:00.000  |
         And I submit the organisation unit
@@ -25,7 +25,7 @@ I want to be able to add and manage organisation units
 
       Scenario: Assign a parent to an organsiation unit
         When an existing parent organisation unit exists
-        And I fill in all of the required fields with data:
+        And I fill in all of the required fields for an organisation unit with data:
         | name            | shortName       | openingDate |
         | Organization 2  | ORG             | 2016-06-23T00:00:00.000  |
         Then I should be able to assign the existing organisation unit as a parent
@@ -85,7 +85,7 @@ I want to be able to add and manage organisation units
 
       Scenario Outline: Translate an organisation unit name
         When I translate the name of an organisation unit for <locale> as <translation>
-        And I select the same locale as I translated the organisation unit
+        And I select the correct locale for the logged user
         Then I should be able to view the translated name.
         Examples:
         | locale | translation |

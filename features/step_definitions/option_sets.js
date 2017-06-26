@@ -47,7 +47,7 @@ defineSupportCode(function ({Given, When, Then, Before}) {
     world.method = 'get';
     world.requestData = {};
 
-    return dhis2.initializePromiseUrlUsingWorldContext(world, dhis2.generateUrlForOptionSetWithId(world.resourceId)).then(function (response) {
+    return dhis2.initializePromiseUrlUsingWorldContext(world, dhis2.generateUrlForResourceTypeWithId('option set', world.resourceId)).then(function (response) {
       world.responseData = response.data;
       assertUpdateDataWithResponseData(world);
     });
@@ -79,10 +79,6 @@ defineSupportCode(function ({Given, When, Then, Before}) {
     this.method = 'patch';
   });
 
-  Given(/^I should be informed that the option set was updated$/, function () {
-    assert.equal(this.responseStatus, 200, 'It should have been updated');
-  });
-
   Given(/^that I have the necessary permissions to delete an option set$/, function () {
     return this.axios.get(dhis2.getApiEndpoint() + '/me?fields=userCredentials[userRoles[*]]', {
       auth: this.authRequestObject
@@ -95,7 +91,7 @@ defineSupportCode(function ({Given, When, Then, Before}) {
     const world = this;
     world.method = 'get';
 
-    return dhis2.initializePromiseUrlUsingWorldContext(world, dhis2.generateUrlForOptionSetWithId(world.resourceId)).then(function (response) {
+    return dhis2.initializePromiseUrlUsingWorldContext(world, dhis2.generateUrlForResourceTypeWithId('option set', world.resourceId)).then(function (response) {
       assert.isAtLeast(response.data.options.length, 1, 'It shoud have at least one options');
       world.resourceIdToDelete = response.data.options[0].id;
     });
@@ -147,7 +143,7 @@ defineSupportCode(function ({Given, When, Then, Before}) {
     const world = this;
     world.method = 'delete';
 
-    return dhis2.initializePromiseUrlUsingWorldContext(world, dhis2.generateUrlForOptionSetWithId(generatedOptionSetId)).then(function (response) {
+    return dhis2.initializePromiseUrlUsingWorldContext(world, dhis2.generateUrlForResourceTypeWithId('option set', generatedOptionSetId)).then(function (response) {
       world.responseStatus = response.status;
       world.responseData = response.data;
     }).catch(function (error) {

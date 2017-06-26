@@ -48,13 +48,7 @@ defineSupportCode(function ({ setWorldConstructor, registerHandler, Given, When,
 
   When(/^I submit the (.+)$/, function (resourceType) {
     const world = this;
-
-    let url = '';
-    if (resourceType === 'option set') {
-      url = dhis2.generateUrlForOptionSetWithId(world.resourceId);
-    } else if (resourceType === 'organisation unit') {
-      url = dhis2.generateUrlForOrganisationUnitWithId(world.resourceId);
-    }
+    const url = dhis2.generateUrlForResourceTypeWithId(resourceType, world.resourceId);
 
     return dhis2.initializePromiseUrlUsingWorldContext(world, url).then(function (response) {
       world.responseStatus = response.status;
@@ -68,5 +62,30 @@ defineSupportCode(function ({ setWorldConstructor, registerHandler, Given, When,
     assert.equal(this.errorResponse.response.status, 400, 'It should have returned error status of 400');
     assert.equal(this.errorResponse.response.data.status, 'ERROR', 'It should have returned error status');
     assert.equal(this.errorResponse.response.data.message, errorMessage, 'Error message should be ' + errorMessage);
+  });
+
+  When(/^I fill in some fields to change with data:$/, function (data) {
+    const properties = data.rawTable[0];
+    const values = data.rawTable[1];
+
+    this.updatedDataToAssert = {};
+    properties.forEach(function (propertyKey, index) {
+      this.updatedDataToAssert[propertyKey] = values[index];
+      this.requestData[propertyKey] = values[index];
+    }, this);
+  });
+
+  Then(/^I should be informed that the (.+) was updated$/, function (resourceType) {
+    assert.equal(this.responseStatus, 200, 'The ' + resourceType + ' should have been updated');
+  });
+
+  When(/^I select the correct locale for the logged user$/, function () {
+    return this.axios({
+      method: 'post',
+      url: dhis2.getApiEndpoint() + '/userSettings/keyDbLocale?value=' + this.locale,
+      auth: this.authRequestObject
+    }).then(function (response) {
+      assert.equal(response.status, 200, 'Locale setting was not updated');
+    });
   });
 });

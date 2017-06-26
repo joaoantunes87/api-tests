@@ -33,9 +33,6 @@ module.exports = (() => {
       return false;
     },
     initializePromiseUrlUsingWorldContext: (world, url) => {
-      // console.log('URL: ' + url);
-      // console.log('METHOD: ' + world.method);
-      // console.log('BODY: ' + JSON.stringify(world.requestData));
       return world.axios({
         method: world.method || 'get',
         url: url,
@@ -43,18 +40,24 @@ module.exports = (() => {
         auth: world.authRequestObject
       });
     },
-    generateUrlForOptionSetWithId: (optionSetId) => {
-      const url = apiEndpoint + '/optionSets/';
-      if (optionSetId) {
-        return url.concat(optionSetId);
+    generateUrlForResourceTypeWithId: (resourceType, resourceId) => {
+      let url = '';
+      switch (resourceType) {
+        case 'option set':
+          url = apiEndpoint + '/optionSets/';
+          break;
+        case 'organisation unit':
+          url = apiEndpoint + '/organisationUnits/';
+          break;
+        case 'data element':
+          url = apiEndpoint + '/dataElements/';
+          break;
+        default:
+          throw new Error('There is no resource type defined for: ' + resourceType);
       }
 
-      return url;
-    },
-    generateUrlForOrganisationUnitWithId: (organisationUnitId) => {
-      const url = apiEndpoint + '/organisationUnits/';
-      if (organisationUnitId) {
-        return url.concat(organisationUnitId);
+      if (resourceId) {
+        return url.concat(resourceId);
       }
 
       return url;
