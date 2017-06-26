@@ -64,23 +64,6 @@ defineSupportCode(function ({Given, When, Then}) {
     });
   });
 
-  When(/^I fill in some fields to change with data:$/, function (data) {
-    const properties = data.rawTable[0];
-    const values = data.rawTable[1];
-
-    this.updatedDataToAssert = {};
-    properties.forEach(function (propertyKey, index) {
-      this.updatedDataToAssert[propertyKey] = values[index];
-      this.requestData[propertyKey] = values[index];
-    }, this);
-  });
-
-  Then(/^I should be informed that the organisation unit was updated$/, function () {
-    const world = this;
-
-    assert.equal(world.responseStatus, 200, 'Organisation Unit was updated');
-  });
-
   When(/^an existing parent organisation unit exists$/, function () {
     assert.equal(organisationUnitWasCreated, true, 'Organisation Unit does not exist');
     assert.isOk(generatedOrganisationUnitId, 'Organisation Unit Id does not exist');
@@ -148,16 +131,6 @@ defineSupportCode(function ({Given, When, Then}) {
       return dhis2.initializePromiseUrlUsingWorldContext(world, dhis2.generateUrlForResourceTypeWithId('organisation unit', generatedOrganisationUnitId));
     }).then(function (response) {
       assert.equal(response.status, 200, 'Organisation Unit was not updated');
-    });
-  });
-
-  When(/^I select the same locale as I translated the organisation unit$/, function () {
-    return this.axios({
-      method: 'post',
-      url: dhis2.getApiEndpoint() + '/userSettings/keyDbLocale?value=' + this.locale,
-      auth: this.authRequestObject
-    }).then(function (response) {
-      assert.equal(response.status, 200, 'Locale setting was not updated');
     });
   });
 

@@ -15,17 +15,18 @@ I want to be able to add and manage data elements
         And The current data element data is the same as submitted.
 
       Scenario: Update an existing data element
-        Given  a data element called "Foo data element" exists
-        When I alter  some of the existing fields:
+        Given I got the existing data element to update
+        When I fill in some fields to change with data:
         | name                    | shortName       | valueType |
         | Bar data element        |  BAR            | INTEGER   |
+        And I submit the data element
         Then I should be informed that the data element was updated
-        And corresponds to what I submitted.
+        And The current data element data is the same as submitted.
 
       Scenario Outline: Translate a data element
-        Given  a data element called "Foo data element" exists
+        Given I got the existing data element to update
         When I translate the name of a data element for <locale> as <translation>
-        And my selected <locale> matches the translation <locale>
+        And I select the same locale as I translated the organisation unit
         Then I should see the translated name of the data element.
         Examples:
         | locale | translation |

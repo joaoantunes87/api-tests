@@ -54,6 +54,7 @@ defineSupportCode(function ({ setWorldConstructor, registerHandler, Given, When,
       world.responseStatus = response.status;
       world.responseData = response.data;
     }).catch(function (error) {
+      console.log('ERROR: ' + error);
       world.errorResponse = error;
     });
   });
@@ -62,5 +63,30 @@ defineSupportCode(function ({ setWorldConstructor, registerHandler, Given, When,
     assert.equal(this.errorResponse.response.status, 400, 'It should have returned error status of 400');
     assert.equal(this.errorResponse.response.data.status, 'ERROR', 'It should have returned error status');
     assert.equal(this.errorResponse.response.data.message, errorMessage, 'Error message should be ' + errorMessage);
+  });
+
+  When(/^I fill in some fields to change with data:$/, function (data) {
+    const properties = data.rawTable[0];
+    const values = data.rawTable[1];
+
+    this.updatedDataToAssert = {};
+    properties.forEach(function (propertyKey, index) {
+      this.updatedDataToAssert[propertyKey] = values[index];
+      this.requestData[propertyKey] = values[index];
+    }, this);
+  });
+
+  Then(/^I should be informed that the (.+) was updated$/, function (resourceType) {
+    assert.equal(this.responseStatus, 200, 'The ' + resourceType + ' should have been updated');
+  });
+
+  When(/^I select the same locale as I translated the organisation unit$/, function () {
+    return this.axios({
+      method: 'post',
+      url: dhis2.getApiEndpoint() + '/userSettings/keyDbLocale?value=' + this.locale,
+      auth: this.authRequestObject
+    }).then(function (response) {
+      assert.equal(response.status, 200, 'Locale setting was not updated');
+    });
   });
 });

@@ -79,10 +79,6 @@ defineSupportCode(function ({Given, When, Then, Before}) {
     this.method = 'patch';
   });
 
-  Given(/^I should be informed that the option set was updated$/, function () {
-    assert.equal(this.responseStatus, 200, 'It should have been updated');
-  });
-
   Given(/^that I have the necessary permissions to delete an option set$/, function () {
     return this.axios.get(dhis2.getApiEndpoint() + '/me?fields=userCredentials[userRoles[*]]', {
       auth: this.authRequestObject

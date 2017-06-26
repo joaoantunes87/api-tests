@@ -25,7 +25,7 @@ I want to be able to add and manage organisation units
 
       Scenario: Assign a parent to an organsiation unit
         When an existing parent organisation unit exists
-        And I fill in all of the required fields with data:
+        And I fill in all of the required fields for an organisation unit with data:
         | name            | shortName       | openingDate |
         | Organization 2  | ORG             | 2016-06-23T00:00:00.000  |
         Then I should be able to assign the existing organisation unit as a parent
