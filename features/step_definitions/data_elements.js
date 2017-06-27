@@ -16,7 +16,7 @@ defineSupportCode(function ({Given, When, Then}) {
     });
   });
 
-  Given(/^I want to create a new data element$/, function () {
+  Given(/^that I want to create a new data element$/, function () {
     this.method = 'post';
     this.requestData.id = generatedDataElementId;
   });
@@ -57,7 +57,7 @@ defineSupportCode(function ({Given, When, Then}) {
     });
   });
 
-  When(/^I translate the name of a data element for (.+) as (.+)$/, function (locale, translationValue) {
+  When(/^I translate the name of the data element for (.+) as (.+)$/, function (locale, translationValue) {
     const world = this;
 
     world.method = 'get';

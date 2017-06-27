@@ -22,7 +22,7 @@ defineSupportCode(function ({Given, When, Then, Before}) {
     });
   });
 
-  When(/^I want to create a new option set$/, function () {
+  When(/^that I want to create a new option set$/, function () {
     this.requestData.id = generatedOptionSetId;
     this.method = 'post';
   });

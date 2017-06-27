@@ -7,7 +7,7 @@ I want to be able to add and manage option sets.
 
         Scenario: Add an option set
             And that I have the necessary permissions to add an option set
-            And I want to create a new option set
+            And that I want to create a new option set
             When I fill in the fields for the options set with data:
             | name     | valueType |
             | Color_66 | TEXT      |
@@ -35,9 +35,9 @@ I want to be able to add and manage option sets.
             And It was really deleted.
 
         Scenario Outline: Rename an option
-            Given that I have created an option set
+            And that I have created an option set
             And it has at least one option
-            And I change the name of the option to <name>
+            When I change the name of the option to <name>
             And I submit the option set
             Then I should be informed that the option set was updated
             And The current option set data is the same as submitted.
@@ -46,9 +46,9 @@ I want to be able to add and manage option sets.
             | Color116 |
 
         Scenario Outline: Update code of an option
-            Given that I have created an option set
+            And that I have created an option set
             And it has at least one option
-            And I change the code of the option to <code>
+            When I change the code of the option to <code>
             And I submit the option set
             Then I should receive an error message equal to: <errorMessage>.
             Examples:

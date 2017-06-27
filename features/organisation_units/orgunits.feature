@@ -7,25 +7,25 @@ I want to be able to add and manage organisation units
       And that I have the necessary permissions to add an organisation unit
 
       Scenario: Add an organisation unit
-        Given I want to create a new organisation unit
+        And that I want to create a new organisation unit
         When I fill in the fields for the organisation unit with data:
         | name            | shortName       | openingDate |
         | Organization 1  | ORG             | 2016-09-23T00:00:00.000  |
         And I submit the organisation unit
         Then I should be informed that the organisation unit was created
-        And The returned data is the same as submitted.
+        And The current organisation unit data is the same as submitted.
 
       Scenario: Update added organisation unit
-        Given I got the existing organisation unit to update
+        And I got the existing organisation unit to update
         When I fill in the fields for the organisation unit with data:
         | name                    | shortName       | openingDate |
         | Organization 1 Updated  | ORGU            | 2016-09-24T00:00:00.000  |
         And I submit the organisation unit
         Then I should be informed that the organisation unit was updated
-        And The returned data is the same as submitted.
+        And The current organisation unit data is the same as submitted.
 
       Scenario: Assign a parent to an organsiation unit
-        Given I want to create a new organisation unit
+        And that I want to create a new organisation unit
         When an existing parent organisation unit exists
         And I fill in the fields for the organisation unit with data:
         | name            | shortName       | openingDate |
@@ -33,14 +33,14 @@ I want to be able to add and manage organisation units
         Then I should be able to assign the existing organisation unit as a parent
         And I submit the organisation unit
         Then I should be informed that the organisation unit was created
-        And The returned data is the same as submitted.
+        And The current organisation unit data is the same as submitted.
 
       Scenario Outline: Update valid properties of an organisation unit with valid values
         When I update an existing organisation unit
         And  I provide a valid value: <value>, for a valid property: <property>
         And I submit the organisation unit
         Then I should be informed that the organisation unit was updated
-        And The returned data is the same as submitted.
+        And The current organisation unit data is the same as submitted.
         Examples:
         | property | value |
         | coordinates | [-11.4197,8.1039] |
@@ -80,13 +80,13 @@ I want to be able to add and manage organisation units
         And I provide a later closed date as <futureClosedDate>
         And I submit the organisation unit
         Then I should be informed that the organisation unit was updated
-        And The returned data is the same as submitted.
+        And The current organisation unit data is the same as submitted.
         Examples:
         | futureClosedDate |
         | 2017-06-12T00:00:00.000 |
 
       Scenario Outline: Translate an organisation unit name
-        When I translate the name of an organisation unit for <locale> as <translation>
+        When I translate the name of the organisation unit for <locale> as <translation>
         And I select the correct locale for the logged user
         Then I should be able to view the translated name.
         Examples:

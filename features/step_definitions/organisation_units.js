@@ -16,7 +16,7 @@ defineSupportCode(function ({Given, When, Then}) {
     });
   });
 
-  Given(/^I want to create a new organisation unit$/, function () {
+  Given(/^that I want to create a new organisation unit$/, function () {
     this.method = 'post';
     this.requestData.id = generatedOrganisationUnitId;
   });
@@ -29,7 +29,7 @@ defineSupportCode(function ({Given, When, Then}) {
     this.resourceId = this.responseData.response.uid;
   });
 
-  Then(/^The returned data is the same as submitted.$/, function () {
+  Then(/^The current organisation unit data is the same as submitted.$/, function () {
     const world = this;
     world.method = 'get';
     world.requestData = {};
@@ -102,7 +102,7 @@ defineSupportCode(function ({Given, When, Then}) {
     this.method = 'patch';
   });
 
-  When(/^I translate the name of an organisation unit for (.+) as (.+)$/, function (locale, translationValue) {
+  When(/^I translate the name of the organisation unit for (.+) as (.+)$/, function (locale, translationValue) {
     const world = this;
 
     world.method = 'get';
