@@ -105,7 +105,7 @@ defineSupportCode(function ({Given, When, Then, Before}) {
     });
   });
 
-  Then(/^I should be informed that the option set was delete$/, function () {
+  Then(/^I should be informed that the option set was deleted$/, function () {
     assert.equal(this.responseStatus, 204, 'Status should be 204');
   });
 

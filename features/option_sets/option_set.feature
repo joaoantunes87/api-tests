@@ -31,7 +31,7 @@ I want to be able to add and manage option sets.
             And that I have created an option set
             And it has at least one option
             Then I delete the option from the option set
-            And I should be informed that the option set was delete
+            And I should be informed that the option set was deleted
             And It was really deleted.
 
         Scenario Outline: Rename an option
