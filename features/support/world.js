@@ -1,8 +1,9 @@
-const { defineSupportCode } = require('cucumber');
-const chai = require('chai');
 const axios = require('axios');
-const reporter = require('cucumber-html-reporter');
+const chai = require('chai');
+const { defineSupportCode } = require('cucumber');
 const dhis2 = require('./utils.js');
+const reporter = require('cucumber-html-reporter');
+
 const assert = chai.assert;
 
 function CustomWorld ({ parameters }) {

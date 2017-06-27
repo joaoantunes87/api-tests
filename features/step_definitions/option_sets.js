@@ -1,6 +1,7 @@
+const chai = require('chai');
 const { defineSupportCode } = require('cucumber');
 const dhis2 = require('../support/utils.js');
-const chai = require('chai');
+
 const assert = chai.assert;
 
 defineSupportCode(function ({Given, When, Then, Before}) {
@@ -47,7 +48,7 @@ defineSupportCode(function ({Given, When, Then, Before}) {
     world.method = 'get';
     world.requestData = {};
 
-    return dhis2.initializePromiseUrlUsingWorldContext(world, dhis2.generateUrlForResourceTypeWithId('option set', world.resourceId)).then(function (response) {
+    return dhis2.initializePromiseUrlUsingWorldContext(world, dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.OPTION_SET, world.resourceId)).then(function (response) {
       world.responseData = response.data;
       assertUpdateDataWithResponseData(world);
     });
@@ -91,7 +92,7 @@ defineSupportCode(function ({Given, When, Then, Before}) {
     const world = this;
     world.method = 'get';
 
-    return dhis2.initializePromiseUrlUsingWorldContext(world, dhis2.generateUrlForResourceTypeWithId('option set', world.resourceId)).then(function (response) {
+    return dhis2.initializePromiseUrlUsingWorldContext(world, dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.OPTION_SET, world.resourceId)).then(function (response) {
       assert.isAtLeast(response.data.options.length, 1, 'It shoud have at least one options');
       world.resourceIdToDelete = response.data.options[0].id;
     });
@@ -143,7 +144,7 @@ defineSupportCode(function ({Given, When, Then, Before}) {
     const world = this;
     world.method = 'delete';
 
-    return dhis2.initializePromiseUrlUsingWorldContext(world, dhis2.generateUrlForResourceTypeWithId('option set', generatedOptionSetId)).then(function (response) {
+    return dhis2.initializePromiseUrlUsingWorldContext(world, dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.OPTION_SET, generatedOptionSetId)).then(function (response) {
       world.responseStatus = response.status;
       world.responseData = response.data;
     }).catch(function (error) {

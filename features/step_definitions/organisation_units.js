@@ -1,6 +1,7 @@
+const chai = require('chai');
 const { defineSupportCode } = require('cucumber');
 const dhis2 = require('../support/utils.js');
-const chai = require('chai');
+
 const assert = chai.assert;
 
 defineSupportCode(function ({Given, When, Then}) {
@@ -41,7 +42,7 @@ defineSupportCode(function ({Given, When, Then}) {
     world.method = 'get';
     world.requestData = {};
 
-    return dhis2.initializePromiseUrlUsingWorldContext(world, dhis2.generateUrlForResourceTypeWithId('organisation unit', world.resourceId)).then(function (response) {
+    return dhis2.initializePromiseUrlUsingWorldContext(world, dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.ORGANISATION_UNIT, world.resourceId)).then(function (response) {
       Object.keys(world.updatedDataToAssert).forEach(function (propertyKey) {
         assert.equal(response.data[propertyKey], world.updatedDataToAssert[propertyKey], propertyKey + ' is wrong');
       });
@@ -57,7 +58,7 @@ defineSupportCode(function ({Given, When, Then}) {
     assert.isOk(generatedOrganisationUnitId, 'Organisation Unit Id does not exist');
 
     world.resourceId = generatedOrganisationUnitId;
-    return dhis2.initializePromiseUrlUsingWorldContext(world, dhis2.generateUrlForResourceTypeWithId('organisation unit', world.resourceId)).then(function (response) {
+    return dhis2.initializePromiseUrlUsingWorldContext(world, dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.ORGANISATION_UNIT, world.resourceId)).then(function (response) {
       assert.equal(response.status, 200, 'Status should be 200');
       world.requestData = response.data;
       world.method = 'put';
@@ -117,7 +118,7 @@ defineSupportCode(function ({Given, When, Then}) {
     world.locale = locale;
     world.translationValue = translationValue;
 
-    return dhis2.initializePromiseUrlUsingWorldContext(world, dhis2.generateUrlForResourceTypeWithId('organisation unit', generatedOrganisationUnitId)).then(function (response) {
+    return dhis2.initializePromiseUrlUsingWorldContext(world, dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.ORGANISATION_UNIT, generatedOrganisationUnitId)).then(function (response) {
       world.requestData = response.data;
       world.requestData.translations = [
         {
@@ -128,7 +129,7 @@ defineSupportCode(function ({Given, When, Then}) {
       ];
 
       world.method = 'put';
-      return dhis2.initializePromiseUrlUsingWorldContext(world, dhis2.generateUrlForResourceTypeWithId('organisation unit', generatedOrganisationUnitId));
+      return dhis2.initializePromiseUrlUsingWorldContext(world, dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.ORGANISATION_UNIT, generatedOrganisationUnitId));
     }).then(function (response) {
       assert.equal(response.status, 200, 'Organisation Unit was not updated');
     });
@@ -139,7 +140,7 @@ defineSupportCode(function ({Given, When, Then}) {
     world.method = 'get';
     world.requestData = {};
 
-    return dhis2.initializePromiseUrlUsingWorldContext(world, dhis2.generateUrlForResourceTypeWithId('organisation unit', generatedOrganisationUnitId)).then(function (response) {
+    return dhis2.initializePromiseUrlUsingWorldContext(world, dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.ORGANISATION_UNIT, generatedOrganisationUnitId)).then(function (response) {
       assert.equal(response.data.displayName, world.translationValue, 'Name is not translated');
     });
   });

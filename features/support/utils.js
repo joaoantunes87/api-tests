@@ -2,6 +2,11 @@
 
 module.exports = (() => {
   let apiEndpoint = 'https://play.dhis2.org/demo/api/26'; // default
+  const RESOURCE_TYPES = {
+    OPTION_SET: 'option set',
+    DATA_ELEMENT: 'data element',
+    ORGANISATION_UNIT: 'organisation unit'
+  };
 
   return {
     getApiEndpoint: () => {
@@ -10,6 +15,7 @@ module.exports = (() => {
     setApiEndpoint: (newApiEndpoint) => {
       apiEndpoint = newApiEndpoint;
     },
+    resourceTypes: RESOURCE_TYPES,
     generateUniqIds: (numberOfIds) => {
       const currentTimestamp = Math.floor(Date.now() / 100);    // 11 digits
       const ids = [];
@@ -43,13 +49,13 @@ module.exports = (() => {
     generateUrlForResourceTypeWithId: (resourceType, resourceId) => {
       let url = '';
       switch (resourceType) {
-        case 'option set':
+        case RESOURCE_TYPES.OPTION_SET:
           url = apiEndpoint + '/optionSets/';
           break;
-        case 'organisation unit':
+        case RESOURCE_TYPES.ORGANISATION_UNIT:
           url = apiEndpoint + '/organisationUnits/';
           break;
-        case 'data element':
+        case RESOURCE_TYPES.DATA_ELEMENT:
           url = apiEndpoint + '/dataElements/';
           break;
         default:

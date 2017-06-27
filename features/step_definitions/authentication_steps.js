@@ -1,6 +1,7 @@
+const chai = require('chai');
 const { defineSupportCode } = require('cucumber');
 const dhis2 = require('../support/utils.js');
-const chai = require('chai');
+
 const assert = chai.assert;
 
 defineSupportCode(function ({Given, When, Then}) {
@@ -20,7 +21,7 @@ defineSupportCode(function ({Given, When, Then}) {
       }
     }).then(function (response) {
       assert.equal(response.status, 200, 'Response Status is ok');
-      assert.property(response, 'data', 'User id was returned');
+      assert.property(response, 'data', 'Response should have been returned');
     });
   });
 
@@ -40,7 +41,7 @@ defineSupportCode(function ({Given, When, Then}) {
       auth: this.authRequestObject
     }).then(function (response) {
       assert.equal(response.status, 200, 'Response Status is ok');
-      assert.property(response.data, 'id', 'User id was returned');
+      assert.property(response.data, 'id', 'Response should have been returned');
     });
   });
 });
