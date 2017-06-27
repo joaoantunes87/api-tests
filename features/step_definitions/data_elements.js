@@ -16,16 +16,8 @@ defineSupportCode(function ({Given, When, Then}) {
     });
   });
 
-  When(/^I fill in all of the required fields for a data element with data:$/, function (data) {
-    const properties = data.rawTable[0];
-    const values = data.rawTable[1];
+  Given(/^I want to create a new data element$/, function () {
     this.method = 'post';
-
-    properties.forEach(function (propertyKey, index) {
-      this.updatedDataToAssert[propertyKey] = values[index];
-      this.requestData[propertyKey] = values[index];
-    }, this);
-
     this.requestData.id = generatedDataElementId;
   });
 

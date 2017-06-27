@@ -7,7 +7,8 @@ I want to be able to add and manage option sets.
 
         Scenario: Add an option set
             And that I have the necessary permissions to add an option set
-            When I fill in all of the required fields for an option set with data:
+            And I want to create a new option set
+            When I fill in the fields for the options set with data:
             | name     | valueType |
             | Color_66 | TEXT      |
             And I submit the option set

@@ -22,15 +22,7 @@ defineSupportCode(function ({Given, When, Then, Before}) {
     });
   });
 
-  When(/^I fill in all of the required fields for an option set with data:$/, function (data) {
-    const properties = data.rawTable[0];
-    const values = data.rawTable[1];
-
-    properties.forEach(function (propertyKey, index) {
-      this.updatedDataToAssert[propertyKey] = values[index];
-      this.requestData[propertyKey] = values[index];
-    }, this);
-
+  When(/^I want to create a new option set$/, function () {
     this.requestData.id = generatedOptionSetId;
     this.method = 'post';
   });

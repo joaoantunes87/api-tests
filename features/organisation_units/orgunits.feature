@@ -7,7 +7,8 @@ I want to be able to add and manage organisation units
       And that I have the necessary permissions to add an organisation unit
 
       Scenario: Add an organisation unit
-        When I fill in all of the required fields for an organisation unit with data:
+        Given I want to create a new organisation unit
+        When I fill in the fields for the organisation unit with data:
         | name            | shortName       | openingDate |
         | Organization 1  | ORG             | 2016-09-23T00:00:00.000  |
         And I submit the organisation unit
@@ -16,7 +17,7 @@ I want to be able to add and manage organisation units
 
       Scenario: Update added organisation unit
         Given I got the existing organisation unit to update
-        When I fill in some fields to change with data:
+        When I fill in the fields for the organisation unit with data:
         | name                    | shortName       | openingDate |
         | Organization 1 Updated  | ORGU            | 2016-09-24T00:00:00.000  |
         And I submit the organisation unit
@@ -24,8 +25,9 @@ I want to be able to add and manage organisation units
         And The returned data is the same as submitted.
 
       Scenario: Assign a parent to an organsiation unit
+        Given I want to create a new organisation unit
         When an existing parent organisation unit exists
-        And I fill in all of the required fields for an organisation unit with data:
+        And I fill in the fields for the organisation unit with data:
         | name            | shortName       | openingDate |
         | Organization 2  | ORG             | 2016-06-23T00:00:00.000  |
         Then I should be able to assign the existing organisation unit as a parent

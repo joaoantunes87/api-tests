@@ -7,7 +7,8 @@ I want to be able to add and manage data elements
       And that I have the necessary permissions to add a data element
 
       Scenario: Add a data element
-        When I fill in all of the required fields for a data element with data:
+        Given I want to create a new data element
+        When I fill in the fields for the data element with data:
         | name            | shortName       | domainType | valueType    | aggregationType   |
         | Foo data element| FOO             | AGGREGATE  | NUMBER       | SUM               |
         And I submit the data element
@@ -16,7 +17,7 @@ I want to be able to add and manage data elements
 
       Scenario: Update an existing data element
         Given I got the existing data element to update
-        When I fill in some fields to change with data:
+        When I fill in the fields for the data element with data:
         | name                    | shortName       | valueType |
         | Bar data element        |  BAR            | INTEGER   |
         And I submit the data element
