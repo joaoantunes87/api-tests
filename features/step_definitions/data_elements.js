@@ -12,7 +12,10 @@ defineSupportCode(function ({Given, When, Then}) {
     return this.axios.get(dhis2.getApiEndpoint() + '/me?fields=userCredentials[userRoles[*]]', {
       auth: this.authRequestObject
     }).then(function (response) {
-      assert.isOk(isAuthorisedToAddDataElementWith(response.data.userCredentials.userRoles), 'Not Authorized to create Data Element');
+      assert.isOk(
+        dhis2.isAuthorisedToAddDataElementWith(response.data.userCredentials.userRoles),
+        'Not Authorized to create Data Element'
+      );
     });
   });
 
@@ -34,7 +37,10 @@ defineSupportCode(function ({Given, When, Then}) {
     world.method = 'get';
     world.requestData = {};
 
-    return dhis2.initializePromiseUrlUsingWorldContext(world, dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.DATA_ELEMENT, world.resourceId)).then(function (response) {
+    return dhis2.initializePromiseUrlUsingWorldContext(
+      world,
+      dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.DATA_ELEMENT, world.resourceId)
+    ).then(function (response) {
       Object.keys(world.updatedDataToAssert).forEach(function (propertyKey) {
         assert.equal(response.data[propertyKey], world.updatedDataToAssert[propertyKey], propertyKey + ' is wrong');
       });
@@ -50,7 +56,10 @@ defineSupportCode(function ({Given, When, Then}) {
     assert.isOk(generatedDataElementId, 'Data Element Id does not exist');
 
     world.resourceId = generatedDataElementId;
-    return dhis2.initializePromiseUrlUsingWorldContext(world, dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.DATA_ELEMENT, world.resourceId)).then(function (response) {
+    return dhis2.initializePromiseUrlUsingWorldContext(
+      world,
+      dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.DATA_ELEMENT, world.resourceId)
+    ).then(function (response) {
       assert.equal(response.status, 200, 'Status should be 200');
       world.requestData = response.data;
       world.method = 'put';
@@ -65,7 +74,10 @@ defineSupportCode(function ({Given, When, Then}) {
     world.locale = locale;
     world.translationValue = translationValue;
 
-    return dhis2.initializePromiseUrlUsingWorldContext(world, dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.DATA_ELEMENT, generatedDataElementId)).then(function (response) {
+    return dhis2.initializePromiseUrlUsingWorldContext(
+      world,
+      dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.DATA_ELEMENT, generatedDataElementId)
+    ).then(function (response) {
       world.requestData = response.data;
       world.requestData.translations = [
         {
@@ -76,7 +88,10 @@ defineSupportCode(function ({Given, When, Then}) {
       ];
 
       world.method = 'put';
-      return dhis2.initializePromiseUrlUsingWorldContext(world, dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.DATA_ELEMENT, generatedDataElementId));
+      return dhis2.initializePromiseUrlUsingWorldContext(
+        world,
+        dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.DATA_ELEMENT, generatedDataElementId)
+      );
     }).then(function (response) {
       assert.equal(response.status, 200, 'Organisation Unit was not updated');
     });
@@ -87,12 +102,11 @@ defineSupportCode(function ({Given, When, Then}) {
     world.method = 'get';
     world.requestData = {};
 
-    return dhis2.initializePromiseUrlUsingWorldContext(world, dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.DATA_ELEMENT, generatedDataElementId)).then(function (response) {
+    return dhis2.initializePromiseUrlUsingWorldContext(
+      world,
+      dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.DATA_ELEMENT, generatedDataElementId)
+    ).then(function (response) {
       assert.equal(response.data.displayName, world.translationValue, 'Name is not translated');
     });
   });
 });
-
-const isAuthorisedToAddDataElementWith = (userRoles = []) => {
-  return dhis2.authorityExistsInUserRoles('F_DATAELEMENT_PUBLIC_ADD', userRoles);
-};
