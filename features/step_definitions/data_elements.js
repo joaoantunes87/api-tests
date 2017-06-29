@@ -1,5 +1,5 @@
-const chai = require('chai');
 const { defineSupportCode } = require('cucumber');
+const chai = require('chai');
 const dhis2 = require('../support/utils.js');
 
 const assert = chai.assert;
