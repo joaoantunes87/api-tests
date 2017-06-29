@@ -1,8 +1,9 @@
 const { defineSupportCode } = require('cucumber');
-const chai = require('chai');
 const axios = require('axios');
-const reporter = require('cucumber-html-reporter');
+const chai = require('chai');
 const dhis2 = require('./utils.js');
+const reporter = require('cucumber-html-reporter');
+
 const assert = chai.assert;
 
 function CustomWorld ({ parameters }) {
@@ -64,7 +65,7 @@ defineSupportCode(function ({ setWorldConstructor, registerHandler, Given, When,
     assert.equal(this.errorResponse.response.data.message, errorMessage, 'Error message should be ' + errorMessage);
   });
 
-  When(/^I fill in some fields to change with data:$/, function (data) {
+  When(/^I fill in the fields for the (.+) with data:$/, function (resourceType, data) {
     const properties = data.rawTable[0];
     const values = data.rawTable[1];
 

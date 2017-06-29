@@ -1,35 +1,25 @@
 const { defineSupportCode } = require('cucumber');
-const dhis2 = require('../support/utils.js');
 const chai = require('chai');
+const dhis2 = require('../support/utils.js');
+
 const assert = chai.assert;
 
 defineSupportCode(function ({Given, When, Then, Before}) {
   const generatedOptionSetId = dhis2.generateUniqIds();
   let optionSetWasCreated = false;
 
-  // Clean up before each test run
-  Before(function () {
-    // auxiliar var for assertions
-    this.resourceIdToDelete = null;       // resource id to be deleted
-  });
-
   Given(/^that I have the necessary permissions to add an option set$/, function () {
     return this.axios.get(dhis2.getApiEndpoint() + '/me?fields=userCredentials[userRoles[*]]', {
       auth: this.authRequestObject
     }).then(function (response) {
-      assert.isOk(isAuthorisedToAddOptionSetWith(response.data.userCredentials.userRoles), 'Not Authorized to create OrganisationUnit');
+      assert.isOk(
+        dhis2.isAuthorisedToAddOptionSetWith(response.data.userCredentials.userRoles),
+        'Not Authorized to create OrganisationUnit'
+      );
     });
   });
 
-  When(/^I fill in all of the required fields for an option set with data:$/, function (data) {
-    const properties = data.rawTable[0];
-    const values = data.rawTable[1];
-
-    properties.forEach(function (propertyKey, index) {
-      this.updatedDataToAssert[propertyKey] = values[index];
-      this.requestData[propertyKey] = values[index];
-    }, this);
-
+  When(/^that I want to create a new option set$/, function () {
     this.requestData.id = generatedOptionSetId;
     this.method = 'post';
   });
@@ -47,7 +37,10 @@ defineSupportCode(function ({Given, When, Then, Before}) {
     world.method = 'get';
     world.requestData = {};
 
-    return dhis2.initializePromiseUrlUsingWorldContext(world, dhis2.generateUrlForResourceTypeWithId('option set', world.resourceId)).then(function (response) {
+    return dhis2.initializePromiseUrlUsingWorldContext(
+      world,
+      dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.OPTION_SET, world.resourceId)
+    ).then(function (response) {
       world.responseData = response.data;
       assertUpdateDataWithResponseData(world);
     });
@@ -83,7 +76,10 @@ defineSupportCode(function ({Given, When, Then, Before}) {
     return this.axios.get(dhis2.getApiEndpoint() + '/me?fields=userCredentials[userRoles[*]]', {
       auth: this.authRequestObject
     }).then(function (response) {
-      assert.isOk(isAuthorisedToDeleteOptionSetWith(response.data.userCredentials.userRoles), 'Not Authorized to create OrganisationUnit');
+      assert.isOk(
+        dhis2.isAuthorisedToDeleteOptionSetWith(response.data.userCredentials.userRoles),
+        'Not Authorized to create OrganisationUnit'
+      );
     });
   });
 
@@ -91,14 +87,18 @@ defineSupportCode(function ({Given, When, Then, Before}) {
     const world = this;
     world.method = 'get';
 
-    return dhis2.initializePromiseUrlUsingWorldContext(world, dhis2.generateUrlForResourceTypeWithId('option set', world.resourceId)).then(function (response) {
+    return dhis2.initializePromiseUrlUsingWorldContext(
+      world,
+      dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.OPTION_SET, world.resourceId)
+    ).then(function (response) {
       assert.isAtLeast(response.data.options.length, 1, 'It shoud have at least one options');
-      world.resourceIdToDelete = response.data.options[0].id;
+      world.responseData = response.data;
     });
   });
 
   Then(/^I delete the option from the option set$/, function () {
     const world = this;
+    world.resourceIdToDelete = world.responseData.options[0].id;
 
     return world.axios({
       method: 'delete',
@@ -112,7 +112,7 @@ defineSupportCode(function ({Given, When, Then, Before}) {
     });
   });
 
-  Then(/^I should be informed that the option set was delete$/, function () {
+  Then(/^I should be informed that the option set was deleted$/, function () {
     assert.equal(this.responseStatus, 204, 'Status should be 204');
   });
 
@@ -143,7 +143,10 @@ defineSupportCode(function ({Given, When, Then, Before}) {
     const world = this;
     world.method = 'delete';
 
-    return dhis2.initializePromiseUrlUsingWorldContext(world, dhis2.generateUrlForResourceTypeWithId('option set', generatedOptionSetId)).then(function (response) {
+    return dhis2.initializePromiseUrlUsingWorldContext(
+      world,
+      dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.OPTION_SET, generatedOptionSetId)
+    ).then(function (response) {
       world.responseStatus = response.status;
       world.responseData = response.data;
     }).catch(function (error) {
@@ -151,14 +154,6 @@ defineSupportCode(function ({Given, When, Then, Before}) {
     });
   });
 });
-
-const isAuthorisedToAddOptionSetWith = (userRoles = []) => {
-  return dhis2.authorityExistsInUserRoles('F_OPTIONSET_PUBLIC_ADD', userRoles);
-};
-
-const isAuthorisedToDeleteOptionSetWith = (userRoles = []) => {
-  return dhis2.authorityExistsInUserRoles('F_OPTIONSET_DELETE', userRoles);
-};
 
 const assertUpdateDataWithResponseData = (world) => {
   Object.keys(world.updatedDataToAssert).forEach(function (propertyKey) {
