@@ -1,6 +1,6 @@
+const { defineSupportCode } = require('cucumber');
 const axios = require('axios');
 const chai = require('chai');
-const { defineSupportCode } = require('cucumber');
 const dhis2 = require('./utils.js');
 const reporter = require('cucumber-html-reporter');
 
