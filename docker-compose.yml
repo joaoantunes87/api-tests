@@ -1,4 +1,4 @@
-version: '2'
+version: '2.1'
 services:
   database:
     container_name: dhis2-database
@@ -11,6 +11,11 @@ services:
       PG_DATA: /var/lib/postgresql/data/pgdata:z
     ports:
      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -h database -p 5432 -d dhis2"]
+      interval: 30s
+      timeout: 30s
+      retries: 30
   web:
     container_name: dhis2-web
     image: dhis2/dhis2-web:2.26-tomcat7-jre8-latest
@@ -20,13 +25,16 @@ services:
     ports:
       - "8085:8080"
     depends_on:
-      - database
-    entrypoint: ./wait-for-it.sh -t 0 database:5432 --
-    command: catalina.sh run # https://github.com/docker/compose/issues/3140
+      database:
+        condition: service_healthy
+    healthcheck:
+      test: "curl -f http://localhost:8080"
+      interval: 15s
+      retries: 120
   api-tests:
     container_name: dhis2-api-tests
     build: .
-    image: dhis2/dhis2-api-tests
     depends_on:
-      - web
-    entrypoint: ./wait-for-it.sh -t 0 http://web:8080 -- npm test -- --world-parameters "{\"apiEndpoint\":\"http://web:8080/api\"}"
+      web:
+        condition: service_healthy
+    entrypoint: npm test -- --world-parameters "{\"apiEndpoint\":\"http://web:8080/api\"}"
