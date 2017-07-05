@@ -12,7 +12,7 @@ The available CLI commands are described below.
 $ npm install
 ```
 
-### Run tests
+### Run tests without Docker
 
 Run with the default API endpoint:
 
@@ -24,4 +24,9 @@ Override the default API endpoint:
 
 ```sh
 $ npm test -- --world-parameters  '{"apiEndpoint": "http://play.dhis2.org/dev/api/27"}'
+```
+
+### Run tests with
+```sh
+$ docker-compose up
 ```
