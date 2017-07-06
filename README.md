@@ -2,31 +2,28 @@
 
 Repository for DHIS2 API Testing.
 
-## Running tests
+## Run tests locally
 
-The available CLI commands are described below.
-
-### Install NPM dependencies
+Make sure you have the required NPM dependencies installed:
 
 ```sh
 $ npm install
 ```
 
-### Run tests without Docker
-
-Run with the default API endpoint:
+Run tests with the default API endpoint:
 
 ```sh
 $ npm test
 ```
 
-Override the default API endpoint:
+Run tests overriding the default API endpoint:
 
 ```sh
-$ npm test -- --world-parameters  '{"apiEndpoint": "http://play.dhis2.org/dev/api/27"}'
+$ npm test -- --world-parameters  '{"apiEndpoint": "https://play.dhis2.org/demo/api/27"}'
 ```
 
-### Run tests with
+## Run tests with Docker
+
 ```sh
 $ docker-compose up
 ```
