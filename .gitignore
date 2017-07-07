@@ -51,3 +51,6 @@ allure-report
 
 # Test Reports
 reports/*
+
+# Environment
+.env

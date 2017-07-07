@@ -11,6 +11,10 @@ function CustomWorld ({ parameters }) {
     dhis2.setApiEndpoint(parameters.apiEndpoint);
   }
 
+  if (parameters.hasOwnProperty('generateHtmlReport')) {
+    dhis2.setToGenerateHtmlReport(parameters.generateHtmlReport);
+  }
+
   this.authRequestObject = {
     username: 'admin',
     password: 'district'
@@ -41,10 +45,12 @@ defineSupportCode(function ({ setWorldConstructor, registerHandler, Given, When,
       jsonFile: 'reports/cucumber_report.json',
       output: 'reports/cucumber_report.html',
       reportSuiteAsScenarios: true,
-      launchReport: true
+      launchReport: false
     };
 
-    reporter.generate(options);
+    if (dhis2.isToGenerateHtmlReport()) {
+      reporter.generate(options);
+    }
   });
 
   When(/^I submit the (.+)$/, function (resourceType) {
