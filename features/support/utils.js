@@ -2,6 +2,7 @@
 
 module.exports = (() => {
   let apiEndpoint = 'https://play.dhis2.org/demo/api/26'; // default
+  let toGenerateHtmlReport = true;
   const RESOURCE_TYPES = {
     OPTION_SET: 'option set',
     DATA_ELEMENT: 'data element',
@@ -27,6 +28,12 @@ module.exports = (() => {
     },
     setApiEndpoint: (newApiEndpoint) => {
       apiEndpoint = newApiEndpoint;
+    },
+    setToGenerateHtmlReport: (toGenerate) => {
+      toGenerateHtmlReport = toGenerate;
+    },
+    isToGenerateHtmlReport: () => {
+      return toGenerateHtmlReport;
     },
     resourceTypes: RESOURCE_TYPES,
     generateUniqIds: (numberOfIds) => {
