@@ -22,21 +22,23 @@ Run tests overriding the default API endpoint:
 $ npm test -- --world-parameters "{\"apiEndpoint\":\"https://play.dhis2.org/demo/api/27\",\"generateHtmlReport\":false}"
 ```
 
-## Run tests with Docker
-### Environment Setup
-Before starting the Docker environment it is needed to define some variable environments. We have two options:</br>
-**Create .env file(example)**
-```
-DHIS2_GENERATE_HTML_REPORT=false
-```
+Available parameters are:
 
-**Define environment variables on terminal(example)**
+| Name | Default value | Description |
+| --- | --- | --- |
+| `apiEndpoint` | Defined inside `utils.js` file | The API endpoint to use to run the tests  |
+| `generateHtmlReport` | `true` | Whether an HTML report should be generated or not |
+
+## Run tests with Docker
+
+Set the environment variable `DHIS2_GENERATE_HTML_REPORT` to `false` to skip the HTML report generation:
 
 ```sh
 $ export DHIS2_GENERATE_HTML_REPORT=false
 ```
 
-### Start Docker Environment
+Start Docker:
+
 ```sh
 $ docker-compose up --build --abort-on-container-exit
 ```

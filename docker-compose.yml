@@ -41,4 +41,4 @@ services:
     depends_on:
       web:
         condition: service_healthy
-    entrypoint: npm test -- --world-parameters "{\"apiEndpoint\":\"http://web:8080/api/27\",\"generateHtmlReport\":$DHIS2_GENERATE_HTML_REPORT}"
+    entrypoint: npm test -- --world-parameters "{\"apiEndpoint\":\"http://web:8080/api/27\",\"generateHtmlReport\":${DHIS2_GENERATE_HTML_REPORT}}"
