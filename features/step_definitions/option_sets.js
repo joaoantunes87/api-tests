@@ -9,7 +9,7 @@ defineSupportCode(function ({Given, When, Then, Before}) {
   let optionSetWasCreated = false;
 
   Given(/^that I have the necessary permissions to add an option set$/, function () {
-    return this.axios.get(dhis2.getApiEndpoint() + '/me?fields=userCredentials[userRoles[*]]', {
+    return this.axios.get(dhis2.apiEndpoint() + '/me?fields=userCredentials[userRoles[*]]', {
       auth: this.authRequestObject
     }).then(function (response) {
       assert.isOk(
@@ -73,7 +73,7 @@ defineSupportCode(function ({Given, When, Then, Before}) {
   });
 
   Given(/^that I have the necessary permissions to delete an option set$/, function () {
-    return this.axios.get(dhis2.getApiEndpoint() + '/me?fields=userCredentials[userRoles[*]]', {
+    return this.axios.get(dhis2.apiEndpoint() + '/me?fields=userCredentials[userRoles[*]]', {
       auth: this.authRequestObject
     }).then(function (response) {
       assert.isOk(
@@ -102,7 +102,7 @@ defineSupportCode(function ({Given, When, Then, Before}) {
 
     return world.axios({
       method: 'delete',
-      url: dhis2.getApiEndpoint() + '/optionSets/' + world.resourceId + '/options/' + world.resourceIdToDelete,
+      url: dhis2.apiEndpoint() + '/optionSets/' + world.resourceId + '/options/' + world.resourceIdToDelete,
       auth: world.authRequestObject
     }).then(function (response) {
       world.responseStatus = response.status;
@@ -121,7 +121,7 @@ defineSupportCode(function ({Given, When, Then, Before}) {
 
     return world.axios({
       method: 'get',
-      url: dhis2.getApiEndpoint() + '/optionSets/' + world.resourceId + '/options/' + world.resourceIdToDelete,
+      url: dhis2.apiEndpoint() + '/optionSets/' + world.resourceId + '/options/' + world.resourceIdToDelete,
       auth: world.authRequestObject
     }).catch(function (error) {
       assert.equal(error.response.status, 404, 'Status should be 404');

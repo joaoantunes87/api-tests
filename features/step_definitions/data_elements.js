@@ -9,7 +9,7 @@ defineSupportCode(function ({Given, When, Then}) {
   let dataElementWasCreated = false;
 
   Given(/^that I have the necessary permissions to add a data element$/, function () {
-    return this.axios.get(dhis2.getApiEndpoint() + '/me?fields=userCredentials[userRoles[*]]', {
+    return this.axios.get(dhis2.apiEndpoint() + '/me?fields=userCredentials[userRoles[*]]', {
       auth: this.authRequestObject
     }).then(function (response) {
       assert.isOk(

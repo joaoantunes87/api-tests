@@ -2,7 +2,7 @@
 
 module.exports = (() => {
   let apiEndpoint = 'https://play.dhis2.org/demo/api/26'; // default
-  let toGenerateHtmlReport = true;
+  let generateHtmlReport = true;
   const RESOURCE_TYPES = {
     OPTION_SET: 'option set',
     DATA_ELEMENT: 'data element',
@@ -23,28 +23,20 @@ module.exports = (() => {
   };
 
   return {
-    getApiEndpoint: () => {
-      return apiEndpoint;
-    },
-    setApiEndpoint: (newApiEndpoint) => {
-      apiEndpoint = newApiEndpoint;
-    },
-    setToGenerateHtmlReport: (toGenerate) => {
-      toGenerateHtmlReport = toGenerate;
-    },
-    isToGenerateHtmlReport: () => {
-      return toGenerateHtmlReport;
-    },
     resourceTypes: RESOURCE_TYPES,
-    generateUniqIds: (numberOfIds) => {
-      const currentTimestamp = Math.floor(Date.now() / 100);    // 11 digits
-      const ids = [];
-      const numberOfIdsTemp = numberOfIds || 1;
-      for (let seed = 0; seed < numberOfIdsTemp; seed++) {
-        ids.push(currentTimestamp - seed);
+    apiEndpoint: (newApiEndpoint) => {
+      if (newApiEndpoint) {
+        apiEndpoint = newApiEndpoint;
+      } else {
+        return apiEndpoint;
       }
-
-      return numberOfIds ? ids : ids[0];
+    },
+    generateHtmlReport: (generate) => {
+      if (typeof generate === 'undefined') {
+        return generateHtmlReport;
+      } else {
+        generateHtmlReport = generate;
+      }
     },
     isAuthorisedToAddDataElementWith: (userRoles = []) => {
       return authorityExistsInUserRoles('F_DATAELEMENT_PUBLIC_ADD', userRoles);
@@ -65,6 +57,16 @@ module.exports = (() => {
         data: world.requestData || {},
         auth: world.authRequestObject
       });
+    },
+    generateUniqIds: (numberOfIds) => {
+      const currentTimestamp = Math.floor(Date.now() / 100);    // 11 digits
+      const ids = [];
+      const numberOfIdsTemp = numberOfIds || 1;
+      for (let seed = 0; seed < numberOfIdsTemp; seed++) {
+        ids.push(currentTimestamp - seed);
+      }
+
+      return numberOfIds ? ids : ids[0];
     },
     generateUrlForResourceTypeWithId: (resourceType, resourceId) => {
       let url = '';

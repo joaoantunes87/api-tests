@@ -7,12 +7,12 @@ const reporter = require('cucumber-html-reporter');
 const assert = chai.assert;
 
 function CustomWorld ({ parameters }) {
-  if (parameters.apiEndpoint) {
-    dhis2.setApiEndpoint(parameters.apiEndpoint);
+  if (parameters.hasOwnProperty('apiEndpoint')) {
+    dhis2.apiEndpoint(parameters.apiEndpoint);
   }
 
   if (parameters.hasOwnProperty('generateHtmlReport')) {
-    dhis2.setToGenerateHtmlReport(parameters.generateHtmlReport);
+    dhis2.generateHtmlReport(parameters.generateHtmlReport);
   }
 
   this.authRequestObject = {
@@ -48,9 +48,11 @@ defineSupportCode(function ({ setWorldConstructor, registerHandler, Given, When,
       launchReport: false
     };
 
-    if (dhis2.isToGenerateHtmlReport()) {
+    if (dhis2.generateHtmlReport()) {
       reporter.generate(options);
     }
+
+    callback();
   });
 
   When(/^I submit the (.+)$/, function (resourceType) {
@@ -89,7 +91,7 @@ defineSupportCode(function ({ setWorldConstructor, registerHandler, Given, When,
   When(/^I select the correct locale for the logged user$/, function () {
     return this.axios({
       method: 'post',
-      url: dhis2.getApiEndpoint() + '/userSettings/keyDbLocale?value=' + this.locale,
+      url: dhis2.apiEndpoint() + '/userSettings/keyDbLocale?value=' + this.locale,
       auth: this.authRequestObject
     }).then(function (response) {
       assert.equal(response.status, 200, 'Locale setting was not updated');
