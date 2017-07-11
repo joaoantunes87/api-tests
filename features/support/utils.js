@@ -6,7 +6,8 @@ module.exports = (() => {
   const RESOURCE_TYPES = {
     OPTION_SET: 'option set',
     DATA_ELEMENT: 'data element',
-    ORGANISATION_UNIT: 'organisation unit'
+    ORGANISATION_UNIT: 'organisation unit',
+    DATASET: 'dataset'
   };
 
   const authorityExistsInUserRoles = (authority, userRoles = []) => {
@@ -50,6 +51,9 @@ module.exports = (() => {
     isAuthorisedToDeleteOptionSetWith: (userRoles = []) => {
       return authorityExistsInUserRoles('F_OPTIONSET_DELETE', userRoles);
     },
+    isAuthorisedToAddDataSetWith: (userRoles = []) => {
+      return authorityExistsInUserRoles('F_DATASET_PUBLIC_ADD', userRoles);
+    },
     initializePromiseUrlUsingWorldContext: (world, url) => {
       return world.axios({
         method: world.method || 'get',
@@ -63,7 +67,7 @@ module.exports = (() => {
       const ids = [];
       const numberOfIdsTemp = numberOfIds || 1;
       for (let seed = 0; seed < numberOfIdsTemp; seed++) {
-        ids.push(currentTimestamp - seed);
+        ids.push((currentTimestamp - seed) + '');
       }
 
       return numberOfIds ? ids : ids[0];
@@ -79,6 +83,9 @@ module.exports = (() => {
           break;
         case RESOURCE_TYPES.DATA_ELEMENT:
           url = apiEndpoint + '/dataElements/';
+          break;
+        case RESOURCE_TYPES.DATASET:
+          url = apiEndpoint + '/dataSets/';
           break;
         default:
           throw new Error('There is no resource type defined for: ' + resourceType);

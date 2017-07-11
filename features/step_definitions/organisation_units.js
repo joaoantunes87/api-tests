@@ -6,6 +6,7 @@ const assert = chai.assert;
 
 defineSupportCode(function ({Given, When, Then}) {
   const generatedOrganisationUnitId = dhis2.generateUniqIds();
+  const dataSetIds = ['aLpVgfXiz0f'];
   let organisationUnitWasCreated = false;
 
   Given(/^that I have the necessary permissions to add an organisation unit$/, function () {
@@ -42,7 +43,22 @@ defineSupportCode(function ({Given, When, Then}) {
       dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.ORGANISATION_UNIT, world.resourceId)
     ).then(function (response) {
       Object.keys(world.updatedDataToAssert).forEach(function (propertyKey) {
-        assert.equal(response.data[propertyKey], world.updatedDataToAssert[propertyKey], propertyKey + ' is wrong');
+        switch (propertyKey) {
+          case 'parent':
+            assert.deepEqual(
+              response.data[propertyKey],
+              world.updatedDataToAssert[propertyKey],
+              propertyKey + ' is wrong');
+            break;
+          case 'dataSets':
+            assert.sameDeepMembers(
+              response.data[propertyKey],
+              world.updatedDataToAssert[propertyKey],
+              propertyKey + ' is wrong');
+            break;
+          default:
+            assert.equal(response.data[propertyKey], world.updatedDataToAssert[propertyKey], propertyKey + ' is wrong');
+        }
       });
     });
   });
@@ -73,9 +89,11 @@ defineSupportCode(function ({Given, When, Then}) {
 
   Then(/^I should be able to assign the existing organisation unit as a parent$/, function () {
     this.requestData.id = null;
-    this.requestData.parent = {
+    const parent = {
       id: generatedOrganisationUnitId
     };
+    this.requestData.parent = parent;
+    this.updatedDataToAssert.parent = parent;
   });
 
   When(/^I update an existing organisation unit$/, function () {
@@ -153,5 +171,20 @@ defineSupportCode(function ({Given, When, Then}) {
     ).then(function (response) {
       assert.equal(response.data.displayName, world.translationValue, 'Name is not translated');
     });
+  });
+
+  When(/^there is a dataset in the system$/, function () {
+    assert.isAtLeast(dataSetIds.length, 1, 'It shoud have at least one indicator');
+  });
+
+  When(/^I update the datasets of the organisation unit$/, function () {
+    const dataSets = [];
+    for (const id of dataSetIds) {
+      dataSets.push({
+        id: id
+      });
+    }
+    this.requestData.dataSets = dataSets;
+    this.updatedDataToAssert.dataSets = dataSets;
   });
 });
