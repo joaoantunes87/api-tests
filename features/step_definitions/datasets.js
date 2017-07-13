@@ -22,32 +22,6 @@ defineSupportCode(function ({Given, When, Then}) {
     });
   });
 
-  Given(/^that there are some data elements in the system$/, function () {
-    const world = this;
-    world.method = 'get';
-    world.requestData = {};
-
-    return dhis2.initializePromiseUrlUsingWorldContext(
-      world,
-      dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.DATA_ELEMENT)
-    ).then(function (response) {
-      assert.isAtLeast(response.data.dataElements.length, 1, 'It shoud have at least one data element');
-    });
-  });
-
-  Given(/^that there are some organisation units in the system$/, function () {
-    const world = this;
-    world.method = 'get';
-    world.requestData = {};
-
-    return dhis2.initializePromiseUrlUsingWorldContext(
-      world,
-      dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.ORGANISATION_UNIT)
-    ).then(function (response) {
-      assert.isAtLeast(response.data.organisationUnits.length, 1, 'It shoud have at least one organisation unit');
-    });
-  });
-
   Given(/^that I want to create a new dataset$/, function () {
     this.method = 'post';
     this.requestData.id = generatedDatasetId;

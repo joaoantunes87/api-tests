@@ -8,8 +8,6 @@ They are used to collect data at assigned organisation units.
     Background:
       Given that I am logged in
       And that I have the necessary permissions to add a dataset
-      And that there are some data elements in the system
-      And that there are some organisation units in the system
 
       Scenario: Create a dataset
         And that I want to create a new dataset
