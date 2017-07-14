@@ -6,7 +6,6 @@ const assert = chai.assert;
 
 defineSupportCode(function ({Given, When, Then}) {
   const generatedOrganisationUnitId = dhis2.generateUniqIds();
-  const dataSetIds = ['aLpVgfXiz0f'];
   let organisationUnitWasCreated = false;
 
   Given(/^that I have the necessary permissions to add an organisation unit$/, function () {
@@ -174,16 +173,23 @@ defineSupportCode(function ({Given, When, Then}) {
   });
 
   When(/^there is a dataset in the system$/, function () {
-    assert.isAtLeast(dataSetIds.length, 1, 'It shoud have at least one indicator');
+    const world = this;
+    world.method = 'get';
+
+    return dhis2.initializePromiseUrlUsingWorldContext(
+      world,
+      dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.DATASET, null)
+    ).then(function (response) {
+      assert.isAtLeast(response.data.dataSets.length, 1, 'It shoud have at least one dataset');
+      world.responseData = response.data;
+    });
   });
 
   When(/^I update the datasets of the organisation unit$/, function () {
-    const dataSets = [];
-    for (const id of dataSetIds) {
-      dataSets.push({
-        id: id
-      });
-    }
+    const world = this;
+    const dataSets = [{
+      id: world.responseData.dataSets[0].id
+    }];
     this.requestData.dataSets = dataSets;
     this.updatedDataToAssert.dataSets = dataSets;
   });
