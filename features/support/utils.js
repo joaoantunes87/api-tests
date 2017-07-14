@@ -97,7 +97,7 @@ module.exports = (() => {
       const ids = [];
       const numberOfIdsTemp = numberOfIds || 1;
       for (let seed = 0; seed < numberOfIdsTemp; seed++) {
-        ids.push((currentTimestamp - seed) + '');
+        ids.push('' + (currentTimestamp - seed));
       }
 
       return numberOfIds ? ids : ids[0];
@@ -115,7 +115,11 @@ module.exports = (() => {
       return endpoint;
     },
     generateUrlToEndpointWithParams: (resourceType, paramsDictionary = {}) => {
-      let url = generateResourceTypeEndpoint(resourceType) + '?';
+      let url = generateResourceTypeEndpoint(resourceType);
+      if (paramsDictionary && Object.keys(paramsDictionary).length > 0) {
+        url += '?';
+      }
+
       for (const key in paramsDictionary) {
         url = url + key + '=' + paramsDictionary[key] + '&';
       }
