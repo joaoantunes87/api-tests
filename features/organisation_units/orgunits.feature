@@ -93,3 +93,11 @@ I want to be able to add and manage organisation units
         | locale | translation |
         | pt | Organização 1 |
         | es | Organización 1 |
+
+      Scenario: Assign a data set to organisation units
+        And I got the existing organisation unit to update
+        And there is a dataset in the system
+        When I update the datasets of the organisation unit
+        And I submit the organisation unit
+        Then I should be informed that the organisation unit was updated
+        And The current organisation unit data is the same as submitted.

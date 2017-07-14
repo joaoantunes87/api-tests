@@ -6,7 +6,10 @@ module.exports = (() => {
   const RESOURCE_TYPES = {
     OPTION_SET: 'option set',
     DATA_ELEMENT: 'data element',
-    ORGANISATION_UNIT: 'organisation unit'
+    ORGANISATION_UNIT: 'organisation unit',
+    DATASET: 'dataset',
+    CATEGORY_COMBINATION: 'category combination',
+    INDICATOR: 'indicator'
   };
 
   const authorityExistsInUserRoles = (authority, userRoles = []) => {
@@ -20,6 +23,34 @@ module.exports = (() => {
     }
 
     return false;
+  };
+
+  const generateResourceTypeEndpoint = (resourceType) => {
+    let endpoint = '';
+    switch (resourceType) {
+      case RESOURCE_TYPES.OPTION_SET:
+        endpoint = apiEndpoint + '/optionSets';
+        break;
+      case RESOURCE_TYPES.ORGANISATION_UNIT:
+        endpoint = apiEndpoint + '/organisationUnits';
+        break;
+      case RESOURCE_TYPES.DATA_ELEMENT:
+        endpoint = apiEndpoint + '/dataElements';
+        break;
+      case RESOURCE_TYPES.DATASET:
+        endpoint = apiEndpoint + '/dataSets';
+        break;
+      case RESOURCE_TYPES.CATEGORY_COMBINATION:
+        endpoint = apiEndpoint + '/categoryCombos';
+        break;
+      case RESOURCE_TYPES.INDICATOR:
+        endpoint = apiEndpoint + '/indicators';
+        break;
+      default:
+        throw new Error('There is no resource type defined for: ' + resourceType);
+    }
+
+    return endpoint;
   };
 
   return {
@@ -50,6 +81,9 @@ module.exports = (() => {
     isAuthorisedToDeleteOptionSetWith: (userRoles = []) => {
       return authorityExistsInUserRoles('F_OPTIONSET_DELETE', userRoles);
     },
+    isAuthorisedToAddDataSetWith: (userRoles = []) => {
+      return authorityExistsInUserRoles('F_DATASET_PUBLIC_ADD', userRoles);
+    },
     initializePromiseUrlUsingWorldContext: (world, url) => {
       return world.axios({
         method: world.method || 'get',
@@ -63,29 +97,31 @@ module.exports = (() => {
       const ids = [];
       const numberOfIdsTemp = numberOfIds || 1;
       for (let seed = 0; seed < numberOfIdsTemp; seed++) {
-        ids.push(currentTimestamp - seed);
+        ids.push('' + (currentTimestamp - seed));
       }
 
       return numberOfIds ? ids : ids[0];
     },
+    generateUrlForResourceType: (resourceType) => {
+      return generateResourceTypeEndpoint(resourceType);
+    },
     generateUrlForResourceTypeWithId: (resourceType, resourceId) => {
-      let url = '';
-      switch (resourceType) {
-        case RESOURCE_TYPES.OPTION_SET:
-          url = apiEndpoint + '/optionSets/';
-          break;
-        case RESOURCE_TYPES.ORGANISATION_UNIT:
-          url = apiEndpoint + '/organisationUnits/';
-          break;
-        case RESOURCE_TYPES.DATA_ELEMENT:
-          url = apiEndpoint + '/dataElements/';
-          break;
-        default:
-          throw new Error('There is no resource type defined for: ' + resourceType);
-      }
+      const endpoint = generateResourceTypeEndpoint(resourceType);
 
       if (resourceId) {
-        return url.concat(resourceId);
+        return endpoint + '/' + resourceId;
+      }
+
+      return endpoint;
+    },
+    generateUrlToEndpointWithParams: (resourceType, paramsDictionary = {}) => {
+      let url = generateResourceTypeEndpoint(resourceType);
+      if (paramsDictionary && Object.keys(paramsDictionary).length > 0) {
+        url += '?';
+      }
+
+      for (const key in paramsDictionary) {
+        url = url + key + '=' + paramsDictionary[key] + '&';
       }
 
       return url;
