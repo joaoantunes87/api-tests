@@ -7,7 +7,8 @@ module.exports = (() => {
     OPTION_SET: 'option set',
     DATA_ELEMENT: 'data element',
     ORGANISATION_UNIT: 'organisation unit',
-    DATASET: 'dataset'
+    DATASET: 'dataset',
+    CATEGORY_COMBINATION: 'category combination'
   };
 
   const authorityExistsInUserRoles = (authority, userRoles = []) => {
@@ -21,6 +22,31 @@ module.exports = (() => {
     }
 
     return false;
+  };
+
+  const generateResourceTypeEndpoint = (resourceType) => {
+    let endpoint = '';
+    switch (resourceType) {
+      case RESOURCE_TYPES.OPTION_SET:
+        endpoint = apiEndpoint + '/optionSets';
+        break;
+      case RESOURCE_TYPES.ORGANISATION_UNIT:
+        endpoint = apiEndpoint + '/organisationUnits';
+        break;
+      case RESOURCE_TYPES.DATA_ELEMENT:
+        endpoint = apiEndpoint + '/dataElements';
+        break;
+      case RESOURCE_TYPES.DATASET:
+        endpoint = apiEndpoint + '/dataSets';
+        break;
+      case RESOURCE_TYPES.CATEGORY_COMBINATION:
+        endpoint = apiEndpoint + '/categoryCombos';
+        break;
+      default:
+        throw new Error('There is no resource type defined for: ' + resourceType);
+    }
+
+    return endpoint;
   };
 
   return {
@@ -72,27 +98,22 @@ module.exports = (() => {
 
       return numberOfIds ? ids : ids[0];
     },
+    generateUrlForResourceType: (resourceType) => {
+      return generateResourceTypeEndpoint(resourceType);
+    },
     generateUrlForResourceTypeWithId: (resourceType, resourceId) => {
-      let url = '';
-      switch (resourceType) {
-        case RESOURCE_TYPES.OPTION_SET:
-          url = apiEndpoint + '/optionSets/';
-          break;
-        case RESOURCE_TYPES.ORGANISATION_UNIT:
-          url = apiEndpoint + '/organisationUnits/';
-          break;
-        case RESOURCE_TYPES.DATA_ELEMENT:
-          url = apiEndpoint + '/dataElements/';
-          break;
-        case RESOURCE_TYPES.DATASET:
-          url = apiEndpoint + '/dataSets/';
-          break;
-        default:
-          throw new Error('There is no resource type defined for: ' + resourceType);
-      }
+      const endpoint = generateResourceTypeEndpoint(resourceType);
 
       if (resourceId) {
-        return url.concat(resourceId);
+        return endpoint + '/' + resourceId;
+      }
+
+      return endpoint;
+    },
+    generateUrlToEndpointWithParams: (resourceType, paramsDictionary = {}) => {
+      let url = generateResourceTypeEndpoint(resourceType) + '?';
+      for (const key in paramsDictionary) {
+        url = url + key + '=' + paramsDictionary[key] + '&';
       }
 
       return url;

@@ -6,7 +6,6 @@ const assert = chai.assert;
 
 defineSupportCode(function ({Given, When, Then}) {
   const generatedDatasetId = dhis2.generateUniqIds();
-  const attributeCategoryCombinationId = 'O4VaNks6tta';
   const aggregateDataElementIds = ['pgzNTiQwMES', 'OCU92ttHmic'];
   const aggregateIndicatorIds = ['ReUHfIn0pTQ', 'bASXd9ukRGD'];
   let datasetWasCreated = false;
@@ -103,12 +102,32 @@ defineSupportCode(function ({Given, When, Then}) {
   });
 
   When(/^there is a category combination with a dimension of type attribute$/, function () {
-    assert.isOk(generatedDatasetId, 'O4VaNks6tta');
+    const world = this;
+    world.method = 'get';
+    world.attributeCategoryCombinationId = null;
+
+    return dhis2.initializePromiseUrlUsingWorldContext(
+      world,
+      dhis2.generateUrlToEndpointWithParams(
+        dhis2.resourceTypes.CATEGORY_COMBINATION,
+        {
+          dataDimensionType: 'ATTRIBUTE'
+        }
+      )
+    ).then(function (response) {
+      assert.isAtLeast(
+        response.data.categoryCombos.length,
+        1,
+        'It shoud have at least one category combination with a a dimension of type attribute'
+      );
+      world.responseData = response.data;
+    });
   });
 
   When(/^I update the category combination of the dataset$/, function () {
+    const world = this;
     const categoryCombo = {
-      id: attributeCategoryCombinationId
+      id: world.responseData.categoryCombos[0].id
     };
     this.requestData.categoryCombo = categoryCombo;
     this.updatedDataToAssert.categoryCombo = categoryCombo;
