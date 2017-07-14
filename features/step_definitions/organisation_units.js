@@ -186,11 +186,11 @@ defineSupportCode(function ({Given, When, Then}) {
   });
 
   When(/^I update the datasets of the organisation unit$/, function () {
-    const world = this;
     const dataSets = [{
-      id: world.responseData.dataSets[0].id
+      id: this.responseData.dataSets[0].id
     }];
     this.requestData.dataSets = dataSets;
     this.updatedDataToAssert.dataSets = dataSets;
+    this.method = 'put';
   });
 });

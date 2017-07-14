@@ -8,7 +8,8 @@ module.exports = (() => {
     DATA_ELEMENT: 'data element',
     ORGANISATION_UNIT: 'organisation unit',
     DATASET: 'dataset',
-    CATEGORY_COMBINATION: 'category combination'
+    CATEGORY_COMBINATION: 'category combination',
+    INDICATOR: 'indicator'
   };
 
   const authorityExistsInUserRoles = (authority, userRoles = []) => {
@@ -41,6 +42,9 @@ module.exports = (() => {
         break;
       case RESOURCE_TYPES.CATEGORY_COMBINATION:
         endpoint = apiEndpoint + '/categoryCombos';
+        break;
+      case RESOURCE_TYPES.INDICATOR:
+        endpoint = apiEndpoint + '/indicators';
         break;
       default:
         throw new Error('There is no resource type defined for: ' + resourceType);

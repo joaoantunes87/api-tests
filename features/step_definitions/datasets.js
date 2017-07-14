@@ -6,8 +6,6 @@ const assert = chai.assert;
 
 defineSupportCode(function ({Given, When, Then}) {
   const generatedDatasetId = dhis2.generateUniqIds();
-  const aggregateDataElementIds = ['pgzNTiQwMES', 'OCU92ttHmic'];
-  const aggregateIndicatorIds = ['ReUHfIn0pTQ', 'bASXd9ukRGD'];
   let datasetWasCreated = false;
 
   Given(/^that I have the necessary permissions to add a dataset$/, function () {
@@ -104,7 +102,6 @@ defineSupportCode(function ({Given, When, Then}) {
   When(/^there is a category combination with a dimension of type attribute$/, function () {
     const world = this;
     world.method = 'get';
-    world.attributeCategoryCombinationId = null;
 
     return dhis2.initializePromiseUrlUsingWorldContext(
       world,
@@ -134,32 +131,59 @@ defineSupportCode(function ({Given, When, Then}) {
   });
 
   When(/^there are some aggregate data elements in the system$/, function () {
-    assert.isAtLeast(aggregateDataElementIds.length, 1, 'It shoud have at least one aggregate data element');
+    const world = this;
+    world.method = 'get';
+
+    return dhis2.initializePromiseUrlUsingWorldContext(
+      world,
+      dhis2.generateUrlToEndpointWithParams(
+        dhis2.resourceTypes.DATA_ELEMENT,
+        {
+          domainType: 'AGGREGATE'
+        }
+      )
+    ).then(function (response) {
+      assert.isAtLeast(
+        response.data.dataElements.length,
+        1,
+        'It shoud have at least one aggregate data element'
+      );
+      world.responseData = response.data;
+    });
   });
 
   When(/^I add data elements to the dataset$/, function () {
-    const dataSetElements = [];
-    for (const id of aggregateDataElementIds) {
-      dataSetElements.push({
-        id: id
-      });
-    }
+    const dataSetElements = [{
+      id: this.responseData.dataElements[0].id
+    }];
     this.requestData.dataSetElements = dataSetElements;
     this.updatedDataToAssert.dataSetElements = dataSetElements;
+    this.method = 'put';
   });
 
   When(/^there are some indicators in the system$/, function () {
-    assert.isAtLeast(aggregateIndicatorIds.length, 1, 'It shoud have at least one indicator');
+    const world = this;
+    world.method = 'get';
+
+    return dhis2.initializePromiseUrlUsingWorldContext(
+      world,
+      dhis2.generateUrlForResourceType(dhis2.resourceTypes.INDICATOR)
+    ).then(function (response) {
+      assert.isAtLeast(
+        response.data.indicators.length,
+        1,
+        'It shoud have at least one indicator'
+      );
+      world.responseData = response.data;
+    });
   });
 
   When(/^I add indicators to the dataset$/, function () {
-    const indicators = [];
-    for (const id of aggregateIndicatorIds) {
-      indicators.push({
-        id: id
-      });
-    }
+    const indicators = [{
+      id: this.responseData.indicators[0].id
+    }];
     this.requestData.indicators = indicators;
     this.updatedDataToAssert.indicators = indicators;
+    this.method = 'put';
   });
 });
