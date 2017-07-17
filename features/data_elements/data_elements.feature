@@ -33,3 +33,12 @@ I want to be able to add and manage data elements
         | locale | translation |
         | pt | Qux |
         | es | Baz |
+
+      Scenario Outline: Filter data elements
+          When I search for data elements by property <property> with value <value>
+          And I send the search request
+          Then I should receive data elements filtered.
+          Examples:
+          | property | value |
+          | domainType | AGGREGATE |
+          | aggregationType | SUM |

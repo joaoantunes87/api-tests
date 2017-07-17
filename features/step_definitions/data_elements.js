@@ -109,4 +109,62 @@ defineSupportCode(function ({Given, When, Then}) {
       assert.equal(response.data.displayName, world.translationValue, 'Name is not translated');
     });
   });
+
+  When(/^I search for data elements by property (.+) with value (.+)$/, function (property, value) {
+    this.searchProperty = property;
+    this.searchValue = value;
+  });
+
+  When(/^I send the search request$/, function () {
+    const world = this;
+    world.method = 'get';
+
+    const search = {};
+    search[world.searchProperty] = world.searchValue;
+
+    return dhis2.initializePromiseUrlUsingWorldContext(
+      world,
+      dhis2.generateUrlToEndpointWithParams(
+        dhis2.resourceTypes.DATA_ELEMENT,
+        search
+      )
+    ).then(function (response) {
+      assert.equal(response.status, 200, 'Response Status is ok');
+      assert.property(response.data, 'dataElements', 'It should return data elements');
+      world.responseStatus = response.status;
+      world.responseData = response.data;
+    });
+  });
+
+  Then(/^I should receive data elements filtered.$/, function () {
+    const world = this;
+    world.method = 'get';
+    world.requestData = {};
+
+    const dataElements = world.responseData.dataElements;
+    let currentDataElement = 0;
+
+    const checkDataElement = (response) => {
+      assert.equal(
+        response.data[world.searchProperty],
+        world.searchValue,
+        'The ' + world.searchProperty + ' should be ' + world.searchValue
+      );
+
+      currentDataElement++;
+      if (currentDataElement < dataElements.length) {
+        return dhis2.initializePromiseUrlUsingWorldContext(
+          world,
+          dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.DATA_ELEMENT, dataElements[currentDataElement].id)
+        ).then(checkDataElement);
+      }
+    };
+
+    if (dataElements.length > 0) {
+      return dhis2.initializePromiseUrlUsingWorldContext(
+        world,
+        dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.DATA_ELEMENT, dataElements[currentDataElement].id)
+      ).then(checkDataElement);
+    }
+  });
 });
