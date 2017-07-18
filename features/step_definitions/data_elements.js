@@ -141,7 +141,8 @@ defineSupportCode(function ({Given, When, Then}) {
     world.method = 'get';
     world.requestData = {};
 
-    const dataElements = world.responseData.dataElements;
+    let dataElements = world.responseData.dataElements;
+    let nextPageUrl = world.responseData.nextPage;
     let currentDataElement = 0;
 
     const checkDataElement = (response) => {
@@ -158,8 +159,35 @@ defineSupportCode(function ({Given, When, Then}) {
           dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.DATA_ELEMENT, dataElements[currentDataElement].id)
         ).then(checkDataElement);
       }
+
+      if (nextPageUrl) {
+        return dhis2.initializePromiseUrlUsingWorldContext(
+          world,
+          nextPageUrl
+        ).then(function (response) {
+          assert.equal(response.status, 200, 'Response Status is ok');
+          assert.property(response.data, 'dataElements', 'It should return data elements');
+
+          // preparing to check next page
+          dataElements = response.data.dataElements;
+          nextPageUrl = response.data.nextPage;
+          currentDataElement = 0;
+
+          // initializing verification by data element
+          if (dataElements.length > 0) {
+            return dhis2.initializePromiseUrlUsingWorldContext(
+              world,
+              dhis2.generateUrlForResourceTypeWithId(
+                dhis2.resourceTypes.DATA_ELEMENT,
+                dataElements[currentDataElement].id
+              )
+            ).then(checkDataElement);
+          }
+        });
+      }
     };
 
+    // initializing verification by data element
     if (dataElements.length > 0) {
       return dhis2.initializePromiseUrlUsingWorldContext(
         world,

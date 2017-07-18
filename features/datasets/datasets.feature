@@ -4,7 +4,6 @@ I want to be able to add and manage datasets
 Data sets are collections of data elements, indicators and data entry forms.
 They are used to collect data at assigned organisation units.
 
-
     Background:
       Given that I am logged in
       And that I have the necessary permissions to add a dataset
