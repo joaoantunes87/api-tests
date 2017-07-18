@@ -51,6 +51,7 @@ defineSupportCode(function ({Given, When, Then}) {
             break;
           case 'dataSetElements':
           case 'indicators':
+          case 'organisationUnits':
             assert.sameDeepMembers(
               response.data[propertyKey],
               world.updatedDataToAssert[propertyKey],
@@ -184,6 +185,32 @@ defineSupportCode(function ({Given, When, Then}) {
     }];
     this.requestData.indicators = indicators;
     this.updatedDataToAssert.indicators = indicators;
+    this.method = 'put';
+  });
+
+  When(/^there are some organisation units in the system$/, function () {
+    const world = this;
+    world.method = 'get';
+
+    return dhis2.initializePromiseUrlUsingWorldContext(
+      world,
+      dhis2.generateUrlForResourceType(dhis2.resourceTypes.ORGANISATION_UNIT)
+    ).then(function (response) {
+      assert.isAtLeast(
+        response.data.organisationUnits.length,
+        1,
+        'It shoud have at least one organisation unit'
+      );
+      world.responseData = response.data;
+    });
+  });
+
+  When(/^I add organisation units to the dataset$/, function () {
+    const organisationUnits = [{
+      id: this.responseData.organisationUnits[0].id
+    }];
+    this.requestData.organisationUnits = organisationUnits;
+    this.updatedDataToAssert.organisationUnits = organisationUnits;
     this.method = 'put';
   });
 });

@@ -136,13 +136,14 @@ defineSupportCode(function ({Given, When, Then}) {
     });
   });
 
-  Then(/^I should receive data elements filtered.$/, function () {
+  // add to remove default cucumber timeout because it takes too long, more than 5000 milliseconds
+  Then(/^I should receive data elements filtered.$/, {timeout: -1}, function () {
     const world = this;
     world.method = 'get';
     world.requestData = {};
 
     let dataElements = world.responseData.dataElements;
-    let nextPageUrl = world.responseData.nextPage;
+    let nextPageUrl = world.responseData.pager.nextPage;
     let currentDataElement = 0;
 
     const checkDataElement = (response) => {
@@ -151,7 +152,7 @@ defineSupportCode(function ({Given, When, Then}) {
         world.searchValue,
         'The ' + world.searchProperty + ' should be ' + world.searchValue
       );
-
+      // console.log('Data Element Id: ' + dataElements[currentDataElement].id);
       currentDataElement++;
       if (currentDataElement < dataElements.length) {
         return dhis2.initializePromiseUrlUsingWorldContext(
@@ -170,7 +171,7 @@ defineSupportCode(function ({Given, When, Then}) {
 
           // preparing to check next page
           dataElements = response.data.dataElements;
-          nextPageUrl = response.data.nextPage;
+          nextPageUrl = response.data.pager.nextPage;
           currentDataElement = 0;
 
           // initializing verification by data element
