@@ -121,7 +121,7 @@ module.exports = (() => {
       }
 
       for (const key in paramsDictionary) {
-        url = url + key + '=' + paramsDictionary[key] + '&';
+        url = url + 'filter=' + key + ':eq:' + paramsDictionary[key] + '&';
       }
 
       return url;

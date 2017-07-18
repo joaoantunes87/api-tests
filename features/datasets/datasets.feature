@@ -76,3 +76,11 @@ They are used to collect data at assigned organisation units.
       And I submit the dataset
       Then I should be informed that the dataset was updated
       And The current dataset data is the same as submitted.
+
+      Scenario: Assign an organisation units to a dataset
+      And I got the existing dataset to update
+      And there are some organisation units in the system
+      When I add organisation units to the dataset
+      And I submit the dataset
+      Then I should be informed that the dataset was updated
+      And The current dataset data is the same as submitted.
