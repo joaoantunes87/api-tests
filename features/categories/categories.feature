@@ -33,4 +33,12 @@ category options. Categories can be combined into category combinations
         Then I should be informed that the category combination was created successfully
         And the category combination should have all of the category option combinations.
         
+    Scenario: Delete a category combination 
+        Given I have created a category combination 
+        When I try to delete the category combination
+        Then the system should inform me the category combination was successfully deleted
+        But not if its associated with any other object.  
         
+    
+
+    
