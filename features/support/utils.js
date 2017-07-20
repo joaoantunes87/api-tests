@@ -9,7 +9,8 @@ module.exports = (() => {
     ORGANISATION_UNIT: 'organisation unit',
     DATASET: 'dataset',
     CATEGORY_COMBINATION: 'category combination',
-    INDICATOR: 'indicator'
+    INDICATOR: 'indicator',
+    CATEGORY_OPTION: 'category option'
   };
 
   const authorityExistsInUserRoles = (authority, userRoles = []) => {
@@ -45,6 +46,9 @@ module.exports = (() => {
         break;
       case RESOURCE_TYPES.INDICATOR:
         endpoint = apiEndpoint + '/indicators';
+        break;
+      case RESOURCE_TYPES.CATEGORY_OPTION:
+        endpoint = apiEndpoint + '/categoryOptions';
         break;
       default:
         throw new Error('There is no resource type defined for: ' + resourceType);
@@ -83,6 +87,15 @@ module.exports = (() => {
     },
     isAuthorisedToAddDataSetWith: (userRoles = []) => {
       return authorityExistsInUserRoles('F_DATASET_PUBLIC_ADD', userRoles);
+    },
+    isAuthorisedToAddCategoryComboWith: (userRoles = []) => {
+      return authorityExistsInUserRoles('F_CATEGORY_COMBO_PUBLIC_ADD', userRoles);
+    },
+    isAuthorisedToAddCategoryOptionWith: (userRoles = []) => {
+      return authorityExistsInUserRoles('F_CATEGORY_OPTION_PUBLIC_ADD', userRoles);
+    },
+    isAuthorisedToAddCategoryWith: (userRoles = []) => {
+      return authorityExistsInUserRoles('F_CATEGORY_PUBLIC_ADD', userRoles);
     },
     initializePromiseUrlUsingWorldContext: (world, url) => {
       return world.axios({
