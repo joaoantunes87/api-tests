@@ -3,6 +3,7 @@
 module.exports = (() => {
   let apiEndpoint = 'https://play.dhis2.org/demo/api/26'; // default
   let generateHtmlReport = true;
+  const ALL_AUTHORITY = 'ALL';
   const RESOURCE_TYPES = {
     OPTION_SET: 'option set',
     DATA_ELEMENT: 'data element',
@@ -12,11 +13,11 @@ module.exports = (() => {
     INDICATOR: 'indicator'
   };
 
-  const authorityExistsInUserRoles = (authority, userRoles = []) => {
+  const isAuthorisedTo = (authority, userRoles = []) => {
     if (authority && userRoles.length > 0) {
       for (const index in userRoles) {
         const authorities = userRoles[index].authorities || [];
-        if (authorities.includes(authority)) {
+        if (authorities.includes(ALL_AUTHORITY) || authorities.includes(authority)) {
           return true;
         }
       }
@@ -70,19 +71,19 @@ module.exports = (() => {
       }
     },
     isAuthorisedToAddDataElementWith: (userRoles = []) => {
-      return authorityExistsInUserRoles('F_DATAELEMENT_PUBLIC_ADD', userRoles);
+      return isAuthorisedTo('F_DATAELEMENT_PUBLIC_ADD', userRoles);
     },
     isAuthorisedToAddOrganisationUnitWith: (userRoles = []) => {
-      return authorityExistsInUserRoles('F_ORGANISATIONUNIT_ADD', userRoles);
+      return isAuthorisedTo('F_ORGANISATIONUNIT_ADD', userRoles);
     },
     isAuthorisedToAddOptionSetWith: (userRoles = []) => {
-      return authorityExistsInUserRoles('F_OPTIONSET_PUBLIC_ADD', userRoles);
+      return isAuthorisedTo('F_OPTIONSET_PUBLIC_ADD', userRoles);
     },
     isAuthorisedToDeleteOptionSetWith: (userRoles = []) => {
-      return authorityExistsInUserRoles('F_OPTIONSET_DELETE', userRoles);
+      return isAuthorisedTo('F_OPTIONSET_DELETE', userRoles);
     },
     isAuthorisedToAddDataSetWith: (userRoles = []) => {
-      return authorityExistsInUserRoles('F_DATASET_PUBLIC_ADD', userRoles);
+      return isAuthorisedTo('F_DATASET_PUBLIC_ADD', userRoles);
     },
     initializePromiseUrlUsingWorldContext: (world, url) => {
       return world.axios({
