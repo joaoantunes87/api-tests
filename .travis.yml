@@ -1,9 +1,10 @@
 sudo: required
 
-language: node_js
-
 services:
   - docker
 
+before_install:
+  - export DHIS2_GENERATE_HTML_REPORT=false
+
 script:
-    - docker-compose up --build --abort-on-container-exit
+  - docker-compose up --build --abort-on-container-exit
