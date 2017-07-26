@@ -16,5 +16,3 @@ RUN echo deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main >> /etc/a
 RUN wget --quiet -O - https://www.postgresql.org/media/keys/ACCC4CF8.asc | apt-key add -
 RUN apt-get update
 RUN apt-get install -y postgresql-9.6 postgresql-contrib-9.6
-RUN su - postgres -c '/usr/lib/postgresql/9.6/bin/pg_ctl -D /var/lib/postgresql/9.6/main -l logfile start'
-# RUN su - postgres -c '/usr/lib/postgresql/9.6/bin/pg_ctl -D /var/lib/postgresql/9.6/main/ -o "-c config_file=/etc/postgresql/9.6/main/postgresql.conf" start'
