@@ -1,8 +1,9 @@
+sudo: required
+
 language: node_js
-node_js:
-- 'node'
-cache:
-  directories:
-  - node_modules
+
+services:
+  - docker
+
 script:
     - docker-compose up --build --abort-on-container-exit
