@@ -3,6 +3,8 @@
 module.exports = (() => {
   let apiEndpoint = 'https://play.dhis2.org/demo/api/26'; // default
   let generateHtmlReport = true;
+
+  const LOG_DEBUG_MODE = 'debug';
   const ALL_AUTHORITY = 'ALL';
   const RESOURCE_TYPES = {
     OPTION_SET: 'option set',
@@ -12,6 +14,8 @@ module.exports = (() => {
     CATEGORY_COMBINATION: 'category combination',
     INDICATOR: 'indicator'
   };
+
+  const onDebugMode = process.env.DHIS2_LOG_MODE === LOG_DEBUG_MODE;
 
   const isAuthorisedTo = (authority, userRoles = []) => {
     if (authority && userRoles.length > 0) {
@@ -126,6 +130,11 @@ module.exports = (() => {
       }
 
       return url;
+    },
+    log: (message) => {
+      if (message && onDebugMode) {
+        console.log(message);
+      }
     }
   };
 })();
