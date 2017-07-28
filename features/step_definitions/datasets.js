@@ -237,7 +237,7 @@ const submitServerRequest = (world) => {
     world.responseStatus = response.status;
     world.responseData = response.data;
   }).catch(function (error) {
-    dhis2.log('ERROR: ' + JSON.stringify(error.response.data));
+    console.error(JSON.stringify(error.response.data, null, 2));
     world.errorResponse = error;
   });
 };

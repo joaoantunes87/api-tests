@@ -30,9 +30,9 @@ module.exports = (() => {
     return false;
   };
 
-  const log = (message) => {
+  const debug = (message) => {
     if (message && onDebugMode) {
-      console.log(message);
+      console.debug(message);
     }
   };
 
@@ -66,6 +66,7 @@ module.exports = (() => {
 
   return {
     resourceTypes: RESOURCE_TYPES,
+    debug: debug,
     apiEndpoint: (newApiEndpoint) => {
       if (newApiEndpoint) {
         apiEndpoint = newApiEndpoint;
@@ -96,9 +97,9 @@ module.exports = (() => {
       return isAuthorisedTo('F_DATASET_PUBLIC_ADD', userRoles);
     },
     initializePromiseUrlUsingWorldContext: (world, url) => {
-      log('URL: ' + url);
-      log('METHOD: ' + world.method);
-      log('REQUEST DATA: ' + JSON.stringify(world.requestData));
+      debug('URL: ' + url);
+      debug('METHOD: ' + world.method);
+      debug('REQUEST DATA: ' + JSON.stringify(world.requestData, null, 2));
       return world.axios({
         method: world.method || 'get',
         url: url,
@@ -139,7 +140,6 @@ module.exports = (() => {
       }
 
       return url;
-    },
-    log: log
+    }
   };
 })();
