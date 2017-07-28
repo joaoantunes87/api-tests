@@ -34,7 +34,7 @@ module.exports = (() => {
 
   const debug = (message) => {
     if (message && onDebugMode) {
-      console.debug(message);
+      console.log(message);
     }
   };
 
@@ -105,13 +105,13 @@ module.exports = (() => {
       return isAuthorisedTo('F_DATASET_PUBLIC_ADD', userRoles);
     },
     isAuthorisedToAddCategoryComboWith: (userRoles = []) => {
-      return authorityExistsInUserRoles('F_CATEGORY_COMBO_PUBLIC_ADD', userRoles);
+      return isAuthorisedTo('F_CATEGORY_COMBO_PUBLIC_ADD', userRoles);
     },
     isAuthorisedToAddCategoryOptionWith: (userRoles = []) => {
-      return authorityExistsInUserRoles('F_CATEGORY_OPTION_PUBLIC_ADD', userRoles);
+      return isAuthorisedTo('F_CATEGORY_OPTION_PUBLIC_ADD', userRoles);
     },
     isAuthorisedToAddCategoryWith: (userRoles = []) => {
-      return authorityExistsInUserRoles('F_CATEGORY_PUBLIC_ADD', userRoles);
+      return isAuthorisedTo('F_CATEGORY_PUBLIC_ADD', userRoles);
     },
     initializePromiseUrlUsingWorldContext: (world, url) => {
       debug('URL: ' + url);

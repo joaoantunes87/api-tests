@@ -9,17 +9,17 @@ category options. Categories can be combined into category combinations
 
       Scenario: Add some category options
         When I fill in the required fields for a category option like:
-        | name           | shortName         |
-        | Apples 23      | Apples 23         |
-        | Oranges 23     | Oranges 23        |
+        | name        | shortName      |
+        | Apples      | Apples         |
+        | Oranges     | Oranges        |
         And I submit that category options to the server
         Then I should be informed that the category options were created successfully.
 
       Scenario: Create category
         Given I have already successfully created some category options
         When I fill in the required fields for a category:
-        | name      | dataDimensionType |
-        | Fruits 13 | DISAGGREGATION    |
+        | name   | dataDimensionType |
+        | Fruits | DISAGGREGATION    |
         And I add my category options to the category
         And I submit that category to the server
         Then I should be informed that the category was created successfully.
@@ -27,8 +27,8 @@ category options. Categories can be combined into category combinations
       Scenario: Create a category combination
         Given I have already successfully created some categories
         When I fill in the required fields for a category combination:
-        | name                | dataDimensionType  |
-        | Color of Fruits 10  | DISAGGREGATION      |
+        | name             | dataDimensionType  |
+        | Color of Fruits  | DISAGGREGATION      |
         And I add my categories to the category combination
         And I submit that category combination to the server
         Then I should be informed that the category combination was created successfully
