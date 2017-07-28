@@ -24,6 +24,21 @@ defineSupportCode(function ({Given, When, Then, Before}) {
     this.method = 'post';
   });
 
+  When(/^I submit the option set$/, function () {
+    return submitServerRequest(this);
+  });
+
+  When(/^I fill in the fields for the options set with data:$/, function (data) {
+    const properties = data.rawTable[0];
+    const values = data.rawTable[1];
+
+    this.updatedDataToAssert = {};
+    properties.forEach(function (propertyKey, index) {
+      this.updatedDataToAssert[propertyKey] = values[index];
+      this.requestData[propertyKey] = values[index];
+    }, this);
+  });
+
   Then(/^I should be informed that the option set was created$/, function () {
     assert.equal(this.responseStatus, 201, 'Status should be 201');
     assert.isOk(this.responseData.response.uid, 'Id was not returned');
@@ -164,5 +179,17 @@ const assertUpdateDataWithResponseData = (world) => {
     } else {
       assert.equal(world.responseData[propertyKey], world.updatedDataToAssert[propertyKey], propertyKey + ' is wrong');
     }
+  });
+};
+
+const submitServerRequest = (world) => {
+  const url = dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.OPTION_SET, world.resourceId);
+
+  return dhis2.initializePromiseUrlUsingWorldContext(world, url).then(function (response) {
+    world.responseStatus = response.status;
+    world.responseData = response.data;
+  }).catch(function (error) {
+    console.error(JSON.stringify(error.response.data, null, 2));
+    world.errorResponse = error;
   });
 };

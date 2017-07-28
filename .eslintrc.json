@@ -16,6 +16,9 @@
       "ignoreComments": true,
       "ignoreUrls": true
     }],
+    "no-multi-spaces": ["error", {
+      "ignoreEOLComments": true
+    }],
     "no-var": "error",
     "prefer-const": "warn",
     "semi": ["error", "always"],

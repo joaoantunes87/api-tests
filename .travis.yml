@@ -1,8 +1,10 @@
-language: node_js
-node_js:
-- 'node'
-cache:
-  directories:
-  - node_modules
+sudo: required
+
+services:
+  - docker
+
+before_install:
+  - export DHIS2_GENERATE_HTML_REPORT=false
+
 script:
-    - npm test
+  - docker-compose up --build --abort-on-container-exit

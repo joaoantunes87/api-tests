@@ -55,43 +55,20 @@ defineSupportCode(function ({ setWorldConstructor, registerHandler, Given, When,
     callback();
   });
 
-  When(/^I submit the (.+)$/, function (resourceType) {
-    const world = this;
-    const url = dhis2.generateUrlForResourceTypeWithId(resourceType, world.resourceId);
-
-    return dhis2.initializePromiseUrlUsingWorldContext(world, url).then(function (response) {
-      world.responseStatus = response.status;
-      world.responseData = response.data;
-    }).catch(function (error) {
-      world.errorResponse = error;
-    });
-  });
-
   Then(/^I should receive an error message equal to: (.+).$/, function (errorMessage) {
     assert.equal(this.errorResponse.response.status, 400, 'It should have returned error status of 400');
     assert.equal(this.errorResponse.response.data.status, 'ERROR', 'It should have returned error status');
     assert.equal(this.errorResponse.response.data.message, errorMessage, 'Error message should be ' + errorMessage);
   });
 
-  When(/^I fill in the fields for the (.+) with data:$/, function (resourceType, data) {
-    const properties = data.rawTable[0];
-    const values = data.rawTable[1];
-
-    this.updatedDataToAssert = {};
-    properties.forEach(function (propertyKey, index) {
-      this.updatedDataToAssert[propertyKey] = values[index];
-      this.requestData[propertyKey] = values[index];
-    }, this);
-  });
-
   Then(/^I should be informed that the (.+) was updated$/, function (resourceType) {
     assert.equal(this.responseStatus, 200, 'The ' + resourceType + ' should have been updated');
   });
 
-  When(/^I select the correct locale for the logged user$/, function () {
+  When(/^I select the correct (.+)$/, function (locale) {
     return this.axios({
       method: 'post',
-      url: dhis2.apiEndpoint() + '/userSettings/keyDbLocale?value=' + this.locale,
+      url: dhis2.apiEndpoint() + '/userSettings/keyDbLocale?value=' + locale,
       auth: this.authRequestObject
     }).then(function (response) {
       assert.equal(response.status, 200, 'Locale setting was not updated');
