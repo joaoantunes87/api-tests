@@ -3,6 +3,9 @@
 module.exports = (() => {
   let apiEndpoint = 'https://play.dhis2.org/demo/api/26'; // default
   let generateHtmlReport = true;
+
+  const LOG_DEBUG_MODE = 'debug';
+  const ALL_AUTHORITY = 'ALL';
   const RESOURCE_TYPES = {
     OPTION_SET: 'option set',
     DATA_ELEMENT: 'data element',
@@ -14,17 +17,25 @@ module.exports = (() => {
     CATEGORY: 'category'
   };
 
-  const authorityExistsInUserRoles = (authority, userRoles = []) => {
+  const onDebugMode = process.env.DHIS2_LOG_MODE === LOG_DEBUG_MODE;
+
+  const isAuthorisedTo = (authority, userRoles = []) => {
     if (authority && userRoles.length > 0) {
       for (const index in userRoles) {
         const authorities = userRoles[index].authorities || [];
-        if (authorities.includes(authority)) {
+        if (authorities.includes(ALL_AUTHORITY) || authorities.includes(authority)) {
           return true;
         }
       }
     }
 
     return false;
+  };
+
+  const debug = (message) => {
+    if (message && onDebugMode) {
+      console.debug(message);
+    }
   };
 
   const generateResourceTypeEndpoint = (resourceType) => {
@@ -63,6 +74,7 @@ module.exports = (() => {
 
   return {
     resourceTypes: RESOURCE_TYPES,
+    debug: debug,
     apiEndpoint: (newApiEndpoint) => {
       if (newApiEndpoint) {
         apiEndpoint = newApiEndpoint;
@@ -78,19 +90,19 @@ module.exports = (() => {
       }
     },
     isAuthorisedToAddDataElementWith: (userRoles = []) => {
-      return authorityExistsInUserRoles('F_DATAELEMENT_PUBLIC_ADD', userRoles);
+      return isAuthorisedTo('F_DATAELEMENT_PUBLIC_ADD', userRoles);
     },
     isAuthorisedToAddOrganisationUnitWith: (userRoles = []) => {
-      return authorityExistsInUserRoles('F_ORGANISATIONUNIT_ADD', userRoles);
+      return isAuthorisedTo('F_ORGANISATIONUNIT_ADD', userRoles);
     },
     isAuthorisedToAddOptionSetWith: (userRoles = []) => {
-      return authorityExistsInUserRoles('F_OPTIONSET_PUBLIC_ADD', userRoles);
+      return isAuthorisedTo('F_OPTIONSET_PUBLIC_ADD', userRoles);
     },
     isAuthorisedToDeleteOptionSetWith: (userRoles = []) => {
-      return authorityExistsInUserRoles('F_OPTIONSET_DELETE', userRoles);
+      return isAuthorisedTo('F_OPTIONSET_DELETE', userRoles);
     },
     isAuthorisedToAddDataSetWith: (userRoles = []) => {
-      return authorityExistsInUserRoles('F_DATASET_PUBLIC_ADD', userRoles);
+      return isAuthorisedTo('F_DATASET_PUBLIC_ADD', userRoles);
     },
     isAuthorisedToAddCategoryComboWith: (userRoles = []) => {
       return authorityExistsInUserRoles('F_CATEGORY_COMBO_PUBLIC_ADD', userRoles);
@@ -102,6 +114,9 @@ module.exports = (() => {
       return authorityExistsInUserRoles('F_CATEGORY_PUBLIC_ADD', userRoles);
     },
     initializePromiseUrlUsingWorldContext: (world, url) => {
+      debug('URL: ' + url);
+      debug('METHOD: ' + world.method);
+      debug('REQUEST DATA: ' + JSON.stringify(world.requestData, null, 2));
       return world.axios({
         method: world.method || 'get',
         url: url,

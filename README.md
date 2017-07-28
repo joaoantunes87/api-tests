@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/dhis2/api-tests.svg?branch=master)](https://travis-ci.org/dhis2/api-tests)
+
 # DHIS2 API Testing
 
 Repository for DHIS2 API Testing.
@@ -19,7 +21,7 @@ $ npm test
 Run tests overriding the default API endpoint:
 
 ```sh
-$ npm test -- --world-parameters "{\"apiEndpoint\":\"https://play.dhis2.org/demo/api/27\",\"generateHtmlReport\":false}"
+$ npm test -- --tags "not @ignore" --world-parameters "{\"apiEndpoint\":\"https://play.dhis2.org/demo/api/26\",\"generateHtmlReport\":false}"
 ```
 
 Available parameters are:
