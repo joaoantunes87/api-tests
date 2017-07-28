@@ -30,6 +30,12 @@ module.exports = (() => {
     return false;
   };
 
+  const log = (message) => {
+    if (message && onDebugMode) {
+      console.log(message);
+    }
+  };
+
   const generateResourceTypeEndpoint = (resourceType) => {
     let endpoint = '';
     switch (resourceType) {
@@ -90,6 +96,9 @@ module.exports = (() => {
       return isAuthorisedTo('F_DATASET_PUBLIC_ADD', userRoles);
     },
     initializePromiseUrlUsingWorldContext: (world, url) => {
+      log('URL: ' + url);
+      log('METHOD: ' + world.method);
+      log('REQUEST DATA: ' + JSON.stringify(world.requestData));
       return world.axios({
         method: world.method || 'get',
         url: url,
@@ -131,10 +140,6 @@ module.exports = (() => {
 
       return url;
     },
-    log: (message) => {
-      if (message && onDebugMode) {
-        console.log(message);
-      }
-    }
+    log: log
   };
 })();
