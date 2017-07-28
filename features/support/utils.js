@@ -12,7 +12,9 @@ module.exports = (() => {
     ORGANISATION_UNIT: 'organisation unit',
     DATASET: 'dataset',
     CATEGORY_COMBINATION: 'category combination',
-    INDICATOR: 'indicator'
+    INDICATOR: 'indicator',
+    CATEGORY_OPTION: 'category option',
+    CATEGORY: 'category'
   };
 
   const onDebugMode = process.env.DHIS2_LOG_MODE === LOG_DEBUG_MODE;
@@ -57,6 +59,12 @@ module.exports = (() => {
       case RESOURCE_TYPES.INDICATOR:
         endpoint = apiEndpoint + '/indicators';
         break;
+      case RESOURCE_TYPES.CATEGORY_OPTION:
+        endpoint = apiEndpoint + '/categoryOptions';
+        break;
+      case RESOURCE_TYPES.CATEGORY:
+        endpoint = apiEndpoint + '/categories';
+        break;
       default:
         throw new Error('There is no resource type defined for: ' + resourceType);
     }
@@ -95,6 +103,15 @@ module.exports = (() => {
     },
     isAuthorisedToAddDataSetWith: (userRoles = []) => {
       return isAuthorisedTo('F_DATASET_PUBLIC_ADD', userRoles);
+    },
+    isAuthorisedToAddCategoryComboWith: (userRoles = []) => {
+      return isAuthorisedTo('F_CATEGORY_COMBO_PUBLIC_ADD', userRoles);
+    },
+    isAuthorisedToAddCategoryOptionWith: (userRoles = []) => {
+      return isAuthorisedTo('F_CATEGORY_OPTION_PUBLIC_ADD', userRoles);
+    },
+    isAuthorisedToAddCategoryWith: (userRoles = []) => {
+      return isAuthorisedTo('F_CATEGORY_PUBLIC_ADD', userRoles);
     },
     initializePromiseUrlUsingWorldContext: (world, url) => {
       debug('URL: ' + url);
