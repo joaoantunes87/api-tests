@@ -4,16 +4,18 @@
 
 Repository for DHIS2 API Testing.
 
-# Technology Stack
-* [Cucumber](https://cucumber.io/): Framework for test automation using Behaviour Driven Development;
-* [Axios](https://github.com/mzabriskie/axios): Promise based HTTP client for node.js used to execute HTTP requests to DHIS2 REST API;
-* [Chaijs](http://chaijs.com/): BDD/TDD assertion library;
-* [Cucumber-html-report](https://github.com/gkushang/cucumber-html-reporter): Library used to generate HTML report after all test cases are executed;
-* [Docker](https://www.docker.com/): Used to bootstrap a clean environment which executes all case tests using an isolated web application for the REST API and a custom database;
+## Technology stack
 
-# How to add Test Cases
-1. Create [Gherkin](https://cucumber.io/docs/reference) file at features folder. If it is a new module create a specific folder for that. For example **/features/organisation_units** for organisation unit related test cases;
-2. Create a javascript file at **step_definitions** folder to execute steps defined on previous point. Check **cucumber-js** documentation [here](https://github.com/cucumber/cucumber-js);
+* [Cucumber](https://cucumber.io/): Framework for test automation using Behaviour Driven Development
+* [Axios](https://github.com/mzabriskie/axios): Promise based HTTP client for Node.js used to execute HTTP requests to DHIS2 REST API
+* [Chaijs](http://chaijs.com/): BDD/TDD assertion library
+* [Cucumber-html-report](https://github.com/gkushang/cucumber-html-reporter): Library used to generate HTML report after all test cases are executed
+* [Docker](https://www.docker.com/): Used to bootstrap a clean environment which executes all case tests using an isolated web application for the REST API and a custom database
+
+## How to add new tests
+
+1. Create a [Gherkin](https://cucumber.io/docs/reference) file inside `features` folder. A new folder should be created for each individual module (e.g. `/features/organisation_units` for organisation unit related test cases)
+2. Create a JavaScript file inside  `step_definitions` folder to execute the steps defined on the previous point. Check [Cucumber.js documentation](https://github.com/cucumber/cucumber-js) for more details
 
 ## Run tests locally
 
