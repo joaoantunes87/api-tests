@@ -32,7 +32,7 @@ module.exports = (() => {
 
   const debug = (message) => {
     if (message && onDebugMode) {
-      console.debug(message);
+      console.log(message);
     }
   };
 
@@ -128,18 +128,6 @@ module.exports = (() => {
       }
 
       return endpoint;
-    },
-    generateUrlToEndpointWithParams: (resourceType, paramsDictionary = {}) => {
-      let url = generateResourceTypeEndpoint(resourceType);
-      if (paramsDictionary && Object.keys(paramsDictionary).length > 0) {
-        url += '?';
-      }
-
-      for (const key in paramsDictionary) {
-        url = url + 'filter=' + key + ':eq:' + paramsDictionary[key] + '&';
-      }
-
-      return url;
     }
   };
 })();
