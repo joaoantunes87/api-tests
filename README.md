@@ -21,7 +21,7 @@ $ npm test
 Run tests overriding the default API endpoint:
 
 ```sh
-$ npm test -- --world-parameters "{\"apiEndpoint\":\"https://play.dhis2.org/demo/api/26\",\"generateHtmlReport\":false}"
+$ npm test -- --tags "not @ignore" --world-parameters "{\"apiEndpoint\":\"https://play.dhis2.org/demo/api/26\",\"generateHtmlReport\":false}"
 ```
 
 Available parameters are:
