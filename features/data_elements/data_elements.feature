@@ -24,12 +24,6 @@ I want to be able to add and manage data elements
         Then I should be informed that the data element was updated
         And the data element has the same properties as those I supplied.
 
-      Scenario: Delete an existing data element
-        When I want to delete an existing data element
-        And submit the request to the server
-        Then I should be informed the data element was deleted
-        But only if no other objects depend on the data element.
-
       Scenario Outline: Translate a data element
         When I want to translate an existing data element
         And I translate the name of the data element for <language> with <locale> as <translation>
@@ -41,7 +35,7 @@ I want to be able to add and manage data elements
         | Spanish    | es   | Baz |
 
       Scenario Outline: Filter data elements
-          When I search for data elements by a <property> which has a <value> 
+          When I search for data elements by a <property> which has a <value>
           And I send the search request
           Then I should only see the data elements which have a <property> with the same <value>.
           Examples:
@@ -49,3 +43,7 @@ I want to be able to add and manage data elements
           | domainType | AGGREGATE |
           | aggregationType | SUM |
 
+      Scenario: Delete an existing data element
+          When I want to delete an existing data element
+          And submit the request to the server
+          Then I should be informed the data element was deleted       
