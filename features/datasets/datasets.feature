@@ -84,3 +84,28 @@ They are used to collect data at assigned organisation units.
       And I submit the dataset
       Then I should be informed that the dataset was updated
       And The current dataset data is the same as submitted.
+
+      Scenario: Assign a valid data input period to a data set
+      Given I have created a dataset
+      When I set the data input periods for the dataset
+      And the start date is before the end date
+      And the periodicity of the specified period is the same as the dataset
+      Then I should be informed that the dataset was updated
+      And The current dataset data is the same as submitted
+
+      
+      Scenario: Attempt to assign a data input period to a data set whose start date is before the end date
+      Given I have created a dataset
+      When I set the data input periods for the dataset
+      And the start date is after the end date
+      Then the dataset should not be updated
+      And the server should show me an error message. 
+
+      Scenario: Attempt to assign a data input period  with a different periodicity
+      Given I have created a dataset
+      When I set the data input periods for the dataset
+      And periodicity of the data input period differs from the dataset itself
+      Then I should be informed that the dataset was not updated
+      And the server should show me an error message. 
+
+
