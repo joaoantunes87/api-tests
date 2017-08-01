@@ -151,15 +151,12 @@ defineSupportCode(function ({Given, When, Then}) {
     const world = this;
     world.method = 'get';
 
-    const search = {};
-    search[world.searchProperty] = world.searchValue;
-
     return dhis2.initializePromiseUrlUsingWorldContext(
       world,
-      dhis2.generateUrlToEndpointWithParams(
-        dhis2.resourceTypes.DATA_ELEMENT,
-        search
-      )
+      dhis2.generateUrlForResourceType(dhis2.resourceTypes.DATA_ELEMENT) + '?' +
+        'fields=' + world.searchProperty + '&' +
+        'filter=' + world.searchProperty + ':eq:' + world.searchValue + '&' +
+        'paging=false'
     ).then(function (response) {
       assert.equal(response.status, 200, 'Response Status is ok');
       assert.property(response.data, 'dataElements', 'It should return data elements');
@@ -171,65 +168,12 @@ defineSupportCode(function ({Given, When, Then}) {
   // added timeout to remove default cucumber timeout because it takes too long, more than 5000 milliseconds
   Then(/^I should only see the data elements which have a (.+) with the same (.+).$/, {timeout: -1},
     function (searchProperty, searchValue) {
-      const world = this;
-      world.method = 'get';
-      world.requestData = {};
-
-      let dataElements = world.responseData.dataElements;
-      let nextPageUrl = world.responseData.pager.nextPage;
-      let currentDataElement = 0;
-
-      const checkDataElement = (response) => {
+      for (const dataElement of this.responseData.dataElements) {
         assert.equal(
-          response.data[searchProperty],
+          dataElement[searchProperty],
           searchValue,
           'The ' + searchProperty + ' should be ' + searchValue
         );
-
-        currentDataElement++;
-        if (currentDataElement < dataElements.length) {
-          return dhis2.initializePromiseUrlUsingWorldContext(
-            world,
-            dhis2.generateUrlForResourceTypeWithId(
-              dhis2.resourceTypes.DATA_ELEMENT,
-              dataElements[currentDataElement].id
-            )
-          ).then(checkDataElement);
-        }
-
-        if (nextPageUrl) {
-          return dhis2.initializePromiseUrlUsingWorldContext(
-            world,
-            nextPageUrl
-          ).then(function (response) {
-            assert.equal(response.status, 200, 'Response Status is ok');
-            assert.property(response.data, 'dataElements', 'It should return data elements');
-
-            // preparing to check next page
-            dataElements = response.data.dataElements;
-            nextPageUrl = response.data.pager.nextPage;
-            currentDataElement = 0;
-
-            // initializing verification by data element
-            if (dataElements.length > 0) {
-              return dhis2.initializePromiseUrlUsingWorldContext(
-                world,
-                dhis2.generateUrlForResourceTypeWithId(
-                  dhis2.resourceTypes.DATA_ELEMENT,
-                  dataElements[currentDataElement].id
-                )
-              ).then(checkDataElement);
-            }
-          });
-        }
-      };
-
-      // initializing verification by data element
-      if (dataElements.length > 0) {
-        return dhis2.initializePromiseUrlUsingWorldContext(
-          world,
-          dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.DATA_ELEMENT, dataElements[currentDataElement].id)
-        ).then(checkDataElement);
       }
     }
   );

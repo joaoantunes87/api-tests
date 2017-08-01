@@ -1,8 +1,13 @@
 'use strict';
 
 module.exports = (() => {
-  let apiEndpoint = 'https://play.dhis2.org/demo/api/26'; // default
+  let server = 'https://play.dhis2.org/demo';  // default
+  let apiVersion = 26;                    // default
   let generateHtmlReport = true;
+
+  const apiEndpoint = () => {
+    return server + '/api/' + apiVersion;
+  };
 
   const LOG_DEBUG_MODE = 'debug';
   const ALL_AUTHORITY = 'ALL';
@@ -12,7 +17,9 @@ module.exports = (() => {
     ORGANISATION_UNIT: 'organisation unit',
     DATASET: 'dataset',
     CATEGORY_COMBINATION: 'category combination',
-    INDICATOR: 'indicator'
+    INDICATOR: 'indicator',
+    CATEGORY_OPTION: 'category option',
+    CATEGORY: 'category'
   };
 
   const onDebugMode = process.env.DHIS2_LOG_MODE === LOG_DEBUG_MODE;
@@ -32,7 +39,7 @@ module.exports = (() => {
 
   const debug = (message) => {
     if (message && onDebugMode) {
-      console.debug(message);
+      console.log(message);
     }
   };
 
@@ -40,22 +47,28 @@ module.exports = (() => {
     let endpoint = '';
     switch (resourceType) {
       case RESOURCE_TYPES.OPTION_SET:
-        endpoint = apiEndpoint + '/optionSets';
+        endpoint = apiEndpoint() + '/optionSets';
         break;
       case RESOURCE_TYPES.ORGANISATION_UNIT:
-        endpoint = apiEndpoint + '/organisationUnits';
+        endpoint = apiEndpoint() + '/organisationUnits';
         break;
       case RESOURCE_TYPES.DATA_ELEMENT:
-        endpoint = apiEndpoint + '/dataElements';
+        endpoint = apiEndpoint() + '/dataElements';
         break;
       case RESOURCE_TYPES.DATASET:
-        endpoint = apiEndpoint + '/dataSets';
+        endpoint = apiEndpoint() + '/dataSets';
         break;
       case RESOURCE_TYPES.CATEGORY_COMBINATION:
-        endpoint = apiEndpoint + '/categoryCombos';
+        endpoint = apiEndpoint() + '/categoryCombos';
         break;
       case RESOURCE_TYPES.INDICATOR:
-        endpoint = apiEndpoint + '/indicators';
+        endpoint = apiEndpoint() + '/indicators';
+        break;
+      case RESOURCE_TYPES.CATEGORY_OPTION:
+        endpoint = apiEndpoint() + '/categoryOptions';
+        break;
+      case RESOURCE_TYPES.CATEGORY:
+        endpoint = apiEndpoint() + '/categories';
         break;
       default:
         throw new Error('There is no resource type defined for: ' + resourceType);
@@ -67,13 +80,21 @@ module.exports = (() => {
   return {
     resourceTypes: RESOURCE_TYPES,
     debug: debug,
-    apiEndpoint: (newApiEndpoint) => {
-      if (newApiEndpoint) {
-        apiEndpoint = newApiEndpoint;
+    server: (newServer) => {
+      if (newServer) {
+        server = newServer;
       } else {
-        return apiEndpoint;
+        return server;
       }
     },
+    apiVersion: (newApiVersion) => {
+      if (newApiVersion) {
+        apiVersion = newApiVersion;
+      } else {
+        return apiVersion;
+      }
+    },
+    apiEndpoint: apiEndpoint,
     generateHtmlReport: (generate) => {
       if (typeof generate === 'undefined') {
         return generateHtmlReport;
@@ -95,6 +116,15 @@ module.exports = (() => {
     },
     isAuthorisedToAddDataSetWith: (userRoles = []) => {
       return isAuthorisedTo('F_DATASET_PUBLIC_ADD', userRoles);
+    },
+    isAuthorisedToAddCategoryComboWith: (userRoles = []) => {
+      return isAuthorisedTo('F_CATEGORY_COMBO_PUBLIC_ADD', userRoles);
+    },
+    isAuthorisedToAddCategoryOptionWith: (userRoles = []) => {
+      return isAuthorisedTo('F_CATEGORY_OPTION_PUBLIC_ADD', userRoles);
+    },
+    isAuthorisedToAddCategoryWith: (userRoles = []) => {
+      return isAuthorisedTo('F_CATEGORY_PUBLIC_ADD', userRoles);
     },
     initializePromiseUrlUsingWorldContext: (world, url) => {
       debug('URL: ' + url);
@@ -128,18 +158,6 @@ module.exports = (() => {
       }
 
       return endpoint;
-    },
-    generateUrlToEndpointWithParams: (resourceType, paramsDictionary = {}) => {
-      let url = generateResourceTypeEndpoint(resourceType);
-      if (paramsDictionary && Object.keys(paramsDictionary).length > 0) {
-        url += '?';
-      }
-
-      for (const key in paramsDictionary) {
-        url = url + 'filter=' + key + ':eq:' + paramsDictionary[key] + '&';
-      }
-
-      return url;
     }
   };
 })();

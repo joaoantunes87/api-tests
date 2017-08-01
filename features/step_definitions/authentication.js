@@ -20,8 +20,8 @@ defineSupportCode(function ({Given, When, Then}) {
         password: this.password
       }
     }).then(function (response) {
-      assert.equal(response.status, 200, 'Response Status is ok');
-      assert.property(response.data, 'id', 'User id should have been returned');
+      assert.equal(response.status, 200, 'Response Status was not ok');
+      assert.isOk(response.data.id, 'User id should have been returned');
     });
   });
 
@@ -41,7 +41,7 @@ defineSupportCode(function ({Given, When, Then}) {
       auth: this.authRequestObject
     }).then(function (response) {
       assert.equal(response.status, 200, 'Response Status is ok');
-      assert.property(response.data, 'id', 'User id should have been returned');
+      assert.isOk(response.data.id, 'User id should have been returned');
     });
   });
 });
