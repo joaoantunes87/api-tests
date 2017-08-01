@@ -7,8 +7,12 @@ const reporter = require('cucumber-html-reporter');
 const assert = chai.assert;
 
 function CustomWorld ({ parameters }) {
-  if (parameters.hasOwnProperty('apiEndpoint')) {
-    dhis2.apiEndpoint(parameters.apiEndpoint);
+  if (parameters.hasOwnProperty('server')) {
+    dhis2.server(parameters.server);
+  }
+
+  if (parameters.hasOwnProperty('apiVersion')) {
+    dhis2.apiVersion(parameters.apiVersion);
   }
 
   if (parameters.hasOwnProperty('generateHtmlReport')) {
@@ -19,9 +23,8 @@ function CustomWorld ({ parameters }) {
     username: 'admin',
     password: 'district'
   };
+
   this.axios = axios;
-  this.axios.defaults.headers.post['Content-Type'] = 'application/json';
-  this.axios.defaults.headers.post['Accept'] = 'application/json';
 }
 
 defineSupportCode(function ({ setWorldConstructor, registerHandler, Given, When, Then, Before, After }) {
