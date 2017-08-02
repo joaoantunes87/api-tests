@@ -41,7 +41,7 @@ Available parameters are:
 
 | Name | Default value | Description |
 | --- | --- | --- |
-| `server` | Defined inside `utils.js` file | The API host to use to run the tests  |
+| `baseUrl` | Defined inside `utils.js` file | The API host to use to run the tests  |
 | `apiVersion` | Defined inside `utils.js` file | The API version to use to run the tests  |
 | `generateHtmlReport` | `true` | Whether an HTML report should be generated or not |
 

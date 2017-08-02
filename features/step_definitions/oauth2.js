@@ -65,7 +65,7 @@ defineSupportCode(function ({Given, When, Then}) {
 
     return this.axios({
       method: 'post',
-      url: dhis2.server() + '/uaa/oauth/token',
+      url: dhis2.baseUrl() + '/uaa/oauth/token',
       data: querystring.stringify({
         'username': basicAuth.username,
         'password': basicAuth.password,
@@ -115,7 +115,7 @@ defineSupportCode(function ({Given, When, Then}) {
     assert.isOk(accessToken, 'There is no token');
   });
 
-  When(/^I use the access token to authenicate with the server$/, function () {
+  When(/^I use the access token to authenticate with the server$/, function () {
     const world = this;
 
     return this.axios.get(dhis2.apiEndpoint() + '/me', {
@@ -144,7 +144,7 @@ defineSupportCode(function ({Given, When, Then}) {
 
     return this.axios({
       method: 'post',
-      url: dhis2.server() + '/uaa/oauth/token',
+      url: dhis2.baseUrl() + '/uaa/oauth/token',
       data: querystring.stringify({
         'refresh_token': refreshToken,
         'grant_type': 'refresh_token'

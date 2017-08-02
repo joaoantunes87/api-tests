@@ -1,12 +1,12 @@
 'use strict';
 
 module.exports = (() => {
-  let server = 'https://play.dhis2.org/demo';  // default
-  let apiVersion = 27;                    // default
+  let baseUrl = 'https://play.dhis2.org/demo';  // default
+  let apiVersion = 27;                        // default
   let generateHtmlReport = true;
 
   const apiEndpoint = () => {
-    return server + '/api/' + apiVersion;
+    return baseUrl + '/api/' + apiVersion;
   };
 
   const LOG_DEBUG_MODE = 'debug';
@@ -80,11 +80,11 @@ module.exports = (() => {
   return {
     resourceTypes: RESOURCE_TYPES,
     debug: debug,
-    server: (newServer) => {
-      if (newServer) {
-        server = newServer;
+    baseUrl: (newBaseUrl) => {
+      if (newBaseUrl) {
+        baseUrl = newBaseUrl;
       } else {
-        return server;
+        return baseUrl;
       }
     },
     apiVersion: (newApiVersion) => {
