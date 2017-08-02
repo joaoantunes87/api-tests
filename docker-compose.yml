@@ -19,7 +19,7 @@ services:
       retries: 50
   web:
     container_name: dhis2-web
-    image: dhis2/dhis2-web:2.26-tomcat7-jre8-latest
+    image: dhis2/dhis2-web:2.27-tomcat7-jre8-latest
     environment:
       JAVA_OPTS: "-Xmx1024m -Xms4000m"
       POSTGRES_DB: dhis
@@ -46,4 +46,4 @@ services:
       PGDATABASE: dhis
       PGHOST: database
       PGPORT: 5432
-    command: bash -c 'psql -a -f db/initial-script.sql && npm test -- --world-parameters "{\"apiEndpoint\":\"http://web:8080/\", \"apiVersion\":26, \"generateHtmlReport\":${DHIS2_GENERATE_HTML_REPORT}}"'
+    command: bash -c 'psql -a -f db/initial-script.sql && npm test -- --world-parameters "{\"server\":\"http://web:8080/\", \"apiVersion\":27, \"generateHtmlReport\":${DHIS2_GENERATE_HTML_REPORT}}"'

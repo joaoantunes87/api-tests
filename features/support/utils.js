@@ -2,7 +2,7 @@
 
 module.exports = (() => {
   let server = 'https://play.dhis2.org/demo';  // default
-  let apiVersion = 26;                    // default
+  let apiVersion = 27;                    // default
   let generateHtmlReport = true;
 
   const apiEndpoint = () => {
