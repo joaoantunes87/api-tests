@@ -5,6 +5,9 @@ const dhis2 = require('../support/utils.js');
 const assert = chai.assert;
 
 defineSupportCode(function ({Given, When, Then}) {
+  const generatedUserId = dhis2.generateUniqIds();
+  let userCreated = false;
+
   Given(/^that I have the necessary permissions to add and delete users$/, function () {
     return this.axios.get(dhis2.apiEndpoint() + '/me?fields=userCredentials[userRoles[*]]', {
       auth: this.authRequestObject
@@ -43,11 +46,16 @@ defineSupportCode(function ({Given, When, Then}) {
 
     const values = data.rawTable[1];
     this.requestData = {
+      id: generatedUserId,
       firstName: values[3],
       surname: values[2],
+      email: values[4],
       userCredentials: {
         username: values[0],
-        password: values[1]
+        password: values[1],
+        userInfo: {
+          id: generatedUserId
+        }
       }
     };
   });
@@ -67,6 +75,7 @@ defineSupportCode(function ({Given, When, Then}) {
   Then(/^I should be informed that the user was successfully created.$/, function () {
     assert.equal(this.responseStatus, 201, 'Status should be 201');
     assert.isOk(this.responseData.response.uid, 'User Id was not returned');
+    userCreated = true;
   });
 
   Then(/^I should be informed that the user's password was not acceptable$/, function () {
@@ -97,6 +106,17 @@ defineSupportCode(function ({Given, When, Then}) {
     // TODO check firstname missing message
   });
 
+  Given(/^a user already exists$/, function () {
+    assert.isOk(userCreated, 'User was not created');
+  });
+
+  When(/^I delete user account$/, function () {
+    this.method = 'delete';
+    this.resourceId = generatedUserId;
+
+    return submitServerRequest(this);
+  });
+
   Given(/^a user called (.*) exists$/, function (username) {
     const world = this;
     world.method = 'get';
@@ -116,12 +136,6 @@ defineSupportCode(function ({Given, When, Then}) {
       );
       world.resourceId = response.data.users[0].id;
     });
-  });
-
-  When(/^I delete user account$/, function () {
-    this.method = 'delete';
-
-    return submitServerRequest(this);
   });
 
   Then(/^I should be informed that the account was deleted$/, function () {
@@ -184,6 +198,7 @@ const submitServerRequest = (world) => {
   }).catch(function (error) {
     dhis2.debug('ERROR STATUS: ' + error.response.status);
     console.error(JSON.stringify(error.response.data, null, 2));
-    world.errorResponse = error;
+    world.responseData = error.response.data;
+    world.responseStatus = error.response.status;
   });
 };

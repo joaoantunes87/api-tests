@@ -37,7 +37,6 @@ defineSupportCode(function ({ setWorldConstructor, registerHandler, Given, When,
     this.updatedDataToAssert = {};        // information to be asserted in later steps
     this.responseStatus = null;           // http status returned on previous request
     this.responseData = {};               // http response body returned on previous request
-    this.errorResponse = null;            // axios error returned on previous promise
     this.method = null;                   // http method to be used in later request
   });
 
@@ -59,9 +58,9 @@ defineSupportCode(function ({ setWorldConstructor, registerHandler, Given, When,
   });
 
   Then(/^I should receive an error message equal to: (.+).$/, function (errorMessage) {
-    assert.equal(this.errorResponse.response.status, 400, 'It should have returned error status of 400');
-    assert.equal(this.errorResponse.response.data.status, 'ERROR', 'It should have returned error status');
-    assert.equal(this.errorResponse.response.data.message, errorMessage, 'Error message should be ' + errorMessage);
+    assert.equal(this.responseStatus, 400, 'It should have returned error status of 400');
+    assert.equal(this.responseData.status, 'ERROR', 'It should have returned error status');
+    assert.equal(this.responseData.message, errorMessage, 'Error message should be ' + errorMessage);
   });
 
   Then(/^I should be informed that the (.+) was updated$/, function (resourceType) {
