@@ -74,4 +74,22 @@ defineSupportCode(function ({ setWorldConstructor, registerHandler, Given, When,
       assert.equal(response.status, 200, 'Locale setting was not updated');
     });
   });
+
+  When(/^there are some organisation units in the system$/, function () {
+    const world = this;
+    world.method = 'get';
+    world.requestData = {};
+
+    return dhis2.initializePromiseUrlUsingWorldContext(
+      world,
+      dhis2.generateUrlForResourceType(dhis2.resourceTypes.ORGANISATION_UNIT)
+    ).then(function (response) {
+      assert.isAtLeast(
+        response.data.organisationUnits.length,
+        1,
+        'It shoud have at least one organisation unit'
+      );
+      world.organisationUnits = response.data.organisationUnits;
+    });
+  });
 });
