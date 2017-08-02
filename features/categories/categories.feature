@@ -40,7 +40,7 @@ category options. Categories can be combined into category combinations
         Then I should receive an error message equal to: <errorMessage>.
         Examples:
         | errorMessage |
-        | A category combination with associated objects can not be deleted |
+        | A category combination with associated objects cannot be deleted |
 
       Scenario: Delete a category combination without associated objects
         Given I have created a category combination without associated objects

@@ -34,14 +34,14 @@ $ npm test
 Run tests overriding the default API endpoint:
 
 ```sh
-$ npm test -- --world-parameters "{\"server\":\"https://play.dhis2.org/demo\",\"apiVersion\":27, \"generateHtmlReport\":false}"
+$ npm test -- --world-parameters "{\"baseUrl\":\"https://play.dhis2.org/demo\",\"apiVersion\":27, \"generateHtmlReport\":false}"
 ```
 
 Available parameters are:
 
 | Name | Default value | Description |
 | --- | --- | --- |
-| `server` | Defined inside `utils.js` file | The API host to use to run the tests  |
+| `baseUrl` | Defined inside `utils.js` file | The API host to use to run the tests  |
 | `apiVersion` | Defined inside `utils.js` file | The API version to use to run the tests  |
 | `generateHtmlReport` | `true` | Whether an HTML report should be generated or not |
 

@@ -53,7 +53,7 @@ I want to be able to add and manage option sets.
             Then I should receive an error message equal to: <errorMessage>.
             Examples:
             | code | errorMessage |
-            | COLOR |  The property code can not be changed |
+            | COLOR |  The property code cannot be changed |
 
         Scenario Outline: Remove an option with data associated
             And that I have the necessary permissions to delete an option set
@@ -63,4 +63,4 @@ I want to be able to add and manage option sets.
             And I should receive an error message equal to: <errorMessage>.
             Examples:
             | errorMessage |
-            | The option can not be removed |
+            | The option cannot be removed |
