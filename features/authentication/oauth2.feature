@@ -1,7 +1,7 @@
-Feature: OAUTH2 Authentiation
+Feature: OAUTH2 Authentication
 As as user of DHIS2
 I want to be able to allow my apps and users
-to authenicate in different ways, including OAUTH2.
+to authenticate in different ways, including OAUTH2.
 
   Background:
     Given I have added a OAUTH2 client to the system
@@ -17,7 +17,7 @@ to authenicate in different ways, including OAUTH2.
 
   Scenario: Use an OAUTH2 token to request my credentials
     Given I have a valid token from the server
-     When I use the access token to authenicate with the server
+     When I use the access token to authenticate with the server
       And request my account information
      Then I should see my account information.
 
