@@ -13,8 +13,8 @@ defineSupportCode(function ({Given, When, Then}) {
   let refreshToken = null;
 
   const oauth2Client = {
-    name: 'OAuth2 Client012',
-    cid: 'testing012',
+    name: 'OAuth2 Testing Client',
+    cid: 'testing',
     grantTypes: [
       'password',
       'refresh_token',
