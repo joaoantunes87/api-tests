@@ -73,10 +73,10 @@ module.exports = (() => {
         endpoint = apiEndpoint() + '/categories';
         break;
       case RESOURCE_TYPES.USER:
-        endpoint = apiEndpoint + '/users';
+        endpoint = apiEndpoint() + '/users';
         break;
       case RESOURCE_TYPES.USER_ROLE:
-        endpoint = apiEndpoint + '/userRoles';
+        endpoint = apiEndpoint() + '/userRoles';
         break;
       default:
         throw new Error('There is no resource type defined for: ' + resourceType);

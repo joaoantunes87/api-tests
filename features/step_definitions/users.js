@@ -136,6 +136,41 @@ defineSupportCode(function ({Given, When, Then}) {
       assert.equal(error.response.status, 404, 'Status should be 204');
     });
   });
+
+  When(/^I update the users password to (.*)$/, function (password) {
+    const world = this;
+    world.method = 'get';
+    world.requestData = {};
+
+    return dhis2.initializePromiseUrlUsingWorldContext(
+      world,
+      dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.USER, world.resourceId)
+    ).then(function (response) {
+      world.method = 'put';
+      world.requestData = response.data;
+      world.requestData.userCredentials.password = password;
+      submitServerRequest(world);
+    });
+  });
+
+  Then(/^the system should inform me that the users password was updated.$/, function () {
+    assert.equal(this.responseStatus, 204, 'Status should be 204');
+  });
+
+  Then(/^the system should inform me that the users password was too short.$/, function () {
+    assert.equal(this.errorResponse.response.status, 400, 'Status should be 400');
+    // TODO check error message
+  });
+
+  Then(/^the system should inform me that the users password must contain an upper case character.$/, function () {
+    assert.equal(this.errorResponse.response.status, 400, 'Status should be 400');
+    // TODO check error message
+  });
+
+  Then(/^the system should inform me that the users password must contain a special character.$/, function () {
+    assert.equal(this.errorResponse.response.status, 400, 'Status should be 400');
+    // TODO check error message
+  });
 });
 
 const submitServerRequest = (world) => {

@@ -7,7 +7,7 @@ I want to be able to add and manage users
        And that I have the necessary permissions to add and delete users
        And there are some user roles in the system
        And there are some organisation units in the system
-     @ignore
+
      Scenario: Create a valid user
      When I want to create a new user with the following details:
      | username    | password     | surname | firstname |
@@ -16,7 +16,7 @@ I want to be able to add and manage users
      And assign the user a data capture organisation unit
      And submit the user to the server
      Then I should be informed that the user was successfully created.
-     @ignore
+
      Scenario: Attempt to create a user with a bad password
      When I want to create a new user with the following details:
      | username      | password    | surname | firstname |
@@ -26,7 +26,7 @@ I want to be able to add and manage users
      And submit the user to the server
      Then I should be informed that the user's password was not acceptable
      And the user should not be created.
-     @ignore
+
      Scenario: Attempt to create a user with no user role
      When I want to create a new user with the following details:
      | username       | password    | surname | firstname  |
@@ -35,7 +35,7 @@ I want to be able to add and manage users
      And submit the user to the server
      Then I should be informed that the user requires a user role
      And the user should not be created.
-     @ignore
+
      Scenario: Attempt to create a user with no surname
      When I want to create a new user with the following details:
      | username       | password    | surname | firstname     |
@@ -45,7 +45,7 @@ I want to be able to add and manage users
      And submit the user to the server
      Then I should be informed that the user requires a surname
      And the user should not be created.
-     @ignore
+
      Scenario: Attempt to create a user with no firstname
      When I want to create a new user with the following details:
      | username       | password    | surname | firstname     |
@@ -57,53 +57,41 @@ I want to be able to add and manage users
      And the user should not be created.
      @ignore
      Scenario: Disable a user
-     Given a user called Megan exists
-     And Megan's account is enabled
+     Given a user called John exists
+     And user account is enabled
      When I disable the account
      Then I should be informed that the account was disabled
      And the user should not be able to login.
      @ignore
      Scenario: Enable a user
-     Given a user called Danish exists
-     And Danish's account is disabled
+     Given a user called Roger exists
+     And account is disabled
      When I enable the account
      Then I should be informed that the account was enabled
      And the user should be able to login.
-     @ignore
+
      Scenario: Delete a user
      Given a user called John exists
      When I delete user account
      Then I should be informed that the account was deleted
      And the user should not exist.
-     @ignore
+
      Scenario: Update a users password with a valid password
-     Given a user called BlackHat exists
-     When I update the users password
-     And the new password has enough characters
-     And the new password has an upper case character
-     And the new password has a special character
+     Given a user called John exists
+     When I update the users password to !BobbyTables2
      Then the system should inform me that the users password was updated.
-     @ignore
+
      Scenario: Attempt to update a users password with a short password
-     Given a user called BlackHat exists
-     When I update the users password
-     And the new password does not have enough characters
-     And the new password has an upper case character
-     And the new password has a special character
+     Given a user called John exists
+     When I update the users password to A!1
      Then the system should inform me that the users password was too short.
-     @ignore
+
      Scenario: Attempt to update a users password which does not have an upper case character
-     Given a user called BlackHat exists
-     When I update the users password
-     And the new password has enough characters
-     And the new password has no upper case character
-     And the new password has a special characger
+     Given a user called John exists
+     When I update the users password to !bobbytables3
      Then the system should inform me that the users password must contain an upper case character.
-     @ignore
+
      Scenario: Attempt to update a users password which does not have a special character
-     Given a user called BlackHat exists
-     When I update the users password
-     And the new password has enough characters
-     And the new password has an upper case character
-     And the new password does not have special character
+     Given a user called John exists
+     When I update the users password to bobbytables04
      Then the system should inform me that the users password must contain a special character.
