@@ -34,7 +34,7 @@ $ npm test
 Run tests overriding the default API endpoint:
 
 ```sh
-$ npm test -- --world-parameters "{\"server\":\"https://play.dhis2.org/demo\",\"apiVersion\":27, \"generateHtmlReport\":false}"
+$ npm test -- --world-parameters "{\"baseUrl\":\"https://play.dhis2.org/demo\",\"apiVersion\":27, \"generateHtmlReport\":false}"
 ```
 
 Available parameters are:
