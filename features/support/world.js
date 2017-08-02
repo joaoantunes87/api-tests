@@ -7,8 +7,8 @@ const reporter = require('cucumber-html-reporter');
 const assert = chai.assert;
 
 function CustomWorld ({ parameters }) {
-  if (parameters.hasOwnProperty('server')) {
-    dhis2.server(parameters.server);
+  if (parameters.hasOwnProperty('baseUrl')) {
+    dhis2.baseUrl(parameters.baseUrl);
   }
 
   if (parameters.hasOwnProperty('apiVersion')) {

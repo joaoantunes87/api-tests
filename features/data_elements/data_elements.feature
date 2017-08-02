@@ -46,4 +46,4 @@ I want to be able to add and manage data elements
       Scenario: Delete an existing data element
           When I want to delete an existing data element
           And submit the request to the server
-          Then I should be informed the data element was deleted       
+          Then I should be informed the data element was deleted
