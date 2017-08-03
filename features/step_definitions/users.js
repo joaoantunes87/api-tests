@@ -7,6 +7,8 @@ const assert = chai.assert;
 defineSupportCode(function ({Given, When, Then}) {
   const generatedUserId = dhis2.generateUniqIds();
   let userCreated = false;
+  let userUsername = null;
+  let userPassword = null;
 
   Given(/^that I have the necessary permissions to add and delete users$/, function () {
     return this.axios.get(dhis2.apiEndpoint() + '/me?fields=userCredentials[userRoles[*]]', {
@@ -42,19 +44,19 @@ defineSupportCode(function ({Given, When, Then}) {
   });
 
   When(/^I want to create a new user with the following details:$/, function (data) {
+    const userId = userCreated ? dhis2.generateUniqIds() : generatedUserId;
     this.method = 'post';
 
     const values = data.rawTable[1];
     this.requestData = {
-      id: generatedUserId,
+      id: userId,
       firstName: values[3],
       surname: values[2],
-      email: values[4],
       userCredentials: {
         username: values[0],
         password: values[1],
         userInfo: {
-          id: generatedUserId
+          id: userId
         }
       }
     };
@@ -75,13 +77,17 @@ defineSupportCode(function ({Given, When, Then}) {
   Then(/^I should be informed that the user was successfully created.$/, function () {
     assert.equal(this.responseStatus, 201, 'Status should be 201');
     assert.isOk(this.responseData.response.uid, 'User Id was not returned');
+
     userCreated = true;
+    userUsername = this.requestData.userCredentials.username;
+    userPassword = this.requestData.userCredentials.password;
   });
 
   Then(/^I should be informed that the user's password was not acceptable$/, function () {
-    assert.equal(this.responseStatus, 400, 'Status should be 400');
-    assert.isOk(this.responseData.response.errorReports, 'No error reports');
-    // TODO check password message
+    checkForErrorMessage(
+      'Property `password` requires a valid password, was given `' + this.requestData.userCredentials.password + '`.',
+      this
+    );
   });
 
   Then(/^the user should not be created.$/, function () {
@@ -89,65 +95,99 @@ defineSupportCode(function ({Given, When, Then}) {
   });
 
   Then(/^I should be informed that the user requires a user role$/, function () {
-    assert.equal(this.responseStatus, 400, 'Status should be 400');
-    assert.isOk(this.responseData.response.errorReports, 'No error reports');
-    // TODO check user roles missing message
+    checkForErrorMessage(
+      'Missing required property `userRoles`.',
+      this
+    );
   });
 
   Then(/^I should be informed that the user requires a surname$/, function () {
-    assert.equal(this.responseStatus, 400, 'Status should be 400');
-    assert.isOk(this.responseData.response.errorReports, 'No error reports');
-    // TODO check surname missing message
+    checkForErrorMessage(
+      'Missing required property `surname`.',
+      this
+    );
   });
 
   Then(/^I should be informed that the user requires a firstname$/, function () {
-    assert.equal(this.responseStatus, 400, 'Status should be 400');
-    assert.isOk(this.responseData.response.errorReports, 'No error reports');
-    // TODO check firstname missing message
+    checkForErrorMessage(
+      'Missing required property `firstName`.',
+      this
+    );
   });
 
   Given(/^a user already exists$/, function () {
     assert.isOk(userCreated, 'User was not created');
-  });
-
-  When(/^I delete user account$/, function () {
-    this.method = 'delete';
     this.resourceId = generatedUserId;
-
-    return submitServerRequest(this);
   });
 
-  Given(/^a user called (.*) exists$/, function (username) {
+  Given(/^user account is enabled$/, function () {
     const world = this;
     world.method = 'get';
     world.requestData = {};
 
     return dhis2.initializePromiseUrlUsingWorldContext(
       world,
-      dhis2.generateUrlForResourceType(dhis2.resourceTypes.USER) + '?' +
-        'fields=id&' +
-        'filter=firstName:eq:' + username
+      dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.USER, world.resourceId)
     ).then(function (response) {
-      assert.equal(response.status, 200, 'Response Status is ok');
-      assert.isAtLeast(
-        response.data.users.length,
-        1,
-        'It shoud have at least one user'
-      );
-      world.resourceId = response.data.users[0].id;
+      assert.isNotOk(response.data.userCredentials.disabled, 'User is disabled');
+      world.requestData = response.data;
     });
   });
 
-  Then(/^I should be informed that the account was deleted$/, function () {
-    assert.equal(this.responseStatus, 204, 'Status should be 204');
+  When(/^I disable the account$/, function () {
+    this.method = 'put';
+    this.requestData.userCredentials.disabled = true;
+    return submitServerRequest(this);
   });
 
-  Then(/^the user should not exist.$/, function () {
-    const url = dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.USER, this.resourceId);
-    this.method = 'get';
+  Then(/^I should be informed that the account was disabled$/, function () {
+    assert.equal(this.responseStatus, 200, 'Status should be 200');
+  });
 
-    return dhis2.initializePromiseUrlUsingWorldContext(this, url).catch(function (error) {
-      assert.equal(error.response.status, 404, 'Status should be 204');
+  Then(/^the user should not be able to login.$/, function () {
+    return this.axios.get(dhis2.apiEndpoint() + '/me', {
+      auth: {
+        username: userUsername,
+        password: userPassword
+      }
+    }).catch(function (error) {
+      assert.equal(error.response.status, 401, 'Success');
+    });
+  });
+
+  Given(/^account is disabled$/, function () {
+    const world = this;
+    world.method = 'get';
+    world.requestData = {};
+
+    return dhis2.initializePromiseUrlUsingWorldContext(
+      world,
+      dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.USER, world.resourceId)
+    ).then(function (response) {
+      assert.isOk(response.data.userCredentials.disabled, 'User is enabled');
+      world.requestData = response.data;
+    });
+  });
+
+  When(/^I enable the account$/, function () {
+    this.method = 'put';
+    this.requestData.userCredentials.disabled = false;
+    return submitServerRequest(this);
+  });
+
+  Then(/^I should be informed that the account was enabled$/, function () {
+    assert.equal(this.responseStatus, 200, 'Status should be 200');
+  });
+
+  Then(/^the user should be able to login.$/, function () {
+    return this.axios.get(dhis2.apiEndpoint() + '/me', {
+      auth: {
+        username: userUsername,
+        password: userPassword
+      }
+    }).then(function (response) {
+      assert.equal(response.status, 200, 'Response Status was not ok');
+      assert.isOk(response.data.id, 'User id should have been returned');
     });
   });
 
@@ -163,27 +203,54 @@ defineSupportCode(function ({Given, When, Then}) {
       world.method = 'put';
       world.requestData = response.data;
       world.requestData.userCredentials.password = password;
-      submitServerRequest(world);
+      return submitServerRequest(world);
     });
   });
 
   Then(/^the system should inform me that the users password was updated.$/, function () {
-    assert.equal(this.responseStatus, 204, 'Status should be 204');
+    assert.equal(this.responseStatus, 200, 'Status should be 200');
   });
 
   Then(/^the system should inform me that the users password was too short.$/, function () {
-    assert.equal(this.errorResponse.response.status, 400, 'Status should be 400');
-    // TODO check error message
+    checkForErrorMessage(
+      'Allowed length range for property `password` is [8 to 60], but given length was 3.',
+      this
+    );
   });
 
   Then(/^the system should inform me that the users password must contain an upper case character.$/, function () {
-    assert.equal(this.errorResponse.response.status, 400, 'Status should be 400');
-    // TODO check error message
+    checkForErrorMessage(
+      'Property `password` requires a valid password, was given `' + this.requestData.userCredentials.password + '`.',
+      this
+    );
   });
 
   Then(/^the system should inform me that the users password must contain a special character.$/, function () {
-    assert.equal(this.errorResponse.response.status, 400, 'Status should be 400');
-    // TODO check error message
+    checkForErrorMessage(
+      'Property `password` requires a valid password, was given `' + this.requestData.userCredentials.password + '`.',
+      this
+    );
+  });
+
+  When(/^I delete user account$/, function () {
+    this.method = 'delete';
+    this.resourceId = generatedUserId;
+
+    return submitServerRequest(this);
+  });
+
+  Then(/^I should be informed that the account was deleted$/, function () {
+    assert.equal(this.responseStatus, 200, 'Status should be 200');
+    assert.equal(this.responseData.status, 'OK', 'Status should be 200');
+  });
+
+  Then(/^the user should not exist.$/, function () {
+    const url = dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.USER, this.resourceId);
+    this.method = 'get';
+
+    return dhis2.initializePromiseUrlUsingWorldContext(this, url).catch(function (error) {
+      assert.equal(error.response.status, 404, 'Status should be 204');
+    });
   });
 });
 
@@ -197,8 +264,14 @@ const submitServerRequest = (world) => {
     world.responseData = response.data;
   }).catch(function (error) {
     dhis2.debug('ERROR STATUS: ' + error.response.status);
-    console.error(JSON.stringify(error.response.data, null, 2));
+    dhis2.debug('ERROR RESPOONSE: ' + JSON.stringify(error.response.data, null, 2));
     world.responseData = error.response.data;
     world.responseStatus = error.response.status;
   });
+};
+
+const checkForErrorMessage = (message, world) => {
+  assert.equal(world.responseStatus, 400, 'Status should be 400');
+  assert.equal(world.responseData.status, 'ERROR', 'Status should be ERROR');
+  assert.equal(world.responseData.typeReports[0].objectReports[0].errorReports[0].message, message);
 };
