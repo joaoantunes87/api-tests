@@ -9,8 +9,8 @@ I want to be able to add and manage option sets.
             And that I have the necessary permissions to add an option set
             And that I want to create a new option set
             When I fill in the fields for the options set with data:
-            | name     | valueType |
-            | Color_66 | TEXT      |
+            | name  | valueType |
+            | Color | TEXT      |
             And I submit the option set
             Then I should be informed that the option set was created
             And The current option set data is the same as submitted.
@@ -19,9 +19,9 @@ I want to be able to add and manage option sets.
             And that I have the necessary permissions to add an option set
             And that I have created an option set
             And that I specify some options to add:
-            | name      | valueType |
-            | Color_76  | TEXT      |
-            | Size_76   | TEXT      |
+            | name      | code      |
+            | color     | color     |
+            | size      | size      |
             Then I submit the option set
             And I should be informed that the option set was updated
             And The current option set data is the same as submitted.
@@ -34,10 +34,9 @@ I want to be able to add and manage option sets.
             And I should be informed that the option set was deleted
             And It was really deleted.
 
-        Scenario Outline: Rename an option
+        Scenario Outline: Rename an option set
             And that I have created an option set
-            And it has at least one option
-            When I change the name of the option to <name>
+            When I change the name of the option set to <name>
             And I submit the option set
             Then I should be informed that the option set was updated
             And The current option set data is the same as submitted.
@@ -45,17 +44,16 @@ I want to be able to add and manage option sets.
             | name |
             | Color116 |
 
-        Scenario Outline: Update code of an option
+        Scenario Outline: Update code of an option set
             And that I have created an option set
-            And it has at least one option
-            When I change the code of the option to <code>
+            When I change the code of the option set to <code>
             And I submit the option set
             Then I should receive an error message equal to: <errorMessage>.
             Examples:
             | code | errorMessage |
             | COLOR |  The property code cannot be changed |
 
-        Scenario Outline: Remove an option with data associated
+        Scenario Outline: Remove an option set with data associated
             And that I have the necessary permissions to delete an option set
             And that I have created an option set
             And it has at least one option
