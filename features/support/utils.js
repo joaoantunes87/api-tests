@@ -13,6 +13,7 @@ module.exports = (() => {
   const ALL_AUTHORITY = 'ALL';
   const RESOURCE_TYPES = {
     OPTION_SET: 'option set',
+    OPTION: 'option',
     DATA_ELEMENT: 'data element',
     ORGANISATION_UNIT: 'organisation unit',
     DATASET: 'dataset',
@@ -48,6 +49,9 @@ module.exports = (() => {
     switch (resourceType) {
       case RESOURCE_TYPES.OPTION_SET:
         endpoint = apiEndpoint() + '/optionSets';
+        break;
+      case RESOURCE_TYPES.OPTION:
+        endpoint = apiEndpoint() + '/options';
         break;
       case RESOURCE_TYPES.ORGANISATION_UNIT:
         endpoint = apiEndpoint() + '/organisationUnits';

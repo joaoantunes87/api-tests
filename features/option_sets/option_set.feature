@@ -25,15 +25,15 @@ I want to be able to add and manage option sets.
             Then I submit the option set
             And I should be informed that the option set was updated
             And The current option set data is the same as submitted.
-
-        Scenario: Remove an option with no data associated
-            And that I have the necessary permissions to delete an option set
+        @ignore
+        Scenario: Remove an option from option set
+            And that I have the necessary permissions to delete an option
             And that I have created an option set
             And it has at least one option
             Then I delete the option from the option set
             And I should be informed that the option set was deleted
             And It was really deleted.
-
+        @ignore
         Scenario Outline: Rename an option set
             And that I have created an option set
             When I change the name of the option set to <name>
@@ -42,8 +42,8 @@ I want to be able to add and manage option sets.
             And The current option set data is the same as submitted.
             Examples:
             | name |
-            | Color116 |
-
+            | Color007 |
+        @ignore
         Scenario Outline: Update code of an option set
             And that I have created an option set
             When I change the code of the option set to <code>
@@ -52,7 +52,7 @@ I want to be able to add and manage option sets.
             Examples:
             | code | errorMessage |
             | COLOR |  The property code cannot be changed |
-
+        @ignore
         Scenario Outline: Remove an option set with data associated
             And that I have the necessary permissions to delete an option set
             And that I have created an option set
