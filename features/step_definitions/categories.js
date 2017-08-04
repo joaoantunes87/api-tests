@@ -180,7 +180,8 @@ defineSupportCode(function ({Given, When, Then}) {
       world.responseStatus = response.status;
       world.responseData = response.data;
     }).catch(function (error) {
-      world.errorResponse = error;
+      world.responseData = error.response.data;
+      world.responseStatus = error.response.status;
     });
   });
 });

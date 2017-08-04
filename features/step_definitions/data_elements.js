@@ -186,7 +186,8 @@ defineSupportCode(function ({Given, When, Then}) {
       world.responseData = response.data;
     }).catch(function (error) {
       console.error(JSON.stringify(error.response.data, null, 2));
-      world.errorResponse = error;
+      world.responseData = error.response.data;
+      world.responseStatus = error.response.status;
     });
   };
 
