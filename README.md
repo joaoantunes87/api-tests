@@ -53,13 +53,13 @@ Set the environment variable `DHIS2_GENERATE_HTML_REPORT` to `false` to skip the
 $ export DHIS2_GENERATE_HTML_REPORT=false
 ```
 
-If you want to execute only a specific feature file set the environment variable `DHIS2_FEATURE`. For example:
+Define the environment variable `DHIS2_FEATURE` to only execute a specific feature file:
 
 ```sh
 $ export DHIS2_FEATURE=features/users/users.feature
 ```
 
-if you want debug messages to appear on log set `DHIS2_LOG_MODE` to `debug`:
+Set the environment `DHIS2_LOG_MODE` to `debug` to log debug messages:
 
 ```sh
 $ export DHIS2_LOG_MODE=debug

@@ -47,4 +47,4 @@ services:
       PGHOST: database
       PGPORT: 5432
       DHIS2_LOG_MODE: $DHIS2_LOG_MODE
-    command: bash -c 'psql -a -f db/initial-script.sql && npm test -- $DHIS2_FEATURE --world-parameters "{\"baseUrl\":\"http://web:8080\", \"apiVersion\":27, \"generateHtmlReport\":${DHIS2_GENERATE_HTML_REPORT}}"'
+    command: bash -c 'psql -a -f db/initial-script.sql && npm test -- $DHIS2_FEATURE --world-parameters "{\"baseUrl\":\"http://web:8080\", \"apiVersion\":27, \"generateHtmlReport\":$DHIS2_GENERATE_HTML_REPORT}"'
