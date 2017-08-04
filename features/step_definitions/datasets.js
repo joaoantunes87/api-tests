@@ -92,22 +92,7 @@ defineSupportCode(function ({Given, When, Then}) {
   });
 
   Given(/^I got the existing dataset to update$/, function () {
-    const world = this;
-    world.method = 'get';
-    world.requestData = {};
-
-    assert.equal(datasetWasCreated, true, 'Dataset does not exist');
-    assert.isOk(generatedDatasetId, 'Dataset Id does not exist');
-
-    world.resourceId = generatedDatasetId;
-    return dhis2.initializePromiseUrlUsingWorldContext(
-      world,
-      dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.DATASET, world.resourceId)
-    ).then(function (response) {
-      assert.equal(response.status, 200, 'Status should be 200');
-      world.requestData = response.data;
-      world.method = 'put';
-    });
+    return checkAndFetchCreatedDataSetToBeUpdated(this);
   });
 
   When(/^I change the periodType to (.+)$/, function (value) {
@@ -115,18 +100,18 @@ defineSupportCode(function ({Given, When, Then}) {
     this.updatedDataToAssert.periodType = value;
   });
 
-  When(/^there is a category combination with a dimension of type attribute$/, function () {
+  Given(/^there is already a data set$/, function () {
+    return checkAndFetchCreatedDataSetToBeUpdated(this);
+  });
+
+  Given(/^there is a category combination with a dimension of type attribute$/, function () {
     const world = this;
     world.method = 'get';
 
     return dhis2.initializePromiseUrlUsingWorldContext(
       world,
-      dhis2.generateUrlToEndpointWithParams(
-        dhis2.resourceTypes.CATEGORY_COMBINATION,
-        {
-          dataDimensionType: 'ATTRIBUTE'
-        }
-      )
+      dhis2.generateUrlForResourceType(dhis2.resourceTypes.CATEGORY_COMBINATION) +
+      '?filter=dataDimensionType:eq:ATTRIBUTE'
     ).then(function (response) {
       assert.isAtLeast(
         response.data.categoryCombos.length,
@@ -152,12 +137,7 @@ defineSupportCode(function ({Given, When, Then}) {
 
     return dhis2.initializePromiseUrlUsingWorldContext(
       world,
-      dhis2.generateUrlToEndpointWithParams(
-        dhis2.resourceTypes.DATA_ELEMENT,
-        {
-          domainType: 'AGGREGATE'
-        }
-      )
+      dhis2.generateUrlForResourceType(dhis2.resourceTypes.DATA_ELEMENT) + '?filter=domainType:eq:AGGREGATE'
     ).then(function (response) {
       assert.isAtLeast(
         response.data.dataElements.length,
@@ -168,7 +148,7 @@ defineSupportCode(function ({Given, When, Then}) {
     });
   });
 
-  When(/^I add data elements to the dataset$/, function () {
+  When(/^I add some data elements to the dataset$/, function () {
     const dataSetElements = [{
       id: this.responseData.dataElements[0].id
     }];
@@ -220,7 +200,7 @@ defineSupportCode(function ({Given, When, Then}) {
     });
   });
 
-  When(/^I add organisation units to the dataset$/, function () {
+  When(/^I add some organisation units to the dataset$/, function () {
     const organisationUnits = [{
       id: this.responseData.organisationUnits[0].id
     }];
@@ -228,6 +208,24 @@ defineSupportCode(function ({Given, When, Then}) {
     this.updatedDataToAssert.organisationUnits = organisationUnits;
     this.method = 'put';
   });
+
+  const checkAndFetchCreatedDataSetToBeUpdated = (world) => {
+    world.method = 'get';
+    world.requestData = {};
+
+    assert.equal(datasetWasCreated, true, 'Dataset does not exist');
+    assert.isOk(generatedDatasetId, 'Dataset Id does not exist');
+
+    world.resourceId = generatedDatasetId;
+    return dhis2.initializePromiseUrlUsingWorldContext(
+      world,
+      dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.DATASET, world.resourceId)
+    ).then(function (response) {
+      assert.equal(response.status, 200, 'Status should be 200');
+      world.requestData = response.data;
+      world.method = 'put';
+    });
+  };
 });
 
 const submitServerRequest = (world) => {

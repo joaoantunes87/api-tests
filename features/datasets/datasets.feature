@@ -59,7 +59,7 @@ They are used to collect data at assigned organisation units.
       When I update the category combination of the dataset
       And I submit the dataset
       Then I should be informed that the dataset was updated
-      And the current dataset data is the same as submitted.
+      And The current dataset data is the same as submitted.
 
       Scenario: Add data elements to a existing data set
       Given there is already a data set
@@ -67,7 +67,7 @@ They are used to collect data at assigned organisation units.
       When I add some data elements to the dataset
       And I submit the dataset
       Then I should be informed that the dataset was updated
-      And the current dataset data is the same as submitted.
+      And The current dataset data is the same as submitted.
 
       Scenario: Add indicators to a data set
       Given there is already a data set
@@ -75,7 +75,7 @@ They are used to collect data at assigned organisation units.
       When I add indicators to the dataset
       And I submit the dataset
       Then I should be informed that the dataset was updated
-      And the current dataset data is the same as submitted.
+      And The current dataset data is the same as submitted.
 
       Scenario: Assign an organisation units to a dataset
       Given there is already a data set
@@ -83,7 +83,7 @@ They are used to collect data at assigned organisation units.
       When I add some organisation units to the dataset
       And I submit the dataset
       Then I should be informed that the dataset was updated
-      And the current dataset data is the same as submitted.
+      And The current dataset data is the same as submitted.
 
       Scenario: Assign a valid data input period to a data set
       Given I have created a dataset
@@ -93,20 +93,19 @@ They are used to collect data at assigned organisation units.
       Then I should be informed that the dataset was updated
       And the current dataset data is the same as submitted
 
-      
       Scenario: Attempt to assign a data input period to a data set whose start date is before the end date
       Given I have created a dataset
       When I set the data input periods for the dataset
       And the start date is after the end date
       Then the dataset should not be updated
-      And the server should show me an error message. 
+      And the server should show me an error message.
 
       Scenario: Attempt to assign a data input period  with a different periodicity
       Given I have created a dataset
       When I set the data input periods for the dataset
       And periodicity of the data input period differs from the dataset itself
       Then I should be informed that the dataset was not updated
-      And the server should show me an error message. 
+      And the server should show me an error message.
 
       Scenario: Specify a category combination within a data set (Data set element)
       Given I have created a dataset
@@ -125,7 +124,3 @@ They are used to collect data at assigned organisation units.
       And I have specified a category combination for a data element in that dataset
       When I change the category combination of the data element
       Then the data set element should remain unchanged.
-      
-
-
-
