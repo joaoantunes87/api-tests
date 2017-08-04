@@ -20,7 +20,9 @@ module.exports = (() => {
     CATEGORY_COMBINATION: 'category combination',
     INDICATOR: 'indicator',
     CATEGORY_OPTION: 'category option',
-    CATEGORY: 'category'
+    CATEGORY: 'category',
+    USER_ROLE: 'user role',
+    USER: 'user'
   };
 
   const onDebugMode = process.env.DHIS2_LOG_MODE === LOG_DEBUG_MODE;
@@ -73,6 +75,12 @@ module.exports = (() => {
         break;
       case RESOURCE_TYPES.CATEGORY:
         endpoint = apiEndpoint() + '/categories';
+        break;
+      case RESOURCE_TYPES.USER:
+        endpoint = apiEndpoint() + '/users';
+        break;
+      case RESOURCE_TYPES.USER_ROLE:
+        endpoint = apiEndpoint() + '/userRoles';
         break;
       default:
         throw new Error('There is no resource type defined for: ' + resourceType);
@@ -129,6 +137,12 @@ module.exports = (() => {
     },
     isAuthorisedToAddCategoryWith: (userRoles = []) => {
       return isAuthorisedTo('F_CATEGORY_PUBLIC_ADD', userRoles);
+    },
+    isAuthorisedToAddUsersWith: (userRoles = []) => {
+      return isAuthorisedTo('F_USER_ADD', userRoles);
+    },
+    isAuthorisedToDeleteUsersWith: (userRoles = []) => {
+      return isAuthorisedTo('F_USER_DELETE', userRoles);
     },
     initializePromiseUrlUsingWorldContext: (world, url) => {
       debug('URL: ' + url);

@@ -53,6 +53,18 @@ Set the environment variable `DHIS2_GENERATE_HTML_REPORT` to `false` to skip the
 $ export DHIS2_GENERATE_HTML_REPORT=false
 ```
 
+Define the environment variable `DHIS2_FEATURE` to only execute a specific feature file:
+
+```sh
+$ export DHIS2_FEATURE=features/users/users.feature
+```
+
+Set the environment `DHIS2_LOG_MODE` to `debug` to log debug messages:
+
+```sh
+$ export DHIS2_LOG_MODE=debug
+```
+
 Start Docker:
 
 ```sh

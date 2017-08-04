@@ -203,23 +203,6 @@ defineSupportCode(function ({Given, When, Then}) {
     this.method = 'put';
   });
 
-  When(/^there are some organisation units in the system$/, function () {
-    const world = this;
-    world.method = 'get';
-
-    return dhis2.initializePromiseUrlUsingWorldContext(
-      world,
-      dhis2.generateUrlForResourceType(dhis2.resourceTypes.ORGANISATION_UNIT)
-    ).then(function (response) {
-      assert.isAtLeast(
-        response.data.organisationUnits.length,
-        1,
-        'It shoud have at least one organisation unit'
-      );
-      world.responseData = response.data;
-    });
-  });
-
   When(/^I add organisation units to the dataset$/, function () {
     const organisationUnits = [{
       id: this.responseData.organisationUnits[0].id
@@ -238,6 +221,7 @@ const submitServerRequest = (world) => {
     world.responseData = response.data;
   }).catch(function (error) {
     console.error(JSON.stringify(error.response.data, null, 2));
-    world.errorResponse = error;
+    world.responseData = error.response.data;
+    world.responseStatus = error.response.status;
   });
 };
