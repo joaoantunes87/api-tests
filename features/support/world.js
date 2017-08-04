@@ -7,8 +7,12 @@ const reporter = require('cucumber-html-reporter');
 const assert = chai.assert;
 
 function CustomWorld ({ parameters }) {
-  if (parameters.hasOwnProperty('apiEndpoint')) {
-    dhis2.apiEndpoint(parameters.apiEndpoint);
+  if (parameters.hasOwnProperty('baseUrl')) {
+    dhis2.baseUrl(parameters.baseUrl);
+  }
+
+  if (parameters.hasOwnProperty('apiVersion')) {
+    dhis2.apiVersion(parameters.apiVersion);
   }
 
   if (parameters.hasOwnProperty('generateHtmlReport')) {
@@ -19,9 +23,8 @@ function CustomWorld ({ parameters }) {
     username: 'admin',
     password: 'district'
   };
+
   this.axios = axios;
-  this.axios.defaults.headers.post['Content-Type'] = 'application/json';
-  this.axios.defaults.headers.post['Accept'] = 'application/json';
 }
 
 defineSupportCode(function ({ setWorldConstructor, registerHandler, Given, When, Then, Before, After }) {
@@ -34,7 +37,6 @@ defineSupportCode(function ({ setWorldConstructor, registerHandler, Given, When,
     this.updatedDataToAssert = {};        // information to be asserted in later steps
     this.responseStatus = null;           // http status returned on previous request
     this.responseData = {};               // http response body returned on previous request
-    this.errorResponse = null;            // axios error returned on previous promise
     this.method = null;                   // http method to be used in later request
   });
 
@@ -55,46 +57,41 @@ defineSupportCode(function ({ setWorldConstructor, registerHandler, Given, When,
     callback();
   });
 
-  When(/^I submit the (.+)$/, function (resourceType) {
-    const world = this;
-    const url = dhis2.generateUrlForResourceTypeWithId(resourceType, world.resourceId);
-
-    return dhis2.initializePromiseUrlUsingWorldContext(world, url).then(function (response) {
-      world.responseStatus = response.status;
-      world.responseData = response.data;
-    }).catch(function (error) {
-      world.errorResponse = error;
-    });
-  });
-
   Then(/^I should receive an error message equal to: (.+).$/, function (errorMessage) {
-    assert.equal(this.errorResponse.response.status, 400, 'It should have returned error status of 400');
-    assert.equal(this.errorResponse.response.data.status, 'ERROR', 'It should have returned error status');
-    assert.equal(this.errorResponse.response.data.message, errorMessage, 'Error message should be ' + errorMessage);
-  });
-
-  When(/^I fill in the fields for the (.+) with data:$/, function (resourceType, data) {
-    const properties = data.rawTable[0];
-    const values = data.rawTable[1];
-
-    this.updatedDataToAssert = {};
-    properties.forEach(function (propertyKey, index) {
-      this.updatedDataToAssert[propertyKey] = values[index];
-      this.requestData[propertyKey] = values[index];
-    }, this);
+    assert.equal(this.responseStatus, 400, 'It should have returned error status of 400');
+    assert.equal(this.responseData.status, 'ERROR', 'It should have returned error status');
+    assert.equal(this.responseData.message, errorMessage, 'Error message should be ' + errorMessage);
   });
 
   Then(/^I should be informed that the (.+) was updated$/, function (resourceType) {
     assert.equal(this.responseStatus, 200, 'The ' + resourceType + ' should have been updated');
   });
 
-  When(/^I select the correct locale for the logged user$/, function () {
+  When(/^I select the correct (.+)$/, function (locale) {
     return this.axios({
       method: 'post',
-      url: dhis2.apiEndpoint() + '/userSettings/keyDbLocale?value=' + this.locale,
+      url: dhis2.apiEndpoint() + '/userSettings/keyDbLocale?value=' + locale,
       auth: this.authRequestObject
     }).then(function (response) {
       assert.equal(response.status, 200, 'Locale setting was not updated');
+    });
+  });
+
+  When(/^there are some organisation units in the system$/, function () {
+    const world = this;
+    world.method = 'get';
+    world.requestData = {};
+
+    return dhis2.initializePromiseUrlUsingWorldContext(
+      world,
+      dhis2.generateUrlForResourceType(dhis2.resourceTypes.ORGANISATION_UNIT)
+    ).then(function (response) {
+      assert.isAtLeast(
+        response.data.organisationUnits.length,
+        1,
+        'It shoud have at least one organisation unit'
+      );
+      world.organisationUnits = response.data.organisationUnits;
     });
   });
 });

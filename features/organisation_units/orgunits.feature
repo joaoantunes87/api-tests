@@ -87,7 +87,7 @@ I want to be able to add and manage organisation units
 
       Scenario Outline: Translate an organisation unit name
         When I translate the name of the organisation unit for <locale> as <translation>
-        And I select the correct locale for the logged user
+        And I select the correct <locale>
         Then I should be able to view the translated name.
         Examples:
         | locale | translation |

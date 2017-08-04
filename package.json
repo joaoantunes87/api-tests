@@ -12,7 +12,7 @@
   ],
   "scripts": {
     "pretest": "./node_modules/eslint/bin/eslint.js features",
-    "test": "./node_modules/.bin/cucumber-js -f json:reports/cucumber_report.json"
+    "test": "./node_modules/.bin/cucumber-js -f json:reports/cucumber_report.json --tags 'not @ignore'"
   },
   "repository": {
     "type": "git",

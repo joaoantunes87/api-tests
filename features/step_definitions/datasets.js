@@ -24,6 +24,21 @@ defineSupportCode(function ({Given, When, Then}) {
     this.requestData.id = generatedDatasetId;
   });
 
+  When(/^I fill in the fields for the dataset with data:$/, function (data) {
+    const properties = data.rawTable[0];
+    const values = data.rawTable[1];
+
+    this.updatedDataToAssert = {};
+    properties.forEach(function (propertyKey, index) {
+      this.updatedDataToAssert[propertyKey] = values[index];
+      this.requestData[propertyKey] = values[index];
+    }, this);
+  });
+
+  When(/^I submit the dataset$/, function () {
+    return submitServerRequest(this);
+  });
+
   Then(/^I should be informed that the dataset was created$/, function () {
     assert.equal(this.responseStatus, 201, 'Status should be 201');
     assert.isOk(this.responseData.response.uid, 'Dataset Id was not returned');
@@ -188,23 +203,6 @@ defineSupportCode(function ({Given, When, Then}) {
     this.method = 'put';
   });
 
-  When(/^there are some organisation units in the system$/, function () {
-    const world = this;
-    world.method = 'get';
-
-    return dhis2.initializePromiseUrlUsingWorldContext(
-      world,
-      dhis2.generateUrlForResourceType(dhis2.resourceTypes.ORGANISATION_UNIT)
-    ).then(function (response) {
-      assert.isAtLeast(
-        response.data.organisationUnits.length,
-        1,
-        'It shoud have at least one organisation unit'
-      );
-      world.responseData = response.data;
-    });
-  });
-
   When(/^I add organisation units to the dataset$/, function () {
     const organisationUnits = [{
       id: this.responseData.organisationUnits[0].id
@@ -214,3 +212,16 @@ defineSupportCode(function ({Given, When, Then}) {
     this.method = 'put';
   });
 });
+
+const submitServerRequest = (world) => {
+  const url = dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.DATASET, world.resourceId);
+
+  return dhis2.initializePromiseUrlUsingWorldContext(world, url).then(function (response) {
+    world.responseStatus = response.status;
+    world.responseData = response.data;
+  }).catch(function (error) {
+    console.error(JSON.stringify(error.response.data, null, 2));
+    world.responseData = error.response.data;
+    world.responseStatus = error.response.status;
+  });
+};
