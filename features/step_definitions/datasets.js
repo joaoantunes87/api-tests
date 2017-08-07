@@ -67,6 +67,7 @@ defineSupportCode(function ({Given, When, Then}) {
           case 'dataSetElements':
           case 'indicators':
           case 'organisationUnits':
+          case 'dataInputPeriods':
             assert.sameDeepMembers(
               response.data[propertyKey],
               world.updatedDataToAssert[propertyKey],
@@ -207,6 +208,39 @@ defineSupportCode(function ({Given, When, Then}) {
     this.requestData.organisationUnits = organisationUnits;
     this.updatedDataToAssert.organisationUnits = organisationUnits;
     this.method = 'put';
+  });
+
+  When(/^I set the data input periods for the dataset:$/, function (data) {
+    const dataTable = data.rawTable;
+    const properties = dataTable[0];
+    const dataInputPeriods = [];
+
+    for (let i = 1; i < data.rawTable.length; i++) {
+      const dataInputPeriod = {};
+
+      properties.forEach(function (propertyKey, index) {
+        if (propertyKey === 'period') {
+          dataInputPeriod.period = {id: dataTable[i][index]};
+        } else {
+          dataInputPeriod[propertyKey] = dataTable[i][index];
+        }
+      }, this);
+
+      dataInputPeriods.push(dataInputPeriod);
+    }
+
+    this.updatedDataToAssert.dataInputPeriods = dataInputPeriods;
+    this.requestData.dataInputPeriods = dataInputPeriods;
+  });
+
+  Then(/^I should be informed that the dataset was not updated$/, function (resourceType) {
+    assert.equal(this.responseStatus, 400, 'The status should have been 400');
+  });
+
+  Then(/^the server should show me an error message equal to "(.+)".$/, function (errorMessage) {
+    assert.equal(this.responseStatus, 400, 'It should have returned error status of 400');
+    assert.equal(this.responseData.status, 'ERROR', 'It should have returned error status');
+    assert.equal(this.responseData.message, errorMessage, 'Error message should be ' + errorMessage);
   });
 
   const checkAndFetchCreatedDataSetToBeUpdated = (world) => {
