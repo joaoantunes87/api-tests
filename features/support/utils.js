@@ -159,11 +159,13 @@ module.exports = (() => {
       });
     },
     generateUniqIds: (numberOfIds) => {
-      const currentTimestamp = Math.floor(Date.now() / 100);    // 11 digits
+      const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+      const currentTimestamp = Math.floor(Date.now() / 1000);   // 10 digits
       const ids = [];
       const numberOfIdsTemp = numberOfIds || 1;
       for (let seed = 0; seed < numberOfIdsTemp; seed++) {
-        ids.push('' + (currentTimestamp - seed));
+        const letter = alphabet[seed % alphabet.length];
+        ids.push(letter + currentTimestamp);
       }
 
       return numberOfIds ? ids : ids[0];
