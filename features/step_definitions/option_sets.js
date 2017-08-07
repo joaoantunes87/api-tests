@@ -72,6 +72,7 @@ defineSupportCode(function ({Given, When, Then, Before}) {
     const dataTable = data.rawTable;
     const properties = dataTable[0];
     const options = [];
+    world.updatedDataToAssert = { options: [] };
 
     for (let i = 1; i < data.rawTable.length; i++) {
       const option = {};
@@ -89,13 +90,16 @@ defineSupportCode(function ({Given, When, Then, Before}) {
     ).then(function (response) {
       world.requestData = response.data;
       const optionCreationRequests = options.map((option) => {
-        world.axios({
+        return world.axios({
           method: 'post',
           url: dhis2.generateUrlForResourceType(dhis2.resourceTypes.OPTION),
           data: option,
           auth: world.authRequestObject
         }).then(function (response) {
+          dhis2.debug('OPTION CREATED: ' + response.data.response.uid);
           world.requestData.options.push({id: response.data.response.uid});
+          world.updatedDataToAssert.options.push({id: response.data.response.uid});
+          dhis2.debug('OPTION SET REQUEST DATA: ' + JSON.stringify(world.requestData.options, null, 2));
         });
       });
 
@@ -105,13 +109,13 @@ defineSupportCode(function ({Given, When, Then, Before}) {
     });
   });
 
-  Given(/^that I have the necessary permissions to delete an option set$/, function () {
+  Given(/^that I have the necessary permissions to delete an option$/, function () {
     return this.axios.get(dhis2.apiEndpoint() + '/me?fields=userCredentials[userRoles[*]]', {
       auth: this.authRequestObject
     }).then(function (response) {
       assert.isOk(
-        dhis2.isAuthorisedToDeleteOptionSetWith(response.data.userCredentials.userRoles),
-        'Not Authorized to create OrganisationUnit'
+        dhis2.isAuthorisedToDeleteOptionWith(response.data.userCredentials.userRoles),
+        'Not Authorized to delete Option'
       );
     });
   });
@@ -171,6 +175,17 @@ defineSupportCode(function ({Given, When, Then, Before}) {
   Then(/^I change the code of the option set to (.+)$/, function (value) {
     this.requestData['code'] = value;
     this.method = 'patch';
+  });
+
+  Given(/^that I have the necessary permissions to delete an option set$/, function () {
+    return this.axios.get(dhis2.apiEndpoint() + '/me?fields=userCredentials[userRoles[*]]', {
+      auth: this.authRequestObject
+    }).then(function (response) {
+      assert.isOk(
+        dhis2.isAuthorisedToDeleteOptionSetWith(response.data.userCredentials.userRoles),
+        'Not Authorized to delete Option'
+      );
+    });
   });
 
   Then(/^I delete the option set$/, function () {

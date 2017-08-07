@@ -126,6 +126,9 @@ module.exports = (() => {
     isAuthorisedToDeleteOptionSetWith: (userRoles = []) => {
       return isAuthorisedTo('F_OPTIONSET_DELETE', userRoles);
     },
+    isAuthorisedToDeleteOptionWith: (userRoles = []) => {
+      return isAuthorisedTo('F_OPTIONSET_DELETE', userRoles);
+    },
     isAuthorisedToAddDataSetWith: (userRoles = []) => {
       return isAuthorisedTo('F_DATASET_PUBLIC_ADD', userRoles);
     },
