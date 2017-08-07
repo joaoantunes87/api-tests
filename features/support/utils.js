@@ -13,6 +13,7 @@ module.exports = (() => {
   const ALL_AUTHORITY = 'ALL';
   const RESOURCE_TYPES = {
     OPTION_SET: 'option set',
+    OPTION: 'option',
     DATA_ELEMENT: 'data element',
     ORGANISATION_UNIT: 'organisation unit',
     DATASET: 'dataset',
@@ -50,6 +51,9 @@ module.exports = (() => {
     switch (resourceType) {
       case RESOURCE_TYPES.OPTION_SET:
         endpoint = apiEndpoint() + '/optionSets';
+        break;
+      case RESOURCE_TYPES.OPTION:
+        endpoint = apiEndpoint() + '/options';
         break;
       case RESOURCE_TYPES.ORGANISATION_UNIT:
         endpoint = apiEndpoint() + '/organisationUnits';
@@ -122,6 +126,9 @@ module.exports = (() => {
     isAuthorisedToDeleteOptionSetWith: (userRoles = []) => {
       return isAuthorisedTo('F_OPTIONSET_DELETE', userRoles);
     },
+    isAuthorisedToDeleteOptionWith: (userRoles = []) => {
+      return isAuthorisedTo('F_OPTIONSET_DELETE', userRoles);
+    },
     isAuthorisedToAddDataSetWith: (userRoles = []) => {
       return isAuthorisedTo('F_DATASET_PUBLIC_ADD', userRoles);
     },
@@ -152,11 +159,13 @@ module.exports = (() => {
       });
     },
     generateUniqIds: (numberOfIds) => {
-      const currentTimestamp = Math.floor(Date.now() / 100);    // 11 digits
+      const alphabet = 'abcdefghijklmnopqrstuvwxyz';
+      const currentTimestamp = Math.floor(Date.now() / 1000);   // 10 digits
       const ids = [];
       const numberOfIdsTemp = numberOfIds || 1;
       for (let seed = 0; seed < numberOfIdsTemp; seed++) {
-        ids.push('' + (currentTimestamp - seed));
+        const letter = alphabet[seed % alphabet.length];
+        ids.push(letter + currentTimestamp);
       }
 
       return numberOfIds ? ids : ids[0];
