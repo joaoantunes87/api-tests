@@ -10,7 +10,7 @@ I want to be able to add and manage option sets.
             And that I want to create a new option set
             When I fill in the fields for the options set with data:
             | name  | valueType |
-            | Color | TEXT      |
+            | color | TEXT      |
             And I submit the option set
             Then I should be informed that the option set was created
             And The current option set data is the same as submitted.
@@ -42,7 +42,7 @@ I want to be able to add and manage option sets.
             And The current option set data is the same as submitted.
             Examples:
             | name |
-            | Color007 |
+            | colors |
 
         Scenario Outline: Update code of an option set
             And that I have created an option set
