@@ -16,7 +16,7 @@ They are used to collect data at assigned organisation units.
         And I submit the dataset
         Then I should be informed that the dataset was created
         And The current dataset data is the same as submitted.
-      @ignore
+
       Scenario Outline: Define a valid expiry days of a data set
         When I update an existing dataset
         And I change the expiry days to <expiryDays>
@@ -28,7 +28,7 @@ They are used to collect data at assigned organisation units.
         | -10 |
         | 0   |
         | 10  |
-      @ignore
+
       Scenario Outline: Define an invalid expiry days of a data set
         When I update an existing dataset
         And I change the expiry days to <expiryDays>
@@ -39,7 +39,7 @@ They are used to collect data at assigned organisation units.
         | -10.5 | The expiryDays value is not valid |
         | 10.5 | The expiryDays value is not valid |
         | foo | The expiryDays value is not valid |
-      @ignore
+
       Scenario Outline: Define a valid dataset period type
         And I got the existing dataset to update
         And I change the periodType to <periodType>
@@ -52,7 +52,7 @@ They are used to collect data at assigned organisation units.
         | Weekly |
         | Monthly |
         | Quarterly |
-      @ignore
+
       Scenario: Define a category combination of a dataset
       Given there is already a data set
       And there is a category combination with a dimension of type attribute
@@ -60,7 +60,7 @@ They are used to collect data at assigned organisation units.
       And I submit the dataset
       Then I should be informed that the dataset was updated
       And The current dataset data is the same as submitted.
-      @ignore
+
       Scenario: Add data elements to a existing data set
       Given there is already a data set
       And there are some aggregate data elements in the system
@@ -68,7 +68,7 @@ They are used to collect data at assigned organisation units.
       And I submit the dataset
       Then I should be informed that the dataset was updated
       And The current dataset data is the same as submitted.
-      @ignore
+
       Scenario: Add indicators to a data set
       Given there is already a data set
       And there are some indicators in the system
@@ -76,7 +76,7 @@ They are used to collect data at assigned organisation units.
       And I submit the dataset
       Then I should be informed that the dataset was updated
       And The current dataset data is the same as submitted.
-      @ignore
+
       Scenario: Assign an organisation units to a dataset
       Given there is already a data set
       And there are some organisation units in the system
