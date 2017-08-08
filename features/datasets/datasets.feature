@@ -11,8 +11,8 @@ They are used to collect data at assigned organisation units.
       Scenario: Create a dataset
         Given that I want to create a new dataset
         When I fill in the fields for the dataset with data:
-        | name            | periodType   | categoryCombination  |
-        | Foo data set    | Monthly      | None                 |
+        | name            | periodType   |
+        | Foo data set    | Monthly      |
         And I submit the dataset
         Then I should be informed that the dataset was created
         And The current dataset data is the same as submitted.
@@ -114,17 +114,17 @@ They are used to collect data at assigned organisation units.
       And the server should show me an error message equal to "periodicity could not be different".
       @ignore
       Scenario: Specify a category combination within a data set (Data set element)
-      Given I have created a dataset
+      Given there is already a data set
       When I add a data element with no category combination to the data set
       Then the data set element should have the same category combination of the data element itself.
       @ignore
       Scenario: Update a non-specified category combination of a data element which is part of a dataset
-      Given I have created a dataset
+      Given there is already a data set
       When I change the category combination of the data element
       Then the data set element should have the same category combination of the data element itself.
       @ignore
       Scenario: Update a specified category combination of a data element which is part of a dataset
-      Given I have created a dataset
+      Given there is already a data set
       And I have specified a category combination for a data element in that dataset
       When I change the category combination of the data element
       Then the data set element should remain unchanged.
