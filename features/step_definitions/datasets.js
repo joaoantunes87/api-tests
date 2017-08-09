@@ -67,6 +67,7 @@ defineSupportCode(function ({Given, When, Then}) {
           case 'dataSetElements':
           case 'indicators':
           case 'organisationUnits':
+          case 'dataInputPeriods':
             assert.sameDeepMembers(
               response.data[propertyKey],
               world.updatedDataToAssert[propertyKey],
@@ -92,22 +93,7 @@ defineSupportCode(function ({Given, When, Then}) {
   });
 
   Given(/^I got the existing dataset to update$/, function () {
-    const world = this;
-    world.method = 'get';
-    world.requestData = {};
-
-    assert.equal(datasetWasCreated, true, 'Dataset does not exist');
-    assert.isOk(generatedDatasetId, 'Dataset Id does not exist');
-
-    world.resourceId = generatedDatasetId;
-    return dhis2.initializePromiseUrlUsingWorldContext(
-      world,
-      dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.DATASET, world.resourceId)
-    ).then(function (response) {
-      assert.equal(response.status, 200, 'Status should be 200');
-      world.requestData = response.data;
-      world.method = 'put';
-    });
+    return checkAndFetchCreatedDataSetToBeUpdated(this);
   });
 
   When(/^I change the periodType to (.+)$/, function (value) {
@@ -115,18 +101,18 @@ defineSupportCode(function ({Given, When, Then}) {
     this.updatedDataToAssert.periodType = value;
   });
 
-  When(/^there is a category combination with a dimension of type attribute$/, function () {
+  Given(/^there is already a data set$/, function () {
+    return checkAndFetchCreatedDataSetToBeUpdated(this);
+  });
+
+  Given(/^there is a category combination with a dimension of type attribute$/, function () {
     const world = this;
     world.method = 'get';
 
     return dhis2.initializePromiseUrlUsingWorldContext(
       world,
-      dhis2.generateUrlToEndpointWithParams(
-        dhis2.resourceTypes.CATEGORY_COMBINATION,
-        {
-          dataDimensionType: 'ATTRIBUTE'
-        }
-      )
+      dhis2.generateUrlForResourceType(dhis2.resourceTypes.CATEGORY_COMBINATION) +
+      '?filter=dataDimensionType:eq:ATTRIBUTE'
     ).then(function (response) {
       assert.isAtLeast(
         response.data.categoryCombos.length,
@@ -152,12 +138,7 @@ defineSupportCode(function ({Given, When, Then}) {
 
     return dhis2.initializePromiseUrlUsingWorldContext(
       world,
-      dhis2.generateUrlToEndpointWithParams(
-        dhis2.resourceTypes.DATA_ELEMENT,
-        {
-          domainType: 'AGGREGATE'
-        }
-      )
+      dhis2.generateUrlForResourceType(dhis2.resourceTypes.DATA_ELEMENT) + '?filter=domainType:eq:AGGREGATE'
     ).then(function (response) {
       assert.isAtLeast(
         response.data.dataElements.length,
@@ -168,7 +149,7 @@ defineSupportCode(function ({Given, When, Then}) {
     });
   });
 
-  When(/^I add data elements to the dataset$/, function () {
+  When(/^I add some data elements to the dataset$/, function () {
     const dataSetElements = [{
       id: this.responseData.dataElements[0].id
     }];
@@ -203,7 +184,7 @@ defineSupportCode(function ({Given, When, Then}) {
     this.method = 'put';
   });
 
-  When(/^I add organisation units to the dataset$/, function () {
+  When(/^I add some organisation units to the dataset$/, function () {
     const organisationUnits = [{
       id: this.responseData.organisationUnits[0].id
     }];
@@ -211,6 +192,57 @@ defineSupportCode(function ({Given, When, Then}) {
     this.updatedDataToAssert.organisationUnits = organisationUnits;
     this.method = 'put';
   });
+
+  When(/^I set the data input periods for the dataset:$/, function (data) {
+    const dataTable = data.rawTable;
+    const properties = dataTable[0];
+    const dataInputPeriods = [];
+
+    for (let i = 1; i < data.rawTable.length; i++) {
+      const dataInputPeriod = {};
+
+      properties.forEach(function (propertyKey, index) {
+        if (propertyKey === 'period') {
+          dataInputPeriod.period = {id: dataTable[i][index]};
+        } else {
+          dataInputPeriod[propertyKey] = dataTable[i][index];
+        }
+      }, this);
+
+      dataInputPeriods.push(dataInputPeriod);
+    }
+
+    this.updatedDataToAssert.dataInputPeriods = dataInputPeriods;
+    this.requestData.dataInputPeriods = dataInputPeriods;
+  });
+
+  Then(/^I should be informed that the dataset was not updated$/, function (resourceType) {
+    assert.equal(this.responseStatus, 400, 'The status should have been 400');
+  });
+
+  Then(/^the server should show me an error message equal to "(.+)".$/, function (errorMessage) {
+    assert.equal(this.responseStatus, 400, 'It should have returned error status of 400');
+    assert.equal(this.responseData.status, 'ERROR', 'It should have returned error status');
+    assert.equal(this.responseData.message, errorMessage, 'Error message should be ' + errorMessage);
+  });
+
+  const checkAndFetchCreatedDataSetToBeUpdated = (world) => {
+    world.method = 'get';
+    world.requestData = {};
+
+    assert.equal(datasetWasCreated, true, 'Dataset does not exist');
+    assert.isOk(generatedDatasetId, 'Dataset Id does not exist');
+
+    world.resourceId = generatedDatasetId;
+    return dhis2.initializePromiseUrlUsingWorldContext(
+      world,
+      dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.DATASET, world.resourceId)
+    ).then(function (response) {
+      assert.equal(response.status, 200, 'Status should be 200');
+      world.requestData = response.data;
+      world.method = 'put';
+    });
+  };
 });
 
 const submitServerRequest = (world) => {
