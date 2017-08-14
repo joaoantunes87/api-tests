@@ -6,7 +6,7 @@ a mathematical formula containing data elements and their category option combin
     Background:
       Given that I am logged in
       And  I have the necessary permissions to add and delete indicators
-    
+
     Scenario: Add a valid indicator type
         When I fill in the fields for an indicator type with valid data:
         | name    | factor |
@@ -44,12 +44,34 @@ a mathematical formula containing data elements and their category option combin
         | Persent  |           |
         And I submit that indicator type to the server
         Then I should be informed that indicator type is invalid
-        And receive the message "Missing required property `name`.".
+        And receive the message "Missing required property `factor`.".
+
+    Scenario: Add a valid indicator with a numerator and denominator
+        Given I create the following category combinations:
+        | name   | dataDimensionType | id             |
+        | Baz    | DISAGGREGATION    | znHoMDcazDV    |
+        | QuX    | DISAGGREGATION    | vDSrLNDcZxg    |
+        And I create the following data elements:
+        | name  | shortName | domainType | valueType | aggregationType  | categoryCombo | id            |
+        | Foo   | FOO       | AGGREGATE  | NUMBER    | SUM              | vDSrLNDcZxg   | M3OggnM4gBb   |
+        | Bar   | BAZ       | AGGREGATE  | NUMBER    | SUM              | znHoMDcazDV   | vtbfnINRXEE   |
+        And I create an indicator type:
+        | name    | id          |
+        | Percent | TiOzznM4gBb |
+        When I fill in the required fields for an indicator
+        | name | shortName | indicatorType |
+        | Eggs | Eggs      | TiOzznM4gBb   |
+        And I define the indicator formula
+        | numerator                   | denominator                 |
+        | #{M3OggnM4gBb.znHoMDcazDV}  | #{vtbfnINRXEE.vDSrLNDcZxg}  |
+        And I submit the indicator to the server
+        Then I should be informed that the indicator was created
+        And the indicator should correspond to what I submitted.
 
     @ignore
     Scenario: Add a valid indicator without a denominator
         Given I have a data element called Foo and Bar in the system
-        And that these data elements have category option combinations Baz and QuX respectively
+        And that these data elements have category combinations Baz and QuX respectively
         And that an indicator type called Number exists
         When I fill in the required fields for an indicator
         | name | shortName | indicatorType |
@@ -57,20 +79,6 @@ a mathematical formula containing data elements and their category option combin
         And I define the indicator formula
         | numerator        |
         | Foo.Baz + Bar.Qux|
-        And I submit the indicator to the server
-        Then I should be informed that the indicator was created
-        And the indicator should correspond to what I submitted.
-    @ignore
-    Scenario: Add a valid indicator with a numerator and denominator
-        Given I have a data element called Foo and Bar in the system
-        And that these data elements have category option combinations Baz and QuX respectively
-        And that an indicator type called Percent exists
-        When I fill in the required fields for an indicator
-        | name | shortName | indicatorType |
-        | Eggs | Eggs      | Percent       |
-        And I define the indicator formula
-        | numerator        | denominator   |
-        | Foo.Baz          | Bar.Qux       |
         And I submit the indicator to the server
         Then I should be informed that the indicator was created
         And the indicator should correspond to what I submitted.
