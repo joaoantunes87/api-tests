@@ -56,8 +56,8 @@ a mathematical formula containing data elements and their category option combin
         | Foo   | FOO       | AGGREGATE  | NUMBER    | SUM              | vDSrLNDcZxg   | M3OggnM4gBb   |
         | Bar   | BAZ       | AGGREGATE  | NUMBER    | SUM              | znHoMDcazDV   | vtbfnINRXEE   |
         And I create an indicator type:
-        | name    | id          |
-        | Percent | TiOzznM4gBb |
+        | name          | id          |
+        | PercentNumDen | TiOzznM4gBb |
         When I fill in the required fields for an indicator
         | name | shortName | indicatorType |
         | Eggs | Eggs      | TiOzznM4gBb   |
