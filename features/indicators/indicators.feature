@@ -68,17 +68,24 @@ a mathematical formula containing data elements and their category option combin
         Then I should be informed that the indicator was created
         And the indicator should correspond to what I submitted.
 
-    @ignore
-    Scenario: Add a valid indicator without a denominator
-        Given I have a data element called Foo and Bar in the system
-        And that these data elements have category combinations Baz and QuX respectively
-        And that an indicator type called Number exists
+    Scenario: Add an indicator without a denominator
+        Given I create the following category combinations:
+        | name   | dataDimensionType | id             |
+        | BazDen | DISAGGREGATION    | zxHoMDcazDV    |
+        | QuXDen | DISAGGREGATION    | tDSrLNDcZxg    |
+        And I create the following data elements:
+        | name   | shortName | domainType | valueType | aggregationType  | categoryCombo | id            |
+        | FooDen | FOO_DEN   | AGGREGATE  | NUMBER    | SUM              | tDSrLNDcZxg   | l3OggnM4gBb   |
+        | BarDen | BAZ_DEN   | AGGREGATE  | NUMBER    | SUM              | zxHoMDcazDV   | vZbfnINRXEE   |
+        And I create an indicator type:
+        | name    | id         |
+        | Number | ziOzznM4gBb |
         When I fill in the required fields for an indicator
         | name | shortName | indicatorType |
-        | Spam | Spam      | Number        |
+        | Eggs | Eggs      | ziOzznM4gBb   |
         And I define the indicator formula
-        | numerator        |
-        | Foo.Baz + Bar.Qux|
+        | numerator                                               |
+        | #{l3OggnM4gBb.zxHoMDcazDV} + #{vZbfnINRXEE.tDSrLNDcZxg} |
         And I submit the indicator to the server
-        Then I should be informed that the indicator was created
-        And the indicator should correspond to what I submitted.
+        Then I should be informed that indicator is invalid
+        And receive the message "Missing required property `denominator`.".

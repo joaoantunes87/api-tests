@@ -199,6 +199,10 @@ defineSupportCode(function ({Given, When, Then}) {
       });
     });
   });
+
+  Then(/^I should be informed that indicator is invalid$/, function () {
+    assert.equal(this.responseStatus, 409, 'Status should be 409');
+  });
 });
 
 const submitIndicatorTypeRequestToServer = (world) => {
