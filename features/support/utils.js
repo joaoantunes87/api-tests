@@ -19,6 +19,7 @@ module.exports = (() => {
     DATASET: 'dataset',
     CATEGORY_COMBINATION: 'category combination',
     INDICATOR: 'indicator',
+    INDICATOR_TYPE: 'indicator type',
     CATEGORY_OPTION: 'category option',
     CATEGORY: 'category',
     USER_ROLE: 'user role',
@@ -69,6 +70,9 @@ module.exports = (() => {
         break;
       case RESOURCE_TYPES.INDICATOR:
         endpoint = apiEndpoint() + '/indicators';
+        break;
+      case RESOURCE_TYPES.INDICATOR_TYPE:
+        endpoint = apiEndpoint() + '/indicatorTypes';
         break;
       case RESOURCE_TYPES.CATEGORY_OPTION:
         endpoint = apiEndpoint() + '/categoryOptions';
@@ -146,6 +150,12 @@ module.exports = (() => {
     },
     isAuthorisedToDeleteUsersWith: (userRoles = []) => {
       return isAuthorisedTo('F_USER_DELETE', userRoles);
+    },
+    isAuthorisedToAddIndicatorsWith: (userRoles = []) => {
+      return isAuthorisedTo('F_INDICATOR_PUBLIC_ADD', userRoles);
+    },
+    isAuthorisedToDeleteIndicatorsWith: (userRoles = []) => {
+      return isAuthorisedTo('F_INDICATOR_DELETE', userRoles);
     },
     initializePromiseUrlUsingWorldContext: (world, url) => {
       debug('URL: ' + url);
