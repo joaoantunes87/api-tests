@@ -14,10 +14,18 @@ DELETE FROM organisationunit;
 DELETE FROM optionvalue;
 DELETE FROM optionset;
 
+DELETE FROM datainputperiod;
 DELETE FROM dataset;
 
 DELETE FROM dataelementtranslations;
 DELETE FROM dataelement;
+
+DELETE FROM "indicator";
+DELETE FROM indicatortype;
+
+DELETE FROM categorycombos_optioncombos;
+DELETE FROM categorycombos_categories;
+DELETE FROM categorycombo;
 
 /* Organisation Units for Case Tests */
 INSERT INTO organisationunit (organisationunitid, uid, name, shortname, created, lastupdated, openingdate) values (1001, 'a1501747207', 'Organisation Unit Testing', 'ORG T', current_timestamp, current_timestamp, current_timestamp);

@@ -16,7 +16,7 @@ services:
       test: ["CMD-SHELL", "pg_isready -h database -p 5432 -d dhis"]
       interval: 30s
       timeout: 30s
-      retries: 50
+      retries: 5
   web:
     container_name: dhis2-web
     image: dhis2/dhis2-web:2.27-tomcat7-jre8-latest
@@ -33,7 +33,7 @@ services:
     healthcheck:
       test: "curl -f http://web:8080"
       interval: 30s
-      retries: 50
+      retries: 15
   api-tests:
     container_name: dhis2-api-tests
     build: .
