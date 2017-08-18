@@ -9,13 +9,14 @@ defineSupportCode(function ({Given, When, Then}) {
   let dataElementWasCreated = false;
 
   Given(/^that I have the necessary permissions to add a data element$/, function () {
-    return this.axios.get(dhis2.apiEndpoint() + '/me?fields=userCredentials[userRoles[*]]', {
-      auth: this.authRequestObject
-    }).then(function (response) {
-      assert.isOk(
-        dhis2.isAuthorisedToAddDataElementWith(response.data.userCredentials.userRoles),
-        'Not Authorized to create Data Element'
-      );
+    return dhis2.sendApiRequest({
+      url: dhis2.apiEndpoint() + '/me?fields=userCredentials[userRoles[*]]',
+      onSuccess: function (response) {
+        assert.isOk(
+          dhis2.isAuthorisedToAddDataElementWith(response.data.userCredentials.userRoles),
+          'Not Authorized to create Data Element'
+        );
+      }
     });
   });
 
@@ -49,16 +50,13 @@ defineSupportCode(function ({Given, When, Then}) {
 
   Then(/^the data element has the same properties as those I supplied.$/, function () {
     const world = this;
-    world.method = 'get';
-    world.requestData = {};
-
-    return dhis2.initializePromiseUrlUsingWorldContext(
-      world,
-      dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.DATA_ELEMENT, world.resourceId)
-    ).then(function (response) {
-      Object.keys(world.updatedDataToAssert).forEach(function (propertyKey) {
-        assert.equal(response.data[propertyKey], world.updatedDataToAssert[propertyKey], propertyKey + ' is wrong');
-      });
+    return dhis2.sendApiRequest({
+      url: dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.DATA_ELEMENT, world.resourceId),
+      onSuccess: function (response) {
+        Object.keys(world.updatedDataToAssert).forEach(function (propertyKey) {
+          assert.equal(response.data[propertyKey], world.updatedDataToAssert[propertyKey], propertyKey + ' is wrong');
+        });
+      }
     });
   });
 
@@ -79,12 +77,18 @@ defineSupportCode(function ({Given, When, Then}) {
   Then(/^I should be informed the data element was deleted$/, function () {
     assert.equal(this.responseStatus, 200, 'Status should be 200');
 
-    return this.axios({
-      method: 'get',
+    return dhis2.sendApiRequest({
       url: dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.DATA_ELEMENT, generatedDataElementId),
-      auth: this.authRequestObject
-    }).catch(function (error) {
-      assert.equal(error.response.status, 404, 'Status should be 404');
+      onSuccess: function (response) {
+        /* throw an error could be used here. Once here, this assert will always fail because onSuccess
+           we can not have a 4** status, but using assert we keep the same style.
+        */
+        assert.equal(response.status, 404, 'Status should be 404');
+      },
+      onError: function (error) {
+        assert.equal(error.response.status, 404, 'Status should be 404');
+      },
+      preventDefaultOnError: true
     });
   });
 
@@ -99,46 +103,42 @@ defineSupportCode(function ({Given, When, Then}) {
   When(/^I translate the name of the data element for (.+) with (.+) as (.+)$/,
     function (language, locale, translationValue) {
       const world = this;
-
-      world.method = 'get';
-      world.requestData = {};
       world.locale = locale;
       world.translationValue = translationValue;
 
-      return dhis2.initializePromiseUrlUsingWorldContext(
-        world,
-        dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.DATA_ELEMENT, generatedDataElementId)
-      ).then(function (response) {
-        world.requestData = response.data;
-        world.requestData.translations = [
-          {
-            property: 'NAME',
-            locale: locale,
-            value: translationValue
-          }
-        ];
+      return dhis2.sendApiRequest({
+        url: dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.DATA_ELEMENT, generatedDataElementId),
+        onSuccess: function (response) {
+          const requestData = response.data;
+          requestData.translations = [
+            {
+              property: 'NAME',
+              locale: locale,
+              value: translationValue
+            }
+          ];
 
-        world.method = 'put';
-        return dhis2.initializePromiseUrlUsingWorldContext(
-          world,
-          dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.DATA_ELEMENT, generatedDataElementId)
-        );
-      }).then(function (response) {
-        assert.equal(response.status, 200, 'Organisation Unit was not updated');
+          return dhis2.sendApiRequest({
+            url: dhis2.generateUrlForResourceTypeWithId(
+              dhis2.resourceTypes.DATA_ELEMENT,
+              generatedDataElementId),
+            method: 'put',
+            requestData: requestData,
+            onSuccess: function (response) {
+              assert.equal(response.status, 200, 'Data Element was not updated');
+            }
+          });
+        }
       });
     }
   );
 
   Then(/^I should see the (.+) of the data element.$/, function (translationValue) {
-    const world = this;
-    world.method = 'get';
-    world.requestData = {};
-
-    return dhis2.initializePromiseUrlUsingWorldContext(
-      world,
-      dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.DATA_ELEMENT, generatedDataElementId)
-    ).then(function (response) {
-      assert.equal(response.data.displayName, translationValue, 'Name is not translated');
+    return dhis2.sendApiRequest({
+      url: dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.DATA_ELEMENT, generatedDataElementId),
+      onSuccess: function (response) {
+        assert.equal(response.data.displayName, translationValue, 'Name is not translated');
+      }
     });
   });
 
@@ -148,25 +148,19 @@ defineSupportCode(function ({Given, When, Then}) {
   });
 
   When(/^I send the search request$/, function () {
-    const world = this;
-    world.method = 'get';
-
-    return dhis2.initializePromiseUrlUsingWorldContext(
-      world,
-      dhis2.generateUrlForResourceType(dhis2.resourceTypes.DATA_ELEMENT) + '?' +
-        'fields=' + world.searchProperty + '&' +
-        'filter=' + world.searchProperty + ':eq:' + world.searchValue + '&' +
-        'paging=false'
-    ).then(function (response) {
-      assert.equal(response.status, 200, 'Response Status is ok');
-      assert.property(response.data, 'dataElements', 'It should return data elements');
-      world.responseStatus = response.status;
-      world.responseData = response.data;
-    });
+    return dhis2.sendApiRequest({
+      url: dhis2.generateUrlForResourceType(dhis2.resourceTypes.DATA_ELEMENT) + '?' +
+            'fields=' + this.searchProperty + '&' +
+            'filter=' + this.searchProperty + ':eq:' + this.searchValue + '&' +
+            'paging=false',
+      onSuccess: function (response) {
+        assert.equal(response.status, 200, 'Response Status is ok');
+        assert.property(response.data, 'dataElements', 'It should return data elements');
+      }
+    }, this);
   });
 
-  // added timeout to remove default cucumber timeout because it takes too long, more than 5000 milliseconds
-  Then(/^I should only see the data elements which have a (.+) with the same (.+).$/, {timeout: -1},
+  Then(/^I should only see the data elements which have a (.+) with the same (.+).$/,
     function (searchProperty, searchValue) {
       for (const dataElement of this.responseData.dataElements) {
         assert.equal(
@@ -179,33 +173,25 @@ defineSupportCode(function ({Given, When, Then}) {
   );
 
   const submitServerRequest = (world) => {
-    const url = dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.DATA_ELEMENT, world.resourceId);
-
-    return dhis2.initializePromiseUrlUsingWorldContext(world, url).then(function (response) {
-      world.responseStatus = response.status;
-      world.responseData = response.data;
-    }).catch(function (error) {
-      console.error(JSON.stringify(error.response.data, null, 2));
-      world.responseData = error.response.data;
-      world.responseStatus = error.response.status;
-    });
+    return dhis2.sendApiRequest({
+      url: dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.DATA_ELEMENT, world.resourceId),
+      requestData: world.requestData,
+      method: world.method,
+      preventDefaultOnError: true
+    }, world);
   };
 
   const prepareExistingDataElementToBeUpdated = (world) => {
-    world.method = 'get';
-    world.requestData = {};
-
     assert.equal(dataElementWasCreated, true, 'Data Element does not exist');
     assert.isOk(generatedDataElementId, 'Data Element Id does not exist');
 
-    world.resourceId = generatedDataElementId;
-    return dhis2.initializePromiseUrlUsingWorldContext(
-      world,
-      dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.DATA_ELEMENT, world.resourceId)
-    ).then(function (response) {
-      assert.equal(response.status, 200, 'Status should be 200');
-      world.requestData = response.data;
-      world.method = 'put';
+    return dhis2.sendApiRequest({
+      url: dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.DATA_ELEMENT, generatedDataElementId),
+      onSuccess: function (response) {
+        assert.equal(response.status, 200, 'Status should be 200');
+        world.requestData = response.data;
+        world.method = 'put';
+      }
     });
   };
 });
