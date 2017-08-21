@@ -157,6 +157,9 @@ module.exports = (() => {
     isAuthorisedToDeleteIndicatorsWith: (userRoles = []) => {
       return isAuthorisedTo('F_INDICATOR_DELETE', userRoles);
     },
+    isAuthorisedToManageApplicationWith: (userRoles = []) => {
+      return isAuthorisedTo('M_dhis-web-maintenance-appmanager', userRoles);
+    },
     initializePromiseUrlUsingWorldContext: (world, url) => {
       debug('URL: ' + url);
       debug('METHOD: ' + world.method);
