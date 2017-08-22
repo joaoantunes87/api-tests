@@ -1,5 +1,5 @@
 'use strict';
-
+const fs = require('fs');
 module.exports = (() => {
   let baseUrl = 'https://play.dhis2.org/demo';  // default
   let apiVersion = 27;                          // default
@@ -23,7 +23,8 @@ module.exports = (() => {
     CATEGORY_OPTION: 'category option',
     CATEGORY: 'category',
     USER_ROLE: 'user role',
-    USER: 'user'
+    USER: 'user',
+    APPLICATION: 'application'
   };
 
   const onDebugMode = process.env.DHIS2_LOG_MODE === LOG_DEBUG_MODE;
@@ -85,6 +86,9 @@ module.exports = (() => {
         break;
       case RESOURCE_TYPES.USER_ROLE:
         endpoint = apiEndpoint() + '/userRoles';
+        break;
+      case RESOURCE_TYPES.APPLICATION:
+        endpoint = apiEndpoint() + '/apps';
         break;
       default:
         throw new Error('There is no resource type defined for: ' + resourceType);
@@ -194,6 +198,9 @@ module.exports = (() => {
       }
 
       return endpoint;
+    },
+    loadFileFromPath: (path) => {
+      return fs.createReadStream(path);
     }
   };
 })();
