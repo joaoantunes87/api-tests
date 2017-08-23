@@ -18,7 +18,7 @@ defineSupportCode(function ({Given, When, Then}) {
     });
   });
 
-  Given(/^I have an application which is not a valid ZIP file at "(.+)"$/, function (filename) {
+  Given(/^I have a valid application ZIP file at "(.+)"$/, function (filename) {
     const filePath = path.join(path.resolve('.'), '/features/apps/' + filename);
 
     this.requestData = new FormData();
@@ -41,6 +41,17 @@ defineSupportCode(function ({Given, When, Then}) {
       world.responseData = error.response.data;
       world.responseStatus = error.response.status;
     });
+  });
+
+  Then(/^I should be informed that the application was created successfully.$/, function () {
+    assert.equal(this.responseStatus, 204, 'Http Status Code should be 204');
+  });
+
+  Given(/^I have an application which is not a valid ZIP file at "(.+)"$/, function (filename) {
+    const filePath = path.join(path.resolve('.'), '/features/apps/' + filename);
+
+    this.requestData = new FormData();
+    this.requestData.append('file', dhis2.loadFileFromPath(filePath));
   });
 
   Then(/^I should be informed that the application is invalid$/, function () {

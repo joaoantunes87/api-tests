@@ -5,12 +5,11 @@ I want to be able to manage the apps in the system
     Background:
       Given that I am logged in
       And that I have the necessary permissions to manage apps
-    @ignore
+
     Scenario: Add an app
       Given I have a valid application ZIP file at "dhis2-clippy-app.zip"
       When I submit that application to the server
-      Then I should be informed that the application was created successfully
-      And I should be able to open the application.
+      Then I should be informed that the application was created successfully.
 
     Scenario: Install an app which is not in ZIP format
       Given I have an application which is not a valid ZIP file at "dhis2-clippy-app.html"
