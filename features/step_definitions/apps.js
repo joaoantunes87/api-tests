@@ -43,8 +43,23 @@ defineSupportCode(function ({Given, When, Then}) {
     });
   });
 
-  Then(/^I should be informed that the application was created successfully.$/, function () {
+  Then(/^I should be informed that the application was created successfully$/, function () {
     assert.equal(this.responseStatus, 204, 'Http Status Code should be 204');
+  });
+
+  Then(/^I should be able find the application called "(.+)".$/, function (applicationName) {
+    const world = this;
+    world.method = 'get';
+    world.requestData = {};
+
+    return dhis2.initializePromiseUrlUsingWorldContext(
+      world,
+      dhis2.generateUrlForResourceType(dhis2.resourceTypes.APPLICATION) + '?filter=name:eq:' + applicationName
+    ).then(function (response) {
+      assert.equal(response.status, 200, 'Http Status Code should be 200');
+      assert.equal(response.data.length, 1, 'It should have found one application');
+      assert.equal(response.data[0].name, applicationName, 'App found should be called ' + applicationName);
+    });
   });
 
   Given(/^I have an application which is not a valid ZIP file at "(.+)"$/, function (filename) {

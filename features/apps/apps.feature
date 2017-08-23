@@ -9,7 +9,8 @@ I want to be able to manage the apps in the system
     Scenario: Add an app
       Given I have a valid application ZIP file at "dhis2-clippy-app.zip"
       When I submit that application to the server
-      Then I should be informed that the application was created successfully.
+      Then I should be informed that the application was created successfully
+      And I should be able find the application called "Clippy".
 
     Scenario: Install an app which is not in ZIP format
       Given I have an application which is not a valid ZIP file at "dhis2-clippy-app.html"
@@ -25,6 +26,6 @@ I want to be able to manage the apps in the system
     @ignore
     Scenario: Delete an app
       Given I have an application using ZIP file called "dhis2-clippy-app.zip"
-      When I delete the app
+      When I delete the application with key "dhis2-clippy-app"
       Then the server should inform me the app was deleted
-      And I should not be able to open the application.
+      And I should not be able find the application called "Clippy".
