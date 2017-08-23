@@ -23,9 +23,10 @@ I want to be able to manage the apps in the system
       When I submit that application to the server
       Then I should be informed that the application is invalid
       And receive the application error message "Zip file requires a manifest file".
-    @ignore
+
     Scenario: Delete an app
-      Given I have an application using ZIP file called "dhis2-clippy-app.zip"
+      Given I have a valid application ZIP file at "dhis2-clippy-app.zip"
+      And I submit that application to the server
       When I delete the application with key "dhis2-clippy-app"
-      Then the server should inform me the app was deleted
+      Then I should be informed that the application was delete successfully
       And I should not be able find the application called "Clippy".

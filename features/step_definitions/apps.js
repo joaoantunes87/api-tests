@@ -77,4 +77,40 @@ defineSupportCode(function ({Given, When, Then}) {
   Then(/^receive the application error message "(.+)".$/, function (errorMessage) {
     assert.equal(this.responseData.message, errorMessage, 'Error Message should be ' + errorMessage);
   });
+
+  When(/^I delete the application with key "(.+)"$/, function (appKey) {
+    const world = this;
+    world.method = 'delete';
+    world.requestData = {};
+
+    return dhis2.initializePromiseUrlUsingWorldContext(
+      world,
+      dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.APPLICATION, appKey)
+    ).then(function (response) {
+      world.responseStatus = response.status;
+      world.responseData = response.data;
+    }).catch(function (error) {
+      console.error(JSON.stringify(error.response.data, null, 2));
+      world.responseData = error.response.data;
+      world.responseStatus = error.response.status;
+    });
+  });
+
+  Then(/^I should be informed that the application was delete successfully$/, function () {
+    assert.equal(this.responseStatus, 204, 'Http Status Code should be 204');
+  });
+
+  Then(/^I should not be able find the application called "(.+)".$/, function (applicationName) {
+    const world = this;
+    world.method = 'get';
+    world.requestData = {};
+
+    return dhis2.initializePromiseUrlUsingWorldContext(
+      world,
+      dhis2.generateUrlForResourceType(dhis2.resourceTypes.APPLICATION) + '?filter=name:eq:' + applicationName
+    ).then(function (response) {
+      assert.equal(response.status, 200, 'Http Status Code should be 200');
+      assert.equal(response.data.length, 0, 'It should have found no applications');
+    });
+  });
 });
