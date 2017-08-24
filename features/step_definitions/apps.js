@@ -78,6 +78,13 @@ defineSupportCode(function ({Given, When, Then}) {
     assert.equal(this.responseData.message, errorMessage, 'Error Message should be ' + errorMessage);
   });
 
+  Given(/^I have an application without a manifest at "(.+)"$/, function (filename) {
+    const filePath = path.join(path.resolve('.'), '/features/apps/' + filename);
+
+    this.requestData = new FormData();
+    this.requestData.append('file', dhis2.loadFileFromPath(filePath));
+  });
+
   When(/^I delete the application with key "(.+)"$/, function (appKey) {
     const world = this;
     world.method = 'delete';

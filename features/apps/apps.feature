@@ -17,7 +17,7 @@ I want to be able to manage the apps in the system
       When I submit that application to the server
       Then I should be informed that the application is invalid
       And receive the application error message "Zip file could not be read".
-    @ignore
+
     Scenario: Install an app without a manifest
       Given I have an application without a manifest at "dhis2-clippy-app-no-manifest.zip"
       When I submit that application to the server
