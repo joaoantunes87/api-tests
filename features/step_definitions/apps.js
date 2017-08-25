@@ -18,7 +18,7 @@ defineSupportCode(function ({Given, When, Then}) {
     });
   });
 
-  Given(/^I have a valid application ZIP file at "(.+)"$/, function (filename) {
+  Given(/^I have an application file at "(.+)"$/, function (filename) {
     const filePath = path.join(path.resolve('.'), '/features/apps/' + filename);
 
     this.requestData = new FormData();
@@ -62,13 +62,6 @@ defineSupportCode(function ({Given, When, Then}) {
     });
   });
 
-  Given(/^I have an application which is not a valid ZIP file at "(.+)"$/, function (filename) {
-    const filePath = path.join(path.resolve('.'), '/features/apps/' + filename);
-
-    this.requestData = new FormData();
-    this.requestData.append('file', dhis2.loadFileFromPath(filePath));
-  });
-
   Then(/^I should be informed that the application is invalid$/, function () {
     assert.equal(this.responseStatus, 409, 'Http Status Code should be 409');
     assert.equal(this.responseData.status, 'ERROR', 'Status should be ERROR');
@@ -76,13 +69,6 @@ defineSupportCode(function ({Given, When, Then}) {
 
   Then(/^receive the application error message "(.+)".$/, function (errorMessage) {
     assert.equal(this.responseData.message, errorMessage, 'Error Message should be ' + errorMessage);
-  });
-
-  Given(/^I have an application without a manifest at "(.+)"$/, function (filename) {
-    const filePath = path.join(path.resolve('.'), '/features/apps/' + filename);
-
-    this.requestData = new FormData();
-    this.requestData.append('file', dhis2.loadFileFromPath(filePath));
   });
 
   When(/^I delete the application with key "(.+)"$/, function (appKey) {
