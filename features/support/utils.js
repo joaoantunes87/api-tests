@@ -1,5 +1,5 @@
 'use strict';
-
+const fs = require('fs');
 module.exports = (() => {
   let baseUrl = 'https://play.dhis2.org/demo';  // default
   let apiVersion = 27;                          // default
@@ -19,10 +19,12 @@ module.exports = (() => {
     DATASET: 'dataset',
     CATEGORY_COMBINATION: 'category combination',
     INDICATOR: 'indicator',
+    INDICATOR_TYPE: 'indicator type',
     CATEGORY_OPTION: 'category option',
     CATEGORY: 'category',
     USER_ROLE: 'user role',
-    USER: 'user'
+    USER: 'user',
+    APPLICATION: 'application'
   };
 
   const onDebugMode = process.env.DHIS2_LOG_MODE === LOG_DEBUG_MODE;
@@ -70,6 +72,9 @@ module.exports = (() => {
       case RESOURCE_TYPES.INDICATOR:
         endpoint = apiEndpoint() + '/indicators';
         break;
+      case RESOURCE_TYPES.INDICATOR_TYPE:
+        endpoint = apiEndpoint() + '/indicatorTypes';
+        break;
       case RESOURCE_TYPES.CATEGORY_OPTION:
         endpoint = apiEndpoint() + '/categoryOptions';
         break;
@@ -81,6 +86,9 @@ module.exports = (() => {
         break;
       case RESOURCE_TYPES.USER_ROLE:
         endpoint = apiEndpoint() + '/userRoles';
+        break;
+      case RESOURCE_TYPES.APPLICATION:
+        endpoint = apiEndpoint() + '/apps';
         break;
       default:
         throw new Error('There is no resource type defined for: ' + resourceType);
@@ -147,6 +155,15 @@ module.exports = (() => {
     isAuthorisedToDeleteUsersWith: (userRoles = []) => {
       return isAuthorisedTo('F_USER_DELETE', userRoles);
     },
+    isAuthorisedToAddIndicatorsWith: (userRoles = []) => {
+      return isAuthorisedTo('F_INDICATOR_PUBLIC_ADD', userRoles);
+    },
+    isAuthorisedToDeleteIndicatorsWith: (userRoles = []) => {
+      return isAuthorisedTo('F_INDICATOR_DELETE', userRoles);
+    },
+    isAuthorisedToManageApplicationWith: (userRoles = []) => {
+      return isAuthorisedTo('M_dhis-web-maintenance-appmanager', userRoles);
+    },
     initializePromiseUrlUsingWorldContext: (world, url) => {
       debug('URL: ' + url);
       debug('METHOD: ' + world.method);
@@ -181,6 +198,9 @@ module.exports = (() => {
       }
 
       return endpoint;
+    },
+    loadFileFromPath: (path) => {
+      return fs.createReadStream(path);
     }
   };
 })();
