@@ -1,6 +1,5 @@
 const { defineSupportCode } = require('cucumber');
 const chai = require('chai');
-const querystring = require('querystring');
 const dhis2 = require('../support/utils.js');
 
 const assert = chai.assert;
@@ -22,67 +21,54 @@ defineSupportCode(function ({Given, When, Then}) {
     ]
   };
 
-  const basicAuth = {
-    username: 'admin',
-    password: 'district'
-  };
-
   Given(/^I have added a OAUTH2 client to the system$/, function () {
     if (oauth2ClientCreated && oauth2ClientId) {
       return;
     }
 
-    const world = this;
-    return world.axios({
-      method: 'post',
+    return dhis2.sendApiRequest({
       url: dhis2.apiEndpoint() + '/oAuth2Clients',
-      data: oauth2Client,
-      auth: basicAuth
-    }).then(function (response) {
-      assert.equal(response.status, 201, 'OAUTH2 client was not created');
-      assert.isOk(response.data.response.uid, 'OAUTH2 client id was not returned');
+      requestData: oauth2Client,
+      method: 'post',
+      onSuccess: function (response) {
+        assert.equal(response.status, 201, 'OAUTH2 client was not created');
+        assert.isOk(response.data.response.uid, 'OAUTH2 client id was not returned');
 
-      oauth2ClientCreated = true;
-      oauth2ClientId = response.data.response.uid;
-      return world.axios({
-        method: 'get',
-        url: dhis2.apiEndpoint() + '/oAuth2Clients/' + oauth2ClientId,
-        data: {},
-        auth: basicAuth
-      }).then(function (response) {
-        assert.equal(response.status, 200, 'Response status was not OK');
-        assert.isOk(response.data.secret, 'Response returned no secret');
-        secret = response.data.secret;
-      });
-    }).catch(function (error) {
-      dhis2.debug('ERROR: ' + JSON.stringify(error.response.data));
-      throw error;
+        oauth2ClientCreated = true;
+        oauth2ClientId = response.data.response.uid;
+        return dhis2.sendApiRequest({
+          url: dhis2.apiEndpoint() + '/oAuth2Clients/' + oauth2ClientId,
+          onSuccess: function (response) {
+            assert.equal(response.status, 200, 'Response status was not OK');
+            assert.isOk(response.data.secret, 'Response returned no secret');
+            secret = response.data.secret;
+          }
+        });
+      },
+      onError: function (error) {
+        throw error;
+      }
     });
   });
 
   When(/^I request a grant type password token from the server$/, function () {
-    const world = this;
-
-    return this.axios({
-      method: 'post',
+    return dhis2.sendApiRequest({
       url: dhis2.baseUrl() + '/uaa/oauth/token',
-      data: querystring.stringify({
-        'username': basicAuth.username,
-        'password': basicAuth.password,
+      requestData: {
+        'username': dhis2.defaultBasicAuth.username,
+        'password': dhis2.defaultBasicAuth.password,
         'grant_type': 'password'
-      }),
-      auth: {
+      },
+      method: 'post',
+      multipartFormRequest: true,
+      authentication: {
         username: oauth2Client.cid,
         password: secret
+      },
+      onError: function (error) {
+        throw error;
       }
-    }).then(function (response) {
-      dhis2.debug('GRANT TYPE PASSWORD: ' + JSON.stringify(response.data));
-      world.responseStatus = response.status;
-      world.responseData = response.data;
-    }).catch(function (error) {
-      dhis2.debug('ERROR: ' + JSON.stringify(error.response.data));
-      throw error;
-    });
+    }, this);
   });
 
   Then(/^the server should provide me with a valid authentication token$/, function () {
@@ -116,14 +102,11 @@ defineSupportCode(function ({Given, When, Then}) {
   });
 
   When(/^I use the access token to authenticate with the server$/, function () {
-    const world = this;
-
-    return this.axios.get(dhis2.apiEndpoint() + '/me', {
-      headers: {'Authorization': 'Bearer ' + accessToken}
-    }).then(function (response) {
-      world.responseStatus = response.status;
-      world.responseData = response.data;
-    });
+    return dhis2.sendApiRequest({
+      url: dhis2.apiEndpoint() + '/me',
+      headers: {'Authorization': 'Bearer ' + accessToken},
+      authenticationNotNeeded: true
+    }, this);
   });
 
   When(/^request my account information$/, function () {
@@ -140,24 +123,22 @@ defineSupportCode(function ({Given, When, Then}) {
   });
 
   When(/^I request a fresh token from the server using my existing token$/, function () {
-    const world = this;
-
-    return this.axios({
-      method: 'post',
+    return dhis2.sendApiRequest({
       url: dhis2.baseUrl() + '/uaa/oauth/token',
-      data: querystring.stringify({
+      requestData: {
         'refresh_token': refreshToken,
         'grant_type': 'refresh_token'
-      }),
-      auth: {
+      },
+      method: 'post',
+      multipartFormRequest: true,
+      authentication: {
         username: oauth2Client.cid,
         password: secret
+      },
+      onError: function (error) {
+        throw error;
       }
-    }).then(function (response) {
-      dhis2.debug('GRANT TYPE REFRESH TOKEN: ' + JSON.stringify(response.data));
-      world.responseStatus = response.status;
-      world.responseData = response.data;
-    });
+    }, this);
   });
 
   Then(/^the response should be the same as my existing token.$/, function () {

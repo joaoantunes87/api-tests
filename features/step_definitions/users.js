@@ -11,35 +11,33 @@ defineSupportCode(function ({Given, When, Then}) {
   let userPassword = null;
 
   Given(/^that I have the necessary permissions to add and delete users$/, function () {
-    return this.axios.get(dhis2.apiEndpoint() + '/me?fields=userCredentials[userRoles[*]]', {
-      auth: this.authRequestObject
-    }).then(function (response) {
-      assert.isOk(
-        dhis2.isAuthorisedToAddUsersWith(response.data.userCredentials.userRoles),
-        'Not Authorized to add users'
-      );
-      assert.isOk(
-        dhis2.isAuthorisedToDeleteUsersWith(response.data.userCredentials.userRoles),
-        'Not Authorized to delete users'
-      );
+    return dhis2.sendApiRequest({
+      url: dhis2.apiEndpoint() + '/me?fields=userCredentials[userRoles[*]]',
+      onSuccess: function (response) {
+        assert.isOk(
+          dhis2.isAuthorisedToAddUsersWith(response.data.userCredentials.userRoles),
+          'Not Authorized to add users'
+        );
+        assert.isOk(
+          dhis2.isAuthorisedToDeleteUsersWith(response.data.userCredentials.userRoles),
+          'Not Authorized to delete users'
+        );
+      }
     });
   });
 
   Given(/^there are some user roles in the system$/, function () {
     const world = this;
-    world.method = 'get';
-    world.requestData = {};
-
-    return dhis2.initializePromiseUrlUsingWorldContext(
-      this,
-      dhis2.generateUrlForResourceType(dhis2.resourceTypes.USER_ROLE)
-    ).then(function (response) {
-      assert.isAtLeast(
-        response.data.userRoles.length,
-        1,
-        'It shoud have at least one user role'
-      );
-      world.userRoles = response.data.userRoles;
+    return dhis2.sendApiRequest({
+      url: dhis2.generateUrlForResourceType(dhis2.resourceTypes.USER_ROLE),
+      onSuccess: function (response) {
+        assert.isAtLeast(
+          response.data.userRoles.length,
+          1,
+          'It shoud have at least one user role'
+        );
+        world.userRoles = response.data.userRoles;
+      }
     });
   });
 
@@ -122,15 +120,12 @@ defineSupportCode(function ({Given, When, Then}) {
 
   Given(/^user account is enabled$/, function () {
     const world = this;
-    world.method = 'get';
-    world.requestData = {};
-
-    return dhis2.initializePromiseUrlUsingWorldContext(
-      world,
-      dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.USER, world.resourceId)
-    ).then(function (response) {
-      assert.isNotOk(response.data.userCredentials.disabled, 'User is disabled');
-      world.requestData = response.data;
+    return dhis2.sendApiRequest({
+      url: dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.USER, world.resourceId),
+      onSuccess: function (response) {
+        assert.isNotOk(response.data.userCredentials.disabled, 'User is disabled');
+        world.requestData = response.data;
+      }
     });
   });
 
@@ -145,27 +140,26 @@ defineSupportCode(function ({Given, When, Then}) {
   });
 
   Then(/^the user should not be able to login.$/, function () {
-    return this.axios.get(dhis2.apiEndpoint() + '/me', {
-      auth: {
+    return dhis2.sendApiRequest({
+      url: dhis2.apiEndpoint() + '/me',
+      authentication: {
         username: userUsername,
         password: userPassword
+      },
+      onError: function (error) {
+        assert.equal(error.response.status, 401, 'Authentication should have failed.');
       }
-    }).catch(function (error) {
-      assert.equal(error.response.status, 401, 'Success');
     });
   });
 
   Given(/^account is disabled$/, function () {
     const world = this;
-    world.method = 'get';
-    world.requestData = {};
-
-    return dhis2.initializePromiseUrlUsingWorldContext(
-      world,
-      dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.USER, world.resourceId)
-    ).then(function (response) {
-      assert.isOk(response.data.userCredentials.disabled, 'User is enabled');
-      world.requestData = response.data;
+    return dhis2.sendApiRequest({
+      url: dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.USER, world.resourceId),
+      onSuccess: function (response) {
+        assert.isOk(response.data.userCredentials.disabled, 'User is enabled');
+        world.requestData = response.data;
+      }
     });
   });
 
@@ -180,30 +174,29 @@ defineSupportCode(function ({Given, When, Then}) {
   });
 
   Then(/^the user should be able to login.$/, function () {
-    return this.axios.get(dhis2.apiEndpoint() + '/me', {
-      auth: {
+    return dhis2.sendApiRequest({
+      url: dhis2.apiEndpoint() + '/me',
+      authentication: {
         username: userUsername,
         password: userPassword
+      },
+      onSuccess: function (response) {
+        assert.equal(response.status, 200, 'Response Status was not ok');
+        assert.isOk(response.data.id, 'User id should have been returned');
       }
-    }).then(function (response) {
-      assert.equal(response.status, 200, 'Response Status was not ok');
-      assert.isOk(response.data.id, 'User id should have been returned');
     });
   });
 
   When(/^I update the users password to (.*)$/, function (password) {
     const world = this;
-    world.method = 'get';
-    world.requestData = {};
-
-    return dhis2.initializePromiseUrlUsingWorldContext(
-      world,
-      dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.USER, world.resourceId)
-    ).then(function (response) {
-      world.method = 'put';
-      world.requestData = response.data;
-      world.requestData.userCredentials.password = password;
-      return submitServerRequest(world);
+    return dhis2.sendApiRequest({
+      url: dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.USER, world.resourceId),
+      onSuccess: function (response) {
+        world.method = 'put';
+        world.requestData = response.data;
+        world.requestData.userCredentials.password = password;
+        return submitServerRequest(world);
+      }
     });
   });
 
@@ -245,29 +238,29 @@ defineSupportCode(function ({Given, When, Then}) {
   });
 
   Then(/^the user should not exist.$/, function () {
-    const url = dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.USER, this.resourceId);
-    this.method = 'get';
-
-    return dhis2.initializePromiseUrlUsingWorldContext(this, url).catch(function (error) {
-      assert.equal(error.response.status, 404, 'Status should be 204');
+    return dhis2.sendApiRequest({
+      url: dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.USER, this.resourceId),
+      onSuccess: function (response) {
+        /* throw an error could be used here. Once here, this assert will always fail because onSuccess
+           we can not have a 4** status, but using assert we keep the same style.
+        */
+        assert.equal(response.status, 404, 'Status should be 404');
+      },
+      onError: function (error) {
+        assert.equal(error.response.status, 404, 'Status should be 404');
+      },
+      preventDefaultOnError: true
     });
   });
 });
 
 const submitServerRequest = (world) => {
-  const url = dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.USER, world.resourceId);
-
-  return dhis2.initializePromiseUrlUsingWorldContext(world, url).then(function (response) {
-    dhis2.debug('SUCCESS STATUS: ' + response.status);
-    dhis2.debug('SUCCESS RESPONSE: ' + JSON.stringify(response.data, null, 2));
-    world.responseStatus = response.status;
-    world.responseData = response.data;
-  }).catch(function (error) {
-    dhis2.debug('ERROR STATUS: ' + error.response.status);
-    dhis2.debug('ERROR RESPOONSE: ' + JSON.stringify(error.response.data, null, 2));
-    world.responseData = error.response.data;
-    world.responseStatus = error.response.status;
-  });
+  return dhis2.sendApiRequest({
+    url: dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.USER, world.resourceId),
+    requestData: world.requestData,
+    method: world.method,
+    preventDefaultOnError: true
+  }, world);
 };
 
 const checkForErrorMessage = (message, world) => {
