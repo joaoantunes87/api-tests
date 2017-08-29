@@ -6,7 +6,6 @@ const assert = chai.assert;
 
 defineSupportCode(function ({Given, When, Then, Before, After}) {
   Before({tags: '@createUser'}, function () {
-    dhis2.debug('BEFORE WORLD: ' + JSON.stringify(this, null, 2));
     this.resourceId = dhis2.generateUniqIds();
     this.requestData = {
       id: this.resourceId,
@@ -23,7 +22,7 @@ defineSupportCode(function ({Given, When, Then, Before, After}) {
 
     this.userUsername = this.requestData.userCredentials.username;
     this.userPassword = this.requestData.userCredentials.password;
-    dhis2.debug('AFTER WORLD: ' + JSON.stringify(this, null, 2));
+
     return dhis2.sendApiRequest({
       url: dhis2.generateUrlForResourceType(dhis2.resourceTypes.USER),
       requestData: this.requestData,
@@ -54,7 +53,7 @@ defineSupportCode(function ({Given, When, Then, Before, After}) {
 
   When(/^I change my password to "(.+)"$/, function (password) {
     const world = this;
-    dhis2.debug('AT STEP WORLD: ' + JSON.stringify(this, null, 2));
+
     return dhis2.sendApiRequest({
       url: dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.USER, world.resourceId),
       authentication: {
