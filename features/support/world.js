@@ -19,18 +19,8 @@ function CustomWorld ({ parameters }) {
   }
 }
 
-defineSupportCode(function ({ setWorldConstructor, registerHandler, Given, When, Then, Before, After }) {
+defineSupportCode(function ({ setWorldConstructor, registerHandler, Given, When, Then }) {
   setWorldConstructor(CustomWorld);
-
-  Before(function () {
-    // auxiliar var for assertions
-    this.requestData = {};                // body request
-    this.resourceId = null;               // id of resource for test
-    this.updatedDataToAssert = {};        // information to be asserted in later steps
-    this.responseStatus = null;           // http status returned on previous request
-    this.responseData = {};               // http response body returned on previous request
-    this.method = null;                   // http method to be used in later request
-  });
 
   // html reports
   registerHandler('AfterFeatures', function (features, callback) {

@@ -4,32 +4,26 @@ I want to be able manage my own password
 
     Background:
       Given that I am logged in
-
+    @createUser
     Scenario: Password without a digit
-      Given I create a new user with the following details:
-      | username    | password      | surname | firstname |
-      | bobby       | !BobbyTables1 | Tables  | Bobby     |
       When I change my password to "ABCdefg!"
       Then I should receive error message "Property `password` requires a valid password, was given `ABCdefg!`.".
 
+    @createUser
     Scenario: Password without upper case
-      Given I create a new user with the following details:
-      | username    | password      | surname | firstname |
-      | lowerbobby  | !BobbyTables1 | Tables  | Bobby     |
       When I change my password to "abcdefg123!"
       Then I should receive error message "Property `password` requires a valid password, was given `abcdefg123!`.".
 
+    @createUser
     Scenario: Password without a special character
-      Given I create a new user with the following details:
-      | username            | password      | surname | firstname |
-      | nospecialcharacter  | !BobbyTables1 | Tables  | Bobby     |
       When I change my password to "ABCDefg123"
       Then I should receive error message "Property `password` requires a valid password, was given `ABCDefg123`.".
 
+    @ignore
     Scenario: Password with my username
       Given I create a new user with the following details:
-      | username            | password      | surname | firstname |
-      | john  | !BobbyTables1 | Tables  | Bobby     |
+      | username    | password      | surname | firstname |
+      | john        | !BobbyTables1 | Tables  | Bobby     |
       When I change my password to "!Abcdejohngf123"
       Then I should receive error message "Property `password` requires a valid password, was given `!Abcdejohngf123`.".
     @ignore

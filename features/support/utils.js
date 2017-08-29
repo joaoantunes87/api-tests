@@ -197,7 +197,6 @@ module.exports = (() => {
         data: requestData,
         auth: authentication
       }).then(function (response) {
-        debug('THEN PROMISE');
         if (world) {
           world.responseStatus = response.status;
           world.responseData = response.data;

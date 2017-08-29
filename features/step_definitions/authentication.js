@@ -41,8 +41,17 @@ defineSupportCode(function ({Given, When, Then}) {
   });
 
   Given(/^that I am logged in$/, function () {
+    let auth = dhis2.defaultBasicAuth;
+    if (this.userUsername && this.userPassword) {
+      auth = {
+        username: this.userUsername,
+        password: this.userPassword
+      };
+    }
+
     return dhis2.sendApiRequest({
       url: dhis2.apiEndpoint() + '/me',
+      authentication: auth,
       onSuccess: function (response) {
         assert.equal(response.status, 200, 'Response Status was not ok');
         assert.isOk(response.data.id, 'User id should have been returned');
