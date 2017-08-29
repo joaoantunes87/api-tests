@@ -6,18 +6,19 @@ const assert = chai.assert;
 
 defineSupportCode(function ({Given, When, Then}) {
   Given(/^I have the necessary permissions to add and delete indicators$/, function () {
-    return this.axios.get(dhis2.apiEndpoint() + '/me?fields=userCredentials[userRoles[*]]', {
-      auth: this.authRequestObject
-    }).then(function (response) {
-      assert.isOk(
-        dhis2.isAuthorisedToAddIndicatorsWith(response.data.userCredentials.userRoles),
-        'Not Authorized to add Indicator'
-      );
+    return dhis2.sendApiRequest({
+      url: dhis2.apiEndpoint() + '/me?fields=userCredentials[userRoles[*]]',
+      onSuccess: function (response) {
+        assert.isOk(
+          dhis2.isAuthorisedToAddIndicatorsWith(response.data.userCredentials.userRoles),
+          'Not Authorized to add Indicator'
+        );
 
-      assert.isOk(
-        dhis2.isAuthorisedToDeleteIndicatorsWith(response.data.userCredentials.userRoles),
-        'Not Authorized to delete Indicator'
-      );
+        assert.isOk(
+          dhis2.isAuthorisedToDeleteIndicatorsWith(response.data.userCredentials.userRoles),
+          'Not Authorized to delete Indicator'
+        );
+      }
     });
   });
 
@@ -51,7 +52,6 @@ defineSupportCode(function ({Given, When, Then}) {
   });
 
   Given(/^I create the following category combinations:$/, function (data) {
-    const world = this;
     const properties = data.rawTable[0];
     const dataTable = data.rawTable;
     const categoryCombos = [];
@@ -67,22 +67,27 @@ defineSupportCode(function ({Given, When, Then}) {
     }
 
     const categoryComboRequests = categoryCombos.map((categoryCombo) => {
-      return world.axios({
-        method: 'post',
+      return dhis2.sendApiRequest({
         url: dhis2.generateUrlForResourceType(dhis2.resourceTypes.CATEGORY_COMBINATION),
-        data: categoryCombo,
-        auth: world.authRequestObject
-      }).then(function (response) {
-        assert.equal(response.status, 201, 'Status should be 201');
-        assert.equal(response.data.response.uid, categoryCombo.id, 'Category Combo Id should be: ' + categoryCombo.id);
+        requestData: categoryCombo,
+        method: 'post',
+        onSuccess: function (response) {
+          dhis2.debug('Category Combo Created with id: ' + categoryCombo.id);
+          assert.equal(response.status, 201, 'Status should be 201');
+          assert.equal(
+            response.data.response.uid, categoryCombo.id,
+            'Category Combo Id should be: ' + categoryCombo.id
+          );
+        }
       });
     });
 
-    return world.axios.all(categoryComboRequests);
+    return dhis2.sendMultipleApiRequests({
+      requests: categoryComboRequests
+    });
   });
 
   Given(/^I create the following data elements:$/, function (data) {
-    const world = this;
     const properties = data.rawTable[0];
     const dataTable = data.rawTable;
     const dataElements = [];
@@ -98,22 +103,23 @@ defineSupportCode(function ({Given, When, Then}) {
     }
 
     const dataElementRequests = dataElements.map((dataElement) => {
-      return world.axios({
-        method: 'post',
+      return dhis2.sendApiRequest({
         url: dhis2.generateUrlForResourceType(dhis2.resourceTypes.DATA_ELEMENT),
-        data: dataElement,
-        auth: world.authRequestObject
-      }).then(function (response) {
-        assert.equal(response.status, 201, 'Status should be 201');
-        assert.equal(response.data.response.uid, dataElement.id, 'Data Element Id should be: ' + dataElement.id);
+        requestData: dataElement,
+        method: 'post',
+        onSuccess: function (response) {
+          assert.equal(response.status, 201, 'Status should be 201');
+          assert.equal(response.data.response.uid, dataElement.id, 'Data Element Id should be: ' + dataElement.id);
+        }
       });
     });
 
-    return world.axios.all(dataElementRequests);
+    return dhis2.sendMultipleApiRequests({
+      requests: dataElementRequests
+    });
   });
 
   Given(/^I create an indicator type:$/, function (data) {
-    const world = this;
     const properties = data.rawTable[0];
     const dataTable = data.rawTable;
     const indicatorType = {};
@@ -124,16 +130,14 @@ defineSupportCode(function ({Given, When, Then}) {
       });
     }
 
-    return world.axios({
-      method: 'post',
+    return dhis2.sendApiRequest({
       url: dhis2.generateUrlForResourceType(dhis2.resourceTypes.INDICATOR_TYPE),
-      data: indicatorType,
-      auth: world.authRequestObject
-    }).then(function (response) {
-      assert.equal(response.status, 201, 'Status should be 201');
-      assert.equal(response.data.response.uid, indicatorType.id, 'Indicator Type Id should be: ' + indicatorType.id);
-    }).catch(function (error) {
-      console.error(JSON.stringify(error.response.data, null, 2));
+      requestData: indicatorType,
+      method: 'post',
+      onSuccess: function (response) {
+        assert.equal(response.status, 201, 'Status should be 201');
+        assert.equal(response.data.response.uid, indicatorType.id, 'Indicator Type Id should be: ' + indicatorType.id);
+      }
     });
   });
 
@@ -178,25 +182,25 @@ defineSupportCode(function ({Given, When, Then}) {
 
   Then(/^the indicator should correspond to what I submitted.$/, function () {
     const world = this;
-    world.method = 'get';
-    world.requestData = {};
-
-    return dhis2.initializePromiseUrlUsingWorldContext(
-      world,
-      dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.INDICATOR, world.responseData.response.uid)
-    ).then(function (response) {
-      Object.keys(world.updatedDataToAssert).forEach(function (propertyKey) {
-        switch (propertyKey) {
-          case 'indicatorType':
-            assert.deepEqual(
-              response.data[propertyKey],
-              world.updatedDataToAssert[propertyKey],
-              propertyKey + ' is wrong');
-            break;
-          default:
-            assert.equal(response.data[propertyKey], world.updatedDataToAssert[propertyKey], propertyKey + ' is wrong');
-        }
-      });
+    return dhis2.sendApiRequest({
+      url: dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.INDICATOR, world.responseData.response.uid),
+      onSuccess: function (response) {
+        Object.keys(world.updatedDataToAssert).forEach(function (propertyKey) {
+          switch (propertyKey) {
+            case 'indicatorType':
+              assert.deepEqual(
+                response.data[propertyKey],
+                world.updatedDataToAssert[propertyKey],
+                propertyKey + ' is wrong');
+              break;
+            default:
+              assert.equal(
+                response.data[propertyKey],
+                world.updatedDataToAssert[propertyKey], propertyKey + ' is wrong'
+              );
+          }
+        });
+      }
     });
   });
 
@@ -206,29 +210,21 @@ defineSupportCode(function ({Given, When, Then}) {
 });
 
 const submitIndicatorTypeRequestToServer = (world) => {
-  const url = dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.INDICATOR_TYPE, world.resourceId);
-
-  return dhis2.initializePromiseUrlUsingWorldContext(world, url).then(function (response) {
-    world.responseStatus = response.status;
-    world.responseData = response.data;
-  }).catch(function (error) {
-    console.error(JSON.stringify(error.response.data, null, 2));
-    world.responseData = error.response.data;
-    world.responseStatus = error.response.status;
-  });
+  return dhis2.sendApiRequest({
+    url: dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.INDICATOR_TYPE, world.resourceId),
+    requestData: world.requestData,
+    method: world.method,
+    preventDefaultOnError: true
+  }, world);
 };
 
 const submitIndicatorRequestToServer = (world) => {
-  const url = dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.INDICATOR, world.resourceId);
-
-  return dhis2.initializePromiseUrlUsingWorldContext(world, url).then(function (response) {
-    world.responseStatus = response.status;
-    world.responseData = response.data;
-  }).catch(function (error) {
-    console.error(JSON.stringify(error.response.data, null, 2));
-    world.responseData = error.response.data;
-    world.responseStatus = error.response.status;
-  });
+  return dhis2.sendApiRequest({
+    url: dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.INDICATOR, world.resourceId),
+    requestData: world.requestData,
+    method: world.method,
+    preventDefaultOnError: true
+  }, world);
 };
 
 const checkForErrorMessage = (message, world) => {
