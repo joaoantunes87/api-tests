@@ -7,7 +7,6 @@ const assert = chai.assert;
 defineSupportCode(function ({Given, When, Then}) {
   Given(/^I create a new user with the following details:$/, function (data) {
     this.resourceId = dhis2.generateUniqIds();
-    this.method = 'post';
 
     const values = data.rawTable[1];
     this.requestData = {
@@ -23,28 +22,35 @@ defineSupportCode(function ({Given, When, Then}) {
       }
     };
 
-    return dhis2.initializePromiseUrlUsingWorldContext(
-      this,
-      dhis2.generateUrlForResourceType(dhis2.resourceTypes.USER)
-    ).then(function (response) {
-      assert.equal(response.status, 200, 'Status should be 201');
+    this.userUsername = this.requestData.userCredentials.username;
+    this.userPassword = this.requestData.userCredentials.password;
+
+    return dhis2.sendApiRequest({
+      url: dhis2.generateUrlForResourceType(dhis2.resourceTypes.USER),
+      requestData: this.requestData,
+      method: 'post',
+      onSuccess: function (response) {
+        assert.equal(response.status, 200, 'Status should be 200');
+      }
     });
   });
 
   When(/^I change my password to "(.+)"$/, function (password) {
     const world = this;
-    world.method = 'get';
-    world.requestData = {};
 
-    return dhis2.initializePromiseUrlUsingWorldContext(
-      world,
-      dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.USER, world.resourceId)
-    ).then(function (response) {
-      assert.equal(response.status, 200, 'Status should be 200');
-      world.requestData = response.data;
-      world.requestData.userCredentials.password = password;
-      world.method = 'put';
-      return submitServerRequest(world);
+    return dhis2.sendApiRequest({
+      url: dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.USER, world.resourceId),
+      authentication: {
+        username: world.userUsername,
+        password: world.userPassword
+      },
+      onSuccess: function (response) {
+        assert.equal(response.status, 200, 'Status should be 200');
+        world.requestData = response.data;
+        world.requestData.userCredentials.password = password;
+        world.method = 'put';
+        return submitServerRequest(world);
+      }
     });
   });
 
@@ -54,19 +60,12 @@ defineSupportCode(function ({Given, When, Then}) {
 });
 
 const submitServerRequest = (world) => {
-  const url = dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.USER, world.resourceId);
-
-  return dhis2.initializePromiseUrlUsingWorldContext(world, url).then(function (response) {
-    dhis2.debug('SUCCESS STATUS: ' + response.status);
-    dhis2.debug('SUCCESS RESPONSE: ' + JSON.stringify(response.data, null, 2));
-    world.responseStatus = response.status;
-    world.responseData = response.data;
-  }).catch(function (error) {
-    dhis2.debug('ERROR STATUS: ' + error.response.status);
-    dhis2.debug('ERROR RESPOONSE: ' + JSON.stringify(error.response.data, null, 2));
-    world.responseData = error.response.data;
-    world.responseStatus = error.response.status;
-  });
+  return dhis2.sendApiRequest({
+    url: dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.USER, world.resourceId),
+    requestData: world.requestData,
+    method: world.method,
+    preventDefaultOnError: true
+  }, world);
 };
 
 const checkForErrorMessage = (message, world) => {
