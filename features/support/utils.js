@@ -1,7 +1,7 @@
 'use strict';
+const fs = require('fs');
 const axios = require('axios');
 const querystring = require('querystring');
-
 module.exports = (() => {
   let baseUrl = 'https://play.dhis2.org/demo';  // default
   let apiVersion = 27;                          // default
@@ -25,7 +25,8 @@ module.exports = (() => {
     CATEGORY_OPTION: 'category option',
     CATEGORY: 'category',
     USER_ROLE: 'user role',
-    USER: 'user'
+    USER: 'user',
+    APPLICATION: 'application'
   };
 
   const AUTH_REQUEST_OBJECT = {
@@ -92,6 +93,9 @@ module.exports = (() => {
         break;
       case RESOURCE_TYPES.USER_ROLE:
         endpoint = apiEndpoint() + '/userRoles';
+        break;
+      case RESOURCE_TYPES.APPLICATION:
+        endpoint = apiEndpoint() + '/apps';
         break;
       default:
         throw new Error('There is no resource type defined for: ' + resourceType);
@@ -164,6 +168,9 @@ module.exports = (() => {
     },
     isAuthorisedToDeleteIndicatorsWith: (userRoles = []) => {
       return isAuthorisedTo('F_INDICATOR_DELETE', userRoles);
+    },
+    isAuthorisedToManageApplicationWith: (userRoles = []) => {
+      return isAuthorisedTo('M_dhis-web-maintenance-appmanager', userRoles);
     },
     sendApiRequest: (options, world) => {
       if (!options.url) {
@@ -262,6 +269,9 @@ module.exports = (() => {
       }
 
       return endpoint;
+    },
+    loadFileFromPath: (path) => {
+      return fs.createReadStream(path);
     }
   };
 })();
