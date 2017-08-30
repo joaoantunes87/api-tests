@@ -1,4 +1,6 @@
 'use strict';
+const axios = require('axios');
+const querystring = require('querystring');
 
 module.exports = (() => {
   let baseUrl = 'https://play.dhis2.org/demo';  // default
@@ -24,6 +26,11 @@ module.exports = (() => {
     CATEGORY: 'category',
     USER_ROLE: 'user role',
     USER: 'user'
+  };
+
+  const AUTH_REQUEST_OBJECT = {
+    username: 'admin',
+    password: 'district'
   };
 
   const onDebugMode = process.env.DHIS2_LOG_MODE === LOG_DEBUG_MODE;
@@ -110,6 +117,7 @@ module.exports = (() => {
         return apiVersion;
       }
     },
+    defaultBasicAuth: AUTH_REQUEST_OBJECT,
     apiEndpoint: apiEndpoint,
     generateHtmlReport: (generate) => {
       if (typeof generate === 'undefined') {
@@ -157,15 +165,79 @@ module.exports = (() => {
     isAuthorisedToDeleteIndicatorsWith: (userRoles = []) => {
       return isAuthorisedTo('F_INDICATOR_DELETE', userRoles);
     },
-    initializePromiseUrlUsingWorldContext: (world, url) => {
-      debug('URL: ' + url);
-      debug('METHOD: ' + world.method);
-      debug('REQUEST DATA: ' + JSON.stringify(world.requestData, null, 2));
-      return world.axios({
-        method: world.method || 'get',
-        url: url,
-        data: world.requestData || {},
-        auth: world.authRequestObject
+    sendApiRequest: (options, world) => {
+      if (!options.url) {
+        throw new Error('Url is required!');
+      }
+
+      let authentication = null;
+      if (!options.authenticationNotNeeded) {         // authentication needed
+        if (options.authentication) {                 // not default auth
+          authentication = options.authentication;
+        } else {                                      // default auth
+          authentication = AUTH_REQUEST_OBJECT;
+        }
+      }
+
+      let requestData = {};
+      if (options.requestData) {
+        requestData = options.multipartFormRequest
+          ? querystring.stringify(options.requestData) : options.requestData;
+      }
+
+      debug('URL: ' + options.url);
+      debug('METHOD: ' + options.method);
+      debug('REQUEST DATA: ' + JSON.stringify(requestData, null, 2));
+      debug('AUTH: ' + JSON.stringify(authentication, null, 2));
+
+      return axios({
+        headers: options.headers || {},
+        method: options.method || 'get',
+        url: options.url,
+        data: requestData,
+        auth: authentication
+      }).then(function (response) {
+        debug('RESPONSE STATUS: ' + response.status);
+        debug('RESPONSE DATA: ' + JSON.stringify(response.data, null, 2));
+        if (world) {
+          world.responseStatus = response.status;
+          world.responseData = response.data;
+        }
+
+        if (options.onSuccess) {
+          return options.onSuccess(response);
+        }
+      }).catch(function (error) {
+        if (error && error.response) {
+          debug('RESPONSE STATUS: ' + error.response.status);
+          debug('RESPONSE DATA: ' + JSON.stringify(error.response.data, null, 2));
+        } else {
+          throw error;
+        }
+
+        if (world) {
+          world.responseData = error.response.data;
+          world.responseStatus = error.response.status;
+        }
+
+        if (options.onError) {
+          return options.onError(error);
+        }
+
+        if (!options.preventDefaultOnError) {
+          throw error;
+        }
+      });
+    },
+    sendMultipleApiRequests: (options) => {
+      if (!options.requests) {
+        throw new Error('Requests are required!');
+      }
+
+      return axios.all(options.requests).then(function (responses) {
+        if (options.onComplete) {
+          options.onComplete();
+        }
       });
     },
     generateUniqIds: (numberOfIds) => {

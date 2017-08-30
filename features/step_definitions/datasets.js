@@ -9,13 +9,14 @@ defineSupportCode(function ({Given, When, Then}) {
   let datasetWasCreated = false;
 
   Given(/^that I have the necessary permissions to add a dataset$/, function () {
-    return this.axios.get(dhis2.apiEndpoint() + '/me?fields=userCredentials[userRoles[*]]', {
-      auth: this.authRequestObject
-    }).then(function (response) {
-      assert.isOk(
-        dhis2.isAuthorisedToAddDataSetWith(response.data.userCredentials.userRoles),
-        'Not Authorized to create Dataset'
-      );
+    return dhis2.sendApiRequest({
+      url: dhis2.apiEndpoint() + '/me?fields=userCredentials[userRoles[*]]',
+      onSuccess: function (response) {
+        assert.isOk(
+          dhis2.isAuthorisedToAddDataSetWith(response.data.userCredentials.userRoles),
+          'Not Authorized to create Dataset'
+        );
+      }
     });
   });
 
@@ -49,34 +50,34 @@ defineSupportCode(function ({Given, When, Then}) {
 
   Then(/^The current dataset data is the same as submitted.$/, function () {
     const world = this;
-    world.method = 'get';
-    world.requestData = {};
-
-    return dhis2.initializePromiseUrlUsingWorldContext(
-      world,
-      dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.DATASET, world.resourceId)
-    ).then(function (response) {
-      Object.keys(world.updatedDataToAssert).forEach(function (propertyKey) {
-        switch (propertyKey) {
-          case 'categoryCombo':
-            assert.deepEqual(
-              response.data[propertyKey],
-              world.updatedDataToAssert[propertyKey],
-              propertyKey + ' is wrong');
-            break;
-          case 'dataSetElements':
-          case 'indicators':
-          case 'organisationUnits':
-          case 'dataInputPeriods':
-            assert.sameDeepMembers(
-              response.data[propertyKey],
-              world.updatedDataToAssert[propertyKey],
-              propertyKey + ' is wrong');
-            break;
-          default:
-            assert.equal(response.data[propertyKey], world.updatedDataToAssert[propertyKey], propertyKey + ' is wrong');
-        }
-      });
+    return dhis2.sendApiRequest({
+      url: dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.DATASET, world.resourceId),
+      onSuccess: function (response) {
+        Object.keys(world.updatedDataToAssert).forEach(function (propertyKey) {
+          switch (propertyKey) {
+            case 'categoryCombo':
+              assert.deepEqual(
+                response.data[propertyKey],
+                world.updatedDataToAssert[propertyKey],
+                propertyKey + ' is wrong');
+              break;
+            case 'dataSetElements':
+            case 'indicators':
+            case 'organisationUnits':
+            case 'dataInputPeriods':
+              assert.sameDeepMembers(
+                response.data[propertyKey],
+                world.updatedDataToAssert[propertyKey],
+                propertyKey + ' is wrong');
+              break;
+            default:
+              assert.equal(
+                response.data[propertyKey],
+                world.updatedDataToAssert[propertyKey], propertyKey + ' is wrong'
+              );
+          }
+        });
+      }
     });
   });
 
@@ -106,21 +107,17 @@ defineSupportCode(function ({Given, When, Then}) {
   });
 
   Given(/^there is a category combination with a dimension of type attribute$/, function () {
-    const world = this;
-    world.method = 'get';
-
-    return dhis2.initializePromiseUrlUsingWorldContext(
-      world,
-      dhis2.generateUrlForResourceType(dhis2.resourceTypes.CATEGORY_COMBINATION) +
-      '?filter=dataDimensionType:eq:ATTRIBUTE'
-    ).then(function (response) {
-      assert.isAtLeast(
-        response.data.categoryCombos.length,
-        1,
-        'It shoud have at least one category combination with a a dimension of type attribute'
-      );
-      world.responseData = response.data;
-    });
+    return dhis2.sendApiRequest({
+      url: dhis2.generateUrlForResourceType(dhis2.resourceTypes.CATEGORY_COMBINATION) +
+            '?filter=dataDimensionType:eq:ATTRIBUTE',
+      onSuccess: function (response) {
+        assert.isAtLeast(
+          response.data.categoryCombos.length,
+          1,
+          'It shoud have at least one category combination with a a dimension of type attribute'
+        );
+      }
+    }, this);
   });
 
   When(/^I update the category combination of the dataset$/, function () {
@@ -133,20 +130,17 @@ defineSupportCode(function ({Given, When, Then}) {
   });
 
   When(/^there are some aggregate data elements in the system$/, function () {
-    const world = this;
-    world.method = 'get';
-
-    return dhis2.initializePromiseUrlUsingWorldContext(
-      world,
-      dhis2.generateUrlForResourceType(dhis2.resourceTypes.DATA_ELEMENT) + '?filter=domainType:eq:AGGREGATE'
-    ).then(function (response) {
-      assert.isAtLeast(
-        response.data.dataElements.length,
-        1,
-        'It shoud have at least one aggregate data element'
-      );
-      world.responseData = response.data;
-    });
+    return dhis2.sendApiRequest({
+      url: dhis2.generateUrlForResourceType(dhis2.resourceTypes.DATA_ELEMENT) +
+            '?filter=domainType:eq:AGGREGATE',
+      onSuccess: function (response) {
+        assert.isAtLeast(
+          response.data.dataElements.length,
+          1,
+          'It shoud have at least one aggregate data element'
+        );
+      }
+    }, this);
   });
 
   When(/^I add some data elements to the dataset$/, function () {
@@ -159,20 +153,16 @@ defineSupportCode(function ({Given, When, Then}) {
   });
 
   When(/^there are some indicators in the system$/, function () {
-    const world = this;
-    world.method = 'get';
-
-    return dhis2.initializePromiseUrlUsingWorldContext(
-      world,
-      dhis2.generateUrlForResourceType(dhis2.resourceTypes.INDICATOR)
-    ).then(function (response) {
-      assert.isAtLeast(
-        response.data.indicators.length,
-        1,
-        'It shoud have at least one indicator'
-      );
-      world.responseData = response.data;
-    });
+    return dhis2.sendApiRequest({
+      url: dhis2.generateUrlForResourceType(dhis2.resourceTypes.INDICATOR),
+      onSuccess: function (response) {
+        assert.isAtLeast(
+          response.data.indicators.length,
+          1,
+          'It shoud have at least one indicator'
+        );
+      }
+    }, this);
   });
 
   When(/^I add indicators to the dataset$/, function () {
@@ -227,33 +217,25 @@ defineSupportCode(function ({Given, When, Then}) {
   });
 
   const checkAndFetchCreatedDataSetToBeUpdated = (world) => {
-    world.method = 'get';
-    world.requestData = {};
-
     assert.equal(datasetWasCreated, true, 'Dataset does not exist');
     assert.isOk(generatedDatasetId, 'Dataset Id does not exist');
 
-    world.resourceId = generatedDatasetId;
-    return dhis2.initializePromiseUrlUsingWorldContext(
-      world,
-      dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.DATASET, world.resourceId)
-    ).then(function (response) {
-      assert.equal(response.status, 200, 'Status should be 200');
-      world.requestData = response.data;
-      world.method = 'put';
+    return dhis2.sendApiRequest({
+      url: dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.DATASET, generatedDatasetId),
+      onSuccess: function (response) {
+        assert.equal(response.status, 200, 'Status should be 200');
+        world.requestData = response.data;
+        world.method = 'put';
+      }
     });
   };
 });
 
 const submitServerRequest = (world) => {
-  const url = dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.DATASET, world.resourceId);
-
-  return dhis2.initializePromiseUrlUsingWorldContext(world, url).then(function (response) {
-    world.responseStatus = response.status;
-    world.responseData = response.data;
-  }).catch(function (error) {
-    console.error(JSON.stringify(error.response.data, null, 2));
-    world.responseData = error.response.data;
-    world.responseStatus = error.response.status;
-  });
+  return dhis2.sendApiRequest({
+    url: dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.DATASET, world.resourceId),
+    requestData: world.requestData,
+    method: world.method,
+    preventDefaultOnError: true
+  }, world);
 };

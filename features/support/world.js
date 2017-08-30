@@ -1,5 +1,4 @@
 const { defineSupportCode } = require('cucumber');
-const axios = require('axios');
 const chai = require('chai');
 const dhis2 = require('./utils.js');
 const reporter = require('cucumber-html-reporter');
@@ -18,27 +17,10 @@ function CustomWorld ({ parameters }) {
   if (parameters.hasOwnProperty('generateHtmlReport')) {
     dhis2.generateHtmlReport(parameters.generateHtmlReport);
   }
-
-  this.authRequestObject = {
-    username: 'admin',
-    password: 'district'
-  };
-
-  this.axios = axios;
 }
 
-defineSupportCode(function ({ setWorldConstructor, registerHandler, Given, When, Then, Before, After }) {
+defineSupportCode(function ({ setWorldConstructor, registerHandler, Given, When, Then }) {
   setWorldConstructor(CustomWorld);
-
-  Before(function () {
-    // auxiliar var for assertions
-    this.requestData = {};                // body request
-    this.resourceId = null;               // id of resource for test
-    this.updatedDataToAssert = {};        // information to be asserted in later steps
-    this.responseStatus = null;           // http status returned on previous request
-    this.responseData = {};               // http response body returned on previous request
-    this.method = null;                   // http method to be used in later request
-  });
 
   // html reports
   registerHandler('AfterFeatures', function (features, callback) {
@@ -68,30 +50,28 @@ defineSupportCode(function ({ setWorldConstructor, registerHandler, Given, When,
   });
 
   When(/^I select the correct (.+)$/, function (locale) {
-    return this.axios({
-      method: 'post',
+    return dhis2.sendApiRequest({
       url: dhis2.apiEndpoint() + '/userSettings/keyDbLocale?value=' + locale,
-      auth: this.authRequestObject
-    }).then(function (response) {
-      assert.equal(response.status, 200, 'Locale setting was not updated');
+      method: 'post',
+      onSuccess: function (response) {
+        assert.equal(response.status, 200, 'Locale setting was not updated');
+      }
     });
   });
 
   When(/^there are some organisation units in the system$/, function () {
     const world = this;
-    world.method = 'get';
-    world.requestData = {};
 
-    return dhis2.initializePromiseUrlUsingWorldContext(
-      world,
-      dhis2.generateUrlForResourceType(dhis2.resourceTypes.ORGANISATION_UNIT)
-    ).then(function (response) {
-      assert.isAtLeast(
-        response.data.organisationUnits.length,
-        1,
-        'It shoud have at least one organisation unit'
-      );
-      world.organisationUnits = response.data.organisationUnits;
+    return dhis2.sendApiRequest({
+      url: dhis2.generateUrlForResourceType(dhis2.resourceTypes.ORGANISATION_UNIT),
+      onSuccess: function (response) {
+        assert.isAtLeast(
+          response.data.organisationUnits.length,
+          1,
+          'It shoud have at least one organisation unit'
+        );
+        world.organisationUnits = response.data.organisationUnits;
+      }
     });
   });
 });

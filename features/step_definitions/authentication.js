@@ -14,34 +14,48 @@ defineSupportCode(function ({Given, When, Then}) {
   });
 
   Then(/^I should be authenticated$/, function () {
-    return this.axios.get(dhis2.apiEndpoint() + '/me', {
-      auth: {
+    return dhis2.sendApiRequest({
+      url: dhis2.apiEndpoint() + '/me',
+      authentication: {
         username: this.username,
         password: this.password
+      },
+      onSuccess: function (response) {
+        assert.equal(response.status, 200, 'Response Status was not ok');
+        assert.isOk(response.data.id, 'User id should have been returned');
       }
-    }).then(function (response) {
-      assert.equal(response.status, 200, 'Response Status was not ok');
-      assert.isOk(response.data.id, 'User id should have been returned');
     });
   });
 
   Then(/^I should be not be authenticated$/, function () {
-    return this.axios.get(dhis2.apiEndpoint() + '/me', {
-      auth: {
+    return dhis2.sendApiRequest({
+      url: dhis2.apiEndpoint() + '/me',
+      authentication: {
         username: this.username,
         password: this.password
+      },
+      onError: function (error) {
+        assert.equal(error.response.status, 401, 'Authentication should have failed.');
       }
-    }).catch(function (error) {
-      assert.equal(error.response.status, 401, 'Success');
     });
   });
 
   Given(/^that I am logged in$/, function () {
-    return this.axios.get(dhis2.apiEndpoint() + '/me', {
-      auth: this.authRequestObject
-    }).then(function (response) {
-      assert.equal(response.status, 200, 'Response Status is ok');
-      assert.isOk(response.data.id, 'User id should have been returned');
+    let auth = dhis2.defaultBasicAuth;
+    if (this.userUsername && this.userPassword) {
+      auth = {
+        username: this.userUsername,
+        password: this.userPassword
+      };
+    }
+
+    return dhis2.sendApiRequest({
+      url: dhis2.apiEndpoint() + '/me',
+      authentication: auth,
+      onSuccess: function (response) {
+        assert.equal(response.status, 200, 'Response Status was not ok');
+        assert.isOk(response.data.id, 'User id should have been returned');
+      }
     });
   });
 });

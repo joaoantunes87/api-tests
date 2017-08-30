@@ -18,23 +18,24 @@ defineSupportCode(function ({Given, When, Then}) {
   let categoryComboWasCreated = false;
 
   Given(/^that I have the necessary permissions to add a category$/, function () {
-    return this.axios.get(dhis2.apiEndpoint() + '/me?fields=userCredentials[userRoles[*]]', {
-      auth: this.authRequestObject
-    }).then(function (response) {
-      assert.isOk(
-        dhis2.isAuthorisedToAddCategoryComboWith(response.data.userCredentials.userRoles),
-        'Not Authorized to create Category Combo'
-      );
+    return dhis2.sendApiRequest({
+      url: dhis2.apiEndpoint() + '/me?fields=userCredentials[userRoles[*]]',
+      onSuccess: function (response) {
+        assert.isOk(
+          dhis2.isAuthorisedToAddCategoryComboWith(response.data.userCredentials.userRoles),
+          'Not Authorized to create Category Combo'
+        );
 
-      assert.isOk(
-        dhis2.isAuthorisedToAddCategoryOptionWith(response.data.userCredentials.userRoles),
-        'Not Authorized to create Category Option'
-      );
+        assert.isOk(
+          dhis2.isAuthorisedToAddCategoryOptionWith(response.data.userCredentials.userRoles),
+          'Not Authorized to create Category Option'
+        );
 
-      assert.isOk(
-        dhis2.isAuthorisedToAddCategoryWith(response.data.userCredentials.userRoles),
-        'Not Authorized to create Category'
-      );
+        assert.isOk(
+          dhis2.isAuthorisedToAddCategoryWith(response.data.userCredentials.userRoles),
+          'Not Authorized to create Category'
+        );
+      }
     });
   });
 
@@ -54,38 +55,40 @@ defineSupportCode(function ({Given, When, Then}) {
 
   When(/^I submit that category options to the server$/, function () {
     const world = this;
-    const url = dhis2.generateUrlForResourceType(dhis2.resourceTypes.CATEGORY_OPTION);
-
-    const createCategoryOption = (categoryOption) => {
-      return world.axios({
+    world.categoryOption1Response = {};
+    world.categoryOption2Response = {};
+    const createCategoryOption = (categoryOption, categoryOptionResponse) => {
+      return dhis2.sendApiRequest({
+        url: dhis2.generateUrlForResourceType(dhis2.resourceTypes.CATEGORY_OPTION),
+        requestData: categoryOption,
         method: 'post',
-        url: url,
-        data: categoryOption,
-        auth: world.authRequestObject
+        onSuccess: function (response) {
+          categoryOptionResponse.status = response.status;
+          categoryOptionResponse.data = response.data;
+        }
       });
     };
 
-    return world.axios.all([createCategoryOption(this.categoryOption1), createCategoryOption(this.categoryOption2)])
-      .then(world.axios.spread(function (categoryOption1Response, categoryOption2Response) {
-        world.categoryOption1ResponseStatus = categoryOption1Response.status;
-        world.categoryOption1ResponseData = categoryOption1Response.data;
-        world.categoryOption2ResponseStatus = categoryOption2Response.status;
-        world.categoryOption2ResponseData = categoryOption2Response.data;
-      }));
+    return dhis2.sendMultipleApiRequests({
+      requests: [
+        createCategoryOption(world.categoryOption1, world.categoryOption1Response),
+        createCategoryOption(world.categoryOption2, world.categoryOption2Response)
+      ]
+    });
   });
 
   When(/^I should be informed that the category options were created successfully.$/, function () {
-    assert.equal(this.categoryOption1ResponseStatus, 201, 'Status should be 201');
+    assert.equal(this.categoryOption1Response.status, 201, 'Status should be 201');
     assert.equal(
-      this.categoryOption1ResponseData.response.uid,
+      this.categoryOption1Response.data.response.uid,
       categoryOptionId1,
       'First category option id should be the generated one'
     );
     categoryOption1WasCreated = true;
 
-    assert.equal(this.categoryOption2ResponseStatus, 201, 'Status should be 201');
+    assert.equal(this.categoryOption2Response.status, 201, 'Status should be 201');
     assert.equal(
-      this.categoryOption2ResponseData.response.uid,
+      this.categoryOption2Response.data.response.uid,
       categoryOptionId2,
       'Second category option id should be the generated one'
     );
@@ -111,14 +114,12 @@ defineSupportCode(function ({Given, When, Then}) {
   });
 
   When(/^I submit that category to the server$/, function () {
-    const world = this;
-    const url = dhis2.generateUrlForResourceType(dhis2.resourceTypes.CATEGORY);
-
-    world.requestData = world.category;
-    return dhis2.initializePromiseUrlUsingWorldContext(world, url).then(function (response) {
-      world.responseStatus = response.status;
-      world.responseData = response.data;
-    });
+    return dhis2.sendApiRequest({
+      url: dhis2.generateUrlForResourceType(dhis2.resourceTypes.CATEGORY),
+      requestData: this.category,
+      method: this.method,
+      preventDefaultOnError: true
+    }, this);
   });
 
   Then(/^I should be informed that the category was created successfully.$/, function () {
@@ -145,14 +146,12 @@ defineSupportCode(function ({Given, When, Then}) {
   });
 
   When(/^I submit that category combination to the server$/, function () {
-    const world = this;
-    const url = dhis2.generateUrlForResourceType(dhis2.resourceTypes.CATEGORY_COMBINATION);
-
-    world.requestData = world.categoryCombo;
-    return dhis2.initializePromiseUrlUsingWorldContext(world, url).then(function (response) {
-      world.responseStatus = response.status;
-      world.responseData = response.data;
-    });
+    return dhis2.sendApiRequest({
+      url: dhis2.generateUrlForResourceType(dhis2.resourceTypes.CATEGORY_COMBINATION),
+      requestData: this.categoryCombo,
+      method: this.method,
+      preventDefaultOnError: true
+    }, this);
   });
 
   Then(/^I should be informed that the category combination was created successfully$/, function () {
@@ -170,18 +169,9 @@ defineSupportCode(function ({Given, When, Then}) {
   });
 
   When(/^I try to delete the category combination$/, function () {
-    const world = this;
-    world.method = 'delete';
-
-    return dhis2.initializePromiseUrlUsingWorldContext(
-      world,
-      dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.CATEGORY_COMBINATION, generatedCategoryComboId)
-    ).then(function (response) {
-      world.responseStatus = response.status;
-      world.responseData = response.data;
-    }).catch(function (error) {
-      world.responseData = error.response.data;
-      world.responseStatus = error.response.status;
-    });
+    return dhis2.sendApiRequest({
+      url: dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.CATEGORY_COMBINATION, generatedCategoryComboId),
+      method: 'delete'
+    }, this);
   });
 });

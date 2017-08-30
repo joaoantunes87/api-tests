@@ -9,13 +9,14 @@ defineSupportCode(function ({Given, When, Then}) {
   let organisationUnitWasCreated = false;
 
   Given(/^that I have the necessary permissions to add an organisation unit$/, function () {
-    return this.axios.get(dhis2.apiEndpoint() + '/me?fields=userCredentials[userRoles[*]]', {
-      auth: this.authRequestObject
-    }).then(function (response) {
-      assert.isOk(
-        dhis2.isAuthorisedToAddOrganisationUnitWith(response.data.userCredentials.userRoles),
-        'Not Authorized to create OrganisationUnit'
-      );
+    return dhis2.sendApiRequest({
+      url: dhis2.apiEndpoint() + '/me?fields=userCredentials[userRoles[*]]',
+      onSuccess: function (response) {
+        assert.isOk(
+          dhis2.isAuthorisedToAddOrganisationUnitWith(response.data.userCredentials.userRoles),
+          'Not Authorized to create OrganisationUnit'
+        );
+      }
     });
   });
 
@@ -49,50 +50,49 @@ defineSupportCode(function ({Given, When, Then}) {
 
   Then(/^The current organisation unit data is the same as submitted.$/, function () {
     const world = this;
-    world.method = 'get';
-    world.requestData = {};
 
-    return dhis2.initializePromiseUrlUsingWorldContext(
-      world,
-      dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.ORGANISATION_UNIT, world.resourceId)
-    ).then(function (response) {
-      Object.keys(world.updatedDataToAssert).forEach(function (propertyKey) {
-        switch (propertyKey) {
-          case 'parent':
-            assert.deepEqual(
-              response.data[propertyKey],
-              world.updatedDataToAssert[propertyKey],
-              propertyKey + ' is wrong');
-            break;
-          case 'dataSets':
-            assert.sameDeepMembers(
-              response.data[propertyKey],
-              world.updatedDataToAssert[propertyKey],
-              propertyKey + ' is wrong');
-            break;
-          default:
-            assert.equal(response.data[propertyKey], world.updatedDataToAssert[propertyKey], propertyKey + ' is wrong');
-        }
-      });
+    return dhis2.sendApiRequest({
+      url: dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.ORGANISATION_UNIT, world.resourceId),
+      onSuccess: function (response) {
+        Object.keys(world.updatedDataToAssert).forEach(function (propertyKey) {
+          switch (propertyKey) {
+            case 'parent':
+              assert.deepEqual(
+                response.data[propertyKey],
+                world.updatedDataToAssert[propertyKey],
+                propertyKey + ' is wrong');
+              break;
+            case 'dataSets':
+              assert.sameDeepMembers(
+                response.data[propertyKey],
+                world.updatedDataToAssert[propertyKey],
+                propertyKey + ' is wrong');
+              break;
+            default:
+              assert.equal(
+                response.data[propertyKey],
+                world.updatedDataToAssert[propertyKey], propertyKey + ' is wrong'
+              );
+          }
+        });
+      }
     });
   });
 
   Given(/^I got the existing organisation unit to update$/, function () {
     const world = this;
-    world.method = 'get';
-    world.requestData = {};
 
     assert.equal(organisationUnitWasCreated, true, 'Organisation Unit does not exist');
     assert.isOk(generatedOrganisationUnitId, 'Organisation Unit Id does not exist');
 
     world.resourceId = generatedOrganisationUnitId;
-    return dhis2.initializePromiseUrlUsingWorldContext(
-      world,
-      dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.ORGANISATION_UNIT, world.resourceId)
-    ).then(function (response) {
-      assert.equal(response.status, 200, 'Status should be 200');
-      world.requestData = response.data;
-      world.method = 'put';
+    return dhis2.sendApiRequest({
+      url: dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.ORGANISATION_UNIT, world.resourceId),
+      onSuccess: function (response) {
+        assert.equal(response.status, 200, 'Status should be 200');
+        world.requestData = response.data;
+        world.method = 'put';
+      }
     });
   });
 
@@ -145,59 +145,55 @@ defineSupportCode(function ({Given, When, Then}) {
 
   When(/^I translate the name of the organisation unit for (.+) as (.+)$/, function (locale, translationValue) {
     const world = this;
-
-    world.method = 'get';
-    world.requestData = {};
     world.locale = locale;
     world.translationValue = translationValue;
 
-    return dhis2.initializePromiseUrlUsingWorldContext(
-      world,
-      dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.ORGANISATION_UNIT, generatedOrganisationUnitId)
-    ).then(function (response) {
-      world.requestData = response.data;
-      world.requestData.translations = [
-        {
-          property: 'NAME',
-          locale: locale,
-          value: translationValue
-        }
-      ];
+    return dhis2.sendApiRequest({
+      url: dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.ORGANISATION_UNIT, generatedOrganisationUnitId),
+      onSuccess: function (response) {
+        const requestData = response.data;
+        requestData.translations = [
+          {
+            property: 'NAME',
+            locale: locale,
+            value: translationValue
+          }
+        ];
 
-      world.method = 'put';
-      return dhis2.initializePromiseUrlUsingWorldContext(
-        world,
-        dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.ORGANISATION_UNIT, generatedOrganisationUnitId)
-      );
-    }).then(function (response) {
-      assert.equal(response.status, 200, 'Organisation Unit was not updated');
+        return dhis2.sendApiRequest({
+          url: dhis2.generateUrlForResourceTypeWithId(
+            dhis2.resourceTypes.ORGANISATION_UNIT,
+            generatedOrganisationUnitId),
+          method: 'put',
+          requestData: requestData,
+          onSuccess: function (response) {
+            assert.equal(response.status, 200, 'Organisation Unit was not updated');
+          }
+        });
+      }
     });
   });
 
   Then(/^I should be able to view the translated name.$/, function () {
     const world = this;
-    world.method = 'get';
-    world.requestData = {};
 
-    return dhis2.initializePromiseUrlUsingWorldContext(
-      world,
-      dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.ORGANISATION_UNIT, generatedOrganisationUnitId)
-    ).then(function (response) {
-      assert.equal(response.data.displayName, world.translationValue, 'Name is not translated');
+    return dhis2.sendApiRequest({
+      url: dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.ORGANISATION_UNIT, generatedOrganisationUnitId),
+      onSuccess: function (response) {
+        assert.equal(response.data.displayName, world.translationValue, 'Name is not translated');
+      }
     });
   });
 
   When(/^there is a dataset in the system$/, function () {
     const world = this;
-    world.method = 'get';
 
-    return dhis2.initializePromiseUrlUsingWorldContext(
-      world,
-      dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.DATASET, null)
-    ).then(function (response) {
-      assert.isAtLeast(response.data.dataSets.length, 1, 'It shoud have at least one dataset');
-      world.responseData = response.data;
-    });
+    return dhis2.sendApiRequest({
+      url: dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.DATASET),
+      onSuccess: function (response) {
+        assert.isAtLeast(response.data.dataSets.length, 1, 'It shoud have at least one dataset');
+      }
+    }, world);
   });
 
   When(/^I update the datasets of the organisation unit$/, function () {
@@ -211,14 +207,10 @@ defineSupportCode(function ({Given, When, Then}) {
 });
 
 const submitServerRequest = (world) => {
-  const url = dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.ORGANISATION_UNIT, world.resourceId);
-
-  return dhis2.initializePromiseUrlUsingWorldContext(world, url).then(function (response) {
-    world.responseStatus = response.status;
-    world.responseData = response.data;
-  }).catch(function (error) {
-    console.error(JSON.stringify(error.response.data, null, 2));
-    world.responseData = error.response.data;
-    world.responseStatus = error.response.status;
-  });
+  return dhis2.sendApiRequest({
+    url: dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.ORGANISATION_UNIT, world.resourceId),
+    requestData: world.requestData,
+    method: world.method,
+    preventDefaultOnError: true
+  }, world);
 };
