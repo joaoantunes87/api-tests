@@ -73,6 +73,10 @@ defineSupportCode(function ({Given, When, Then, Before, After}) {
   Then(/^I should receive error message "(.+)".$/, function (errorMessage) {
     checkForErrorMessage(errorMessage, this);
   });
+
+  Given(/^My username is "(.+)"$/, function (username) {
+    assert.equal(this.userUsername, username, 'Username should be: ' + username);
+  });
 });
 
 const submitServerRequest = (world) => {

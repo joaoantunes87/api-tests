@@ -19,13 +19,11 @@ I want to be able manage my own password
       When I change my password to "ABCDefg123"
       Then I should receive error message "Property `password` requires a valid password, was given `ABCDefg123`.".
 
-    @ignore
+    @createUser
     Scenario: Password with my username
-      Given I create a new user with the following details:
-      | username    | password      | surname | firstname |
-      | john        | !BobbyTables1 | Tables  | Bobby     |
-      When I change my password to "!Abcdejohngf123"
-      Then I should receive error message "Property `password` requires a valid password, was given `!Abcdejohngf123`.".
+      Given My username is "bobby"
+      When I change my password to "!Abcdebobbygf123"
+      Then I should receive error message "Property `password` requires a valid password, was given `!Abcdebobbygf123`.".
     @ignore
     Scenario Outline: Password with a generic word
       When I change my password to any of these <passwords>
