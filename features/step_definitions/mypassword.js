@@ -28,7 +28,7 @@ defineSupportCode(function ({Given, When, Then, Before, After}) {
       requestData: this.requestData,
       method: 'post',
       onSuccess: function (response) {
-        assert.equal(response.status, 200, 'Status should be 200');
+        assert.equal(response.status, 201, 'Status should be 201');
       }
     });
   });
@@ -70,6 +70,11 @@ defineSupportCode(function ({Given, When, Then, Before, After}) {
     });
   });
 
+  Then(/^I should see a message that my password was successfully changed.$/, function () {
+    assert.equal(this.responseStatus, 200, 'Status should be 200');
+    assert.equal(this.responseData.status, 'OK', 'Status should be OK');
+  });
+
   Then(/^I should receive error message (.+).$/, function (errorMessage) {
     checkForErrorMessage(errorMessage, this);
   });
@@ -89,7 +94,7 @@ const submitServerRequest = (world) => {
 };
 
 const checkForErrorMessage = (message, world) => {
-  assert.equal(world.responseStatus, 200, 'Status should be 400');
+  assert.equal(world.responseStatus, 400, 'Status should be 400');
   assert.equal(world.responseData.status, 'ERROR', 'Status should be ERROR');
   assert.equal(world.responseData.typeReports[0].objectReports[0].errorReports[0].message, message);
 };

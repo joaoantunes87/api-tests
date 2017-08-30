@@ -4,6 +4,12 @@ I want to be able manage my own password
 
     Background:
       Given that I am logged in
+
+    @createUser
+    Scenario: Valid password
+      When I change my password to !BobbyTables2
+      Then I should see a message that my password was successfully changed.
+
     @createUser
     Scenario: Password without a digit
       When I change my password to ABCdefg!
@@ -39,25 +45,32 @@ I want to be able manage my own password
       | password!jLDx4b9      |
       | login!jLDx4b9         |
       | manager!jLDx4b9       |
-    @ignore
-    Scenario: Valid password
-      When I change my password a valid password
-      And the password has at least the required number of characters
-      And the password has an upper case character
-      And the password has a special character
-      And the password has a number
-      And the password does not contain my username
-      And the password does not contain my email address
-      Then I should see a message that my password was successfully changed.
-    @ignore
+
+    @createUser
     Scenario: Use of historical passwords
-      Given I have generated 24 valid passwords
-      And the password has at least the required number of characters
-      And the password has an upper case character
-      And the password has a special character
-      And the password has a number
-      And the password does not contain my username
-      And the password does not contain my email address
-      When I change my password to each of the passwords
-      And I change my password again any of the passwords
-      Then I should receive a message that I cannot use a previous password.
+      Given I change my password to !BobbyTables2
+      And I change my password to !BobbyTables3
+      And I change my password to !BobbyTables4
+      And I change my password to !BobbyTables5
+      And I change my password to !BobbyTables6
+      And I change my password to !BobbyTables7
+      And I change my password to !BobbyTables8
+      And I change my password to !BobbyTables9
+      And I change my password to !BobbyTables10
+      And I change my password to !BobbyTables11
+      And I change my password to !BobbyTables12
+      And I change my password to !BobbyTables13
+      And I change my password to !BobbyTables14
+      And I change my password to !BobbyTables15
+      And I change my password to !BobbyTables16
+      And I change my password to !BobbyTables17
+      And I change my password to !BobbyTables18
+      And I change my password to !BobbyTables19
+      And I change my password to !BobbyTables20
+      And I change my password to !BobbyTables21
+      And I change my password to !BobbyTables22
+      And I change my password to !BobbyTables23
+      And I change my password to !BobbyTables24
+      And I change my password to !BobbyTables25
+      And I change my password to !BobbyTables25
+      Then I should receive error message Property `password` requires a valid password, was given `!BobbyTables25`..
