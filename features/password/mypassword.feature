@@ -6,30 +6,31 @@ I want to be able manage my own password
       Given that I am logged in
     @createUser
     Scenario: Password without a digit
-      When I change my password to "ABCdefg!"
-      Then I should receive error message "Property `password` requires a valid password, was given `ABCdefg!`.".
+      When I change my password to ABCdefg!
+      Then I should receive error message Property `password` requires a valid password, was given `ABCdefg!`..
 
     @createUser
     Scenario: Password without upper case
-      When I change my password to "abcdefg123!"
-      Then I should receive error message "Property `password` requires a valid password, was given `abcdefg123!`.".
+      When I change my password to abcdefg123!
+      Then I should receive error message Property `password` requires a valid password, was given `abcdefg123!`..
 
     @createUser
     Scenario: Password without a special character
-      When I change my password to "ABCDefg123"
-      Then I should receive error message "Property `password` requires a valid password, was given `ABCDefg123`.".
+      When I change my password to ABCDefg123
+      Then I should receive error message Property `password` requires a valid password, was given `ABCDefg123`..
 
     @createUser
     Scenario: Password with my username
-      Given My username is "bobby"
-      When I change my password to "!Abcdebobbygf123"
-      Then I should receive error message "Property `password` requires a valid password, was given `!Abcdebobbygf123`.".
-    @ignore
+      Given My username is bobby
+      When I change my password to !Abcdebobbygf123
+      Then I should receive error message Property `password` requires a valid password, was given `!Abcdebobbygf123`..
+
+    @createUser
     Scenario Outline: Password with a generic word
-      When I change my password to any of these <passwords>
-      Then I should see message that my password cannot contain generic words.
+      When I change my password to <password>
+      Then I should receive error message Property `password` requires a valid password, was given `<password>`..
       Examples:
-      | passwords             |
+      | password              |
       | user!jLDx4b9          |
       | admin!jLDx4b9         |
       | system!jLDx4b9        |

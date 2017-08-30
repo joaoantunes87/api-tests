@@ -51,7 +51,7 @@ defineSupportCode(function ({Given, When, Then, Before, After}) {
     });
   });
 
-  When(/^I change my password to "(.+)"$/, function (password) {
+  When(/^I change my password to (.+)$/, function (password) {
     const world = this;
 
     return dhis2.sendApiRequest({
@@ -70,11 +70,11 @@ defineSupportCode(function ({Given, When, Then, Before, After}) {
     });
   });
 
-  Then(/^I should receive error message "(.+)".$/, function (errorMessage) {
+  Then(/^I should receive error message (.+).$/, function (errorMessage) {
     checkForErrorMessage(errorMessage, this);
   });
 
-  Given(/^My username is "(.+)"$/, function (username) {
+  Given(/^My username is (.+)$/, function (username) {
     assert.equal(this.userUsername, username, 'Username should be: ' + username);
   });
 });

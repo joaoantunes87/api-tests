@@ -197,6 +197,8 @@ module.exports = (() => {
         data: requestData,
         auth: authentication
       }).then(function (response) {
+        debug('RESPONSE STATUS: ' + response.status);
+        debug('RESPONSE DATA: ' + JSON.stringify(response.data, null, 2));
         if (world) {
           world.responseStatus = response.status;
           world.responseData = response.data;
@@ -207,8 +209,8 @@ module.exports = (() => {
         }
       }).catch(function (error) {
         if (error && error.response) {
-          debug('ERROR RESPONSE STATUS: ' + error.response.status);
-          debug('ERROR RESPONSE DATA: ' + JSON.stringify(error.response.data, null, 2));
+          debug('RESPONSE STATUS: ' + error.response.status);
+          debug('RESPONSE DATA: ' + JSON.stringify(error.response.data, null, 2));
         } else {
           throw error;
         }
