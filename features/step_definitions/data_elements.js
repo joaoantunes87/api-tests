@@ -184,6 +184,7 @@ defineSupportCode(function ({Given, When, Then}) {
   const prepareExistingDataElementToBeUpdated = (world) => {
     assert.equal(dataElementWasCreated, true, 'Data Element does not exist');
     assert.isOk(generatedDataElementId, 'Data Element Id does not exist');
+    world.resourceId = generatedDataElementId;
 
     return dhis2.sendApiRequest({
       url: dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.DATA_ELEMENT, generatedDataElementId),
