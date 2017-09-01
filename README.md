@@ -68,5 +68,5 @@ $ export DHIS2_LOG_MODE=debug
 Start Docker:
 
 ```sh
-$ docker-compose up --build --abort-on-container-exit
+$ ./run.sh
 ```

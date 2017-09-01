@@ -33,7 +33,7 @@ services:
     healthcheck:
       test: "curl -f http://web:8080"
       interval: 30s
-      retries: 15
+      retries: 5
   api-tests:
     container_name: dhis2-api-tests
     build: .
