@@ -65,7 +65,7 @@ Set the environment `DHIS2_LOG_MODE` to `debug` to log debug messages:
 $ export DHIS2_LOG_MODE=debug
 ```
 
-Start Docker:
+Start Tests Execution:
 
 ```sh
 $ ./run.sh
