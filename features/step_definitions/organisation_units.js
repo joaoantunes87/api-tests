@@ -17,7 +17,7 @@ defineSupportCode(function ({Given, When, Then}) {
           'Not Authorized to create OrganisationUnit'
         );
       }
-    });
+    }, this);
   });
 
   Given(/^that I want to create a new organisation unit$/, function () {
@@ -38,6 +38,10 @@ defineSupportCode(function ({Given, When, Then}) {
 
   When(/^I submit the organisation unit$/, function () {
     return submitServerRequest(this);
+  });
+
+  When(/^I should be informed I have no permission to do that operation.$/, function () {
+    assert.equal(this.responseStatus, 403, 'Status should be 403');
   });
 
   Then(/^I should be informed that the organisation unit was created$/, function () {
@@ -76,7 +80,7 @@ defineSupportCode(function ({Given, When, Then}) {
           }
         });
       }
-    });
+    }, world);
   });
 
   Given(/^I got the existing organisation unit to update$/, function () {
@@ -93,7 +97,7 @@ defineSupportCode(function ({Given, When, Then}) {
         world.requestData = response.data;
         world.method = 'put';
       }
-    });
+    }, world);
   });
 
   When(/^an existing parent organisation unit exists$/, function () {
@@ -171,7 +175,7 @@ defineSupportCode(function ({Given, When, Then}) {
           }
         });
       }
-    });
+    }, world);
   });
 
   Then(/^I should be able to view the translated name.$/, function () {
@@ -182,7 +186,7 @@ defineSupportCode(function ({Given, When, Then}) {
       onSuccess: function (response) {
         assert.equal(response.data.displayName, world.translationValue, 'Name is not translated');
       }
-    });
+    }, world);
   });
 
   When(/^there is a dataset in the system$/, function () {

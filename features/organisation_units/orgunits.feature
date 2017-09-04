@@ -1,12 +1,21 @@
 Feature: Organisation unit maintenance
-As as user of DHIS2
+As a user of DHIS2
 I want to be able to add and manage organisation units
 
     Background:
       Given that I am logged in
-      And that I have the necessary permissions to add an organisation unit
+
+      @createUser
+      Scenario: Add an organisation unit without permissions
+        Given that I want to create a new organisation unit
+        When I fill in the fields for the organisation unit with data:
+        | name            | shortName       | openingDate |
+        | Organization 2  | ORG2            | 2016-09-23T00:00:00.000  |
+        And I submit the organisation unit
+        Then I should be informed I have no permission to do that operation.
 
       Scenario: Add an organisation unit
+        Given that I have the necessary permissions to add an organisation unit
         And that I want to create a new organisation unit
         When I fill in the fields for the organisation unit with data:
         | name            | shortName       | openingDate |
@@ -16,6 +25,7 @@ I want to be able to add and manage organisation units
         And The current organisation unit data is the same as submitted.
 
       Scenario: Update added organisation unit
+        Given that I have the necessary permissions to add an organisation unit
         And I got the existing organisation unit to update
         When I fill in the fields for the organisation unit with data:
         | name                    | shortName       | openingDate |
@@ -25,6 +35,7 @@ I want to be able to add and manage organisation units
         And The current organisation unit data is the same as submitted.
 
       Scenario: Assign a parent to an organsiation unit
+        Given that I have the necessary permissions to add an organisation unit
         And that I want to create a new organisation unit
         When an existing parent organisation unit exists
         And I fill in the fields for the organisation unit with data:
@@ -36,6 +47,7 @@ I want to be able to add and manage organisation units
         And The current organisation unit data is the same as submitted.
 
       Scenario Outline: Update valid properties of an organisation unit with valid values
+        Given that I have the necessary permissions to add an organisation unit
         When I update an existing organisation unit
         And  I provide a valid value: <value>, for a valid property: <property>
         And I submit the organisation unit
@@ -47,6 +59,7 @@ I want to be able to add and manage organisation units
         | openingDate | 1970-01-01T00:00:00.000 |
 
       Scenario Outline: Update properties of an organisation unit with invalid values
+        Given that I have the necessary permissions to add an organisation unit
         When I update an existing organisation unit
         And I provide an invalid value: <value>, for a valid property: <property>
         And I submit the organisation unit
@@ -57,6 +70,7 @@ I want to be able to add and manage organisation units
         | openingDate | 1970-02-31T00:00:00.000 | The openingDate value is not valid |
 
       Scenario Outline: Update non-existent properties of an organisation unit
+        Given that I have the necessary permissions to add an organisation unit
         When I update an existing organisation unit
         And I provide an invalid value: <value>, for an invalid property: <property>
         And I submit the organisation unit
@@ -67,6 +81,7 @@ I want to be able to add and manage organisation units
         | startTime | 1970-02-28T00:00:00.000 | The property startTime does not exist |
 
       Scenario Outline: Define an end date for an organisation unit
+        Given that I have the necessary permissions to add an organisation unit
         When I update an existing organisation unit
         And I provide a previous closed date as <pastClosedDate>
         And I submit the organisation unit
@@ -76,6 +91,7 @@ I want to be able to add and manage organisation units
         | 2015-01-30T00:00:00.000 | The value for closedDate should be later than openingDate |
 
       Scenario Outline: Define an end date for an organisation unit
+        Given that I have the necessary permissions to add an organisation unit
         When I update an existing organisation unit
         And I provide a later closed date as <futureClosedDate>
         And I submit the organisation unit
@@ -86,6 +102,7 @@ I want to be able to add and manage organisation units
         | 2017-06-12T00:00:00.000 |
 
       Scenario Outline: Translate an organisation unit name
+        Given that I have the necessary permissions to add an organisation unit
         When I translate the name of the organisation unit for <locale> as <translation>
         And I select the correct <locale>
         Then I should be able to view the translated name.
@@ -95,6 +112,7 @@ I want to be able to add and manage organisation units
         | es | Organización 1 |
 
       Scenario: Assign a data set to organisation units
+        Given that I have the necessary permissions to add an organisation unit
         And I got the existing organisation unit to update
         And there is a dataset in the system
         When I update the datasets of the organisation unit
