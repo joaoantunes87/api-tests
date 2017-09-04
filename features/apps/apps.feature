@@ -7,8 +7,7 @@ I want to be able to manage the apps in the system
 
     @createUser
     Scenario: Add an app without permissions
-      Given that I have the necessary permissions to manage apps
-      And I have an application file at "dhis2-valid-app.zip"
+      Given I have an application file at "dhis2-valid-app.zip"
       When I submit that application to the server
       Then I should be informed I have no permission to do that operation.
 
