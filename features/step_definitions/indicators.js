@@ -19,7 +19,7 @@ defineSupportCode(function ({Given, When, Then}) {
           'Not Authorized to delete Indicator'
         );
       }
-    });
+    }, this);
   });
 
   When(/^I fill in the fields for an indicator type with valid data:$/, function (data) {
@@ -80,7 +80,7 @@ defineSupportCode(function ({Given, When, Then}) {
           );
         }
       });
-    });
+    }, this);
 
     return dhis2.sendMultipleApiRequests({
       requests: categoryComboRequests
@@ -88,6 +88,8 @@ defineSupportCode(function ({Given, When, Then}) {
   });
 
   Given(/^I create the following data elements:$/, function (data) {
+    const world = this;
+
     const properties = data.rawTable[0];
     const dataTable = data.rawTable;
     const dataElements = [];
@@ -111,7 +113,7 @@ defineSupportCode(function ({Given, When, Then}) {
           assert.equal(response.status, 201, 'Status should be 201');
           assert.equal(response.data.response.uid, dataElement.id, 'Data Element Id should be: ' + dataElement.id);
         }
-      });
+      }, world);
     });
 
     return dhis2.sendMultipleApiRequests({
@@ -138,7 +140,7 @@ defineSupportCode(function ({Given, When, Then}) {
         assert.equal(response.status, 201, 'Status should be 201');
         assert.equal(response.data.response.uid, indicatorType.id, 'Indicator Type Id should be: ' + indicatorType.id);
       }
-    });
+    }, this);
   });
 
   When(/^I fill in the required fields for an indicator$/, function (data) {
@@ -201,7 +203,7 @@ defineSupportCode(function ({Given, When, Then}) {
           }
         });
       }
-    });
+    }, world);
   });
 
   Then(/^I should be informed that indicator is invalid$/, function () {

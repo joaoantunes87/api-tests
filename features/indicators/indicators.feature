@@ -7,8 +7,7 @@ a mathematical formula containing data elements and their category option combin
       Given that I am logged in
 
       @createUser
-      Scenario: Add a valid indicator type
-        Given I have the necessary permissions to add and delete indicators
+      Scenario: Add a valid indicator type without permissions
         When I fill in the fields for an indicator type with valid data:
         | name    | factor |
         | Percent | 100    |
