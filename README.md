@@ -65,8 +65,8 @@ Set the environment `DHIS2_LOG_MODE` to `debug` to log debug messages:
 $ export DHIS2_LOG_MODE=debug
 ```
 
-Start Tests Execution:
+Start tests execution:
 
 ```sh
-$ ./run.sh
+$ ./run.sh # or run.bat for Windows
 ```
