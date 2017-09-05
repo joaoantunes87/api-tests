@@ -23,7 +23,7 @@ defineSupportCode(function ({Given, When, Then}) {
           'Not Authorized to delete users'
         );
       }
-    });
+    }, this);
   });
 
   Given(/^there are some user roles in the system$/, function () {
@@ -38,7 +38,7 @@ defineSupportCode(function ({Given, When, Then}) {
         );
         world.userRoles = response.data.userRoles;
       }
-    });
+    }, world);
   });
 
   When(/^I want to create a new user with the following details:$/, function (data) {
@@ -126,7 +126,7 @@ defineSupportCode(function ({Given, When, Then}) {
         assert.isNotOk(response.data.userCredentials.disabled, 'User is disabled');
         world.requestData = response.data;
       }
-    });
+    }, world);
   });
 
   When(/^I disable the account$/, function () {
@@ -149,7 +149,7 @@ defineSupportCode(function ({Given, When, Then}) {
       onError: function (error) {
         assert.equal(error.response.status, 401, 'Authentication should have failed.');
       }
-    });
+    }, this);
   });
 
   Given(/^account is disabled$/, function () {
@@ -184,7 +184,7 @@ defineSupportCode(function ({Given, When, Then}) {
         assert.equal(response.status, 200, 'Response Status was not ok');
         assert.isOk(response.data.id, 'User id should have been returned');
       }
-    });
+    }, this);
   });
 
   When(/^I update the users password to (.*)$/, function (password) {
@@ -197,7 +197,7 @@ defineSupportCode(function ({Given, When, Then}) {
         world.requestData.userCredentials.password = password;
         return submitServerRequest(world);
       }
-    });
+    }, world);
   });
 
   Then(/^the system should inform me that the users password was updated.$/, function () {
@@ -250,7 +250,7 @@ defineSupportCode(function ({Given, When, Then}) {
         assert.equal(error.response.status, 404, 'Status should be 404');
       },
       preventDefaultOnError: true
-    });
+    }, this);
   });
 });
 
