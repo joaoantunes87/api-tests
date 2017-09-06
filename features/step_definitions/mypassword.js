@@ -112,7 +112,7 @@ defineSupportCode(function ({Given, When, Then, Before, After}) {
 });
 
 const checkForErrorMessage = (message, world) => {
-  assert.equal(world.responseStatus, 409, 'Status should be 409');
+  assert.equal(world.responseStatus, 400, 'Status should be 400');
   assert.equal(world.responseData.status, 'ERROR', 'Status should be ERROR');
   assert.equal(world.responseData.message, message);
 };
