@@ -17,35 +17,7 @@ Repository for DHIS2 API Testing.
 1. Create a [Gherkin](https://cucumber.io/docs/reference) file inside `features` folder. A new folder should be created for each individual module (e.g. `/features/organisation_units` for organisation unit related test cases)
 2. Create a JavaScript file inside  `step_definitions` folder to execute the steps defined on the previous point. Check [Cucumber.js documentation](https://github.com/cucumber/cucumber-js) for more details
 
-## Run tests locally
-
-Make sure you have the required NPM dependencies installed:
-
-```sh
-$ npm install
-```
-
-Run tests with the default API endpoint:
-
-```sh
-$ npm test
-```
-
-Run tests overriding the default API endpoint:
-
-```sh
-$ npm test -- --world-parameters "{\"baseUrl\":\"https://play.dhis2.org/demo\",\"apiVersion\":27, \"generateHtmlReport\":false}"
-```
-
-Available parameters are:
-
-| Name | Default value | Description |
-| --- | --- | --- |
-| `baseUrl` | Defined inside `utils.js` file | The API host to use to run the tests  |
-| `apiVersion` | Defined inside `utils.js` file | The API version to use to run the tests  |
-| `generateHtmlReport` | `true` | Whether an HTML report should be generated or not |
-
-## Run tests with Docker
+## Tests Execution
 
 Set the environment variable `DHIS2_GENERATE_HTML_REPORT` to `false` to skip the HTML report generation:
 
@@ -63,6 +35,12 @@ Set the environment `DHIS2_LOG_MODE` to `debug` to log debug messages:
 
 ```sh
 $ export DHIS2_LOG_MODE=debug
+```
+
+Set the environment `DHIS2_API_VERSION` to desired api version to be tested:
+
+```sh
+$ export DHIS2_API_VERSION=27
 ```
 
 Start tests execution:

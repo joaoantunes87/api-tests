@@ -3,9 +3,10 @@ const fs = require('fs');
 const axios = require('axios');
 const querystring = require('querystring');
 module.exports = (() => {
-  let baseUrl = 'https://play.dhis2.org/demo';  // default
-  let apiVersion = 27;                          // default
-  let generateHtmlReport = true;
+  const baseUrl = process.env.DHIS2_BASE_URL || 'https://play.dhis2.org/demo';  // default
+  const apiVersion = process.env.DHIS2_API_VERSION || 27;                          // default
+  const generateHtmlReport = process.env.DHIS2_GENERATE_HTML_REPORT
+    ? process.env.DHIS2_GENERATE_HTML_REPORT.toLowerCase() === 'true' : false;
 
   const apiEndpoint = () => {
     return baseUrl + '/api/' + apiVersion;
@@ -26,7 +27,8 @@ module.exports = (() => {
     CATEGORY: 'category',
     USER_ROLE: 'user role',
     USER: 'user',
-    APPLICATION: 'application'
+    APPLICATION: 'application',
+    META_DATA: 'metadata'
   };
 
   const AUTH_REQUEST_OBJECT = {
@@ -97,6 +99,9 @@ module.exports = (() => {
       case RESOURCE_TYPES.APPLICATION:
         endpoint = apiEndpoint() + '/apps';
         break;
+      case RESOURCE_TYPES.META_DATA:
+        endpoint = apiEndpoint() + '/metadata';
+        break;
       default:
         throw new Error('There is no resource type defined for: ' + resourceType);
     }
@@ -107,28 +112,16 @@ module.exports = (() => {
   return {
     resourceTypes: RESOURCE_TYPES,
     debug: debug,
-    baseUrl: (newBaseUrl) => {
-      if (newBaseUrl) {
-        baseUrl = newBaseUrl;
-      } else {
-        return baseUrl;
-      }
+    baseUrl: () => {
+      return baseUrl;
     },
-    apiVersion: (newApiVersion) => {
-      if (newApiVersion) {
-        apiVersion = newApiVersion;
-      } else {
-        return apiVersion;
-      }
+    apiVersion: () => {
+      return apiVersion;
     },
     defaultBasicAuth: AUTH_REQUEST_OBJECT,
     apiEndpoint: apiEndpoint,
-    generateHtmlReport: (generate) => {
-      if (typeof generate === 'undefined') {
-        return generateHtmlReport;
-      } else {
-        generateHtmlReport = generate;
-      }
+    generateHtmlReport: () => {
+      return generateHtmlReport;
     },
     isAuthorisedToAddDataElementWith: (userRoles = []) => {
       return isAuthorisedTo('F_DATAELEMENT_PUBLIC_ADD', userRoles);
