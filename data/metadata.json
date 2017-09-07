@@ -7,117 +7,60 @@
    },
    "organisationUnits":[
       {
-         "lastUpdated":"2017-05-23T09:46:32.490",
          "id":"MScLzvZ6VKt",
          "created":"2017-05-23T09:46:32.403",
          "name":"Södermanland",
          "shortName":"Södermanland",
-         "path":"/qIxbNzdiKys/MScLzvZ6VKt",
          "featureType":"NONE",
          "openingDate":"2015-04-01T00:00:00.000",
          "parent":{
             "id":"qIxbNzdiKys"
-         },
-         "lastUpdatedBy":{
-            "id":"M5zQapPyTZI"
-         },
-         "translations":[
-
-         ],
-         "attributeValues":[
-
-         ]
+         }
       },
       {
-         "lastUpdated":"2017-05-18T11:10:54.574",
          "id":"qIxbNzdiKys",
          "created":"2017-05-18T11:10:54.464",
          "name":"Sweden",
          "shortName":"Sweden",
-         "path":"/qIxbNzdiKys",
          "featureType":"NONE",
          "openingDate":"1300-01-08T00:12:12.000",
-         "closedDate":"9999-01-01T00:00:00.000",
-         "lastUpdatedBy":{
-            "id":"M5zQapPyTZI"
-         },
-         "translations":[
-
-         ],
-         "attributeValues":[
-
-         ]
+         "closedDate":"9999-01-01T00:00:00.000"
       },
       {
-         "lastUpdated":"2017-05-23T09:47:49.916",
          "id":"fFAyEuFkaI4",
          "created":"2017-05-23T09:47:49.881",
          "name":"Uppland",
          "shortName":"Uppland",
-         "path":"/qIxbNzdiKys/fFAyEuFkaI4",
          "featureType":"NONE",
          "openingDate":"2015-03-01T00:00:00.000",
          "parent":{
             "id":"qIxbNzdiKys"
-         },
-         "lastUpdatedBy":{
-            "id":"M5zQapPyTZI"
-         },
-         "translations":[
-
-         ],
-         "attributeValues":[
-
-         ]
+         }
       }
    ],
    "organisationUnitLevels":[
       {
          "level":1,
          "created":"2017-05-18T11:28:15.568",
-         "lastUpdated":"2017-05-23T12:39:00.011",
          "name":"Level 1",
-         "id":"diEYApSMB4x",
-         "lastUpdatedBy":{
-            "id":"M5zQapPyTZI"
-         },
-         "translations":[
-
-         ]
+         "id":"diEYApSMB4x"
       },
       {
          "level":2,
          "created":"2017-05-23T12:39:00.016",
-         "lastUpdated":"2017-05-23T12:39:00.017",
          "name":"Level 2",
-         "id":"vW58TY1Bx95",
-         "lastUpdatedBy":{
-            "id":"M5zQapPyTZI"
-         },
-         "translations":[
-
-         ]
+         "id":"vW58TY1Bx95"
       }
    ],
    "categories":[
       {
          "code":"default",
          "created":"2017-05-18T10:33:54.371",
-         "lastUpdated":"2017-09-04T14:54:07.159",
          "name":"default",
          "id":"GLevLNI9wkl",
          "dataDimensionType":"DISAGGREGATION",
          "publicAccess":"--------",
          "dataDimension":false,
-         "userGroupAccesses":[
-
-         ],
-         "translations":[
-
-         ],
-         "userAccesses":[
-
-         ],
          "categoryOptions":[
             {
                "id":"xYerKDKCefk"
@@ -127,7 +70,6 @@
    ],
    "categoryOptionCombos":[
       {
-         "lastUpdated":"2017-05-18T10:33:54.403",
          "code":"default",
          "created":"2017-05-18T10:33:54.402",
          "name":"default",
@@ -136,12 +78,6 @@
          "categoryCombo":{
             "id":"bjDvmb4bfuf"
          },
-         "translations":[
-
-         ],
-         "attributeValues":[
-
-         ],
          "categoryOptions":[
             {
                "id":"xYerKDKCefk"
@@ -153,21 +89,11 @@
       {
          "code":"default",
          "created":"2017-05-18T10:33:54.392",
-         "lastUpdated":"2017-05-18T10:33:54.418",
          "name":"default",
          "id":"bjDvmb4bfuf",
          "dataDimensionType":"DISAGGREGATION",
          "publicAccess":"--------",
          "skipTotal":false,
-         "userGroupAccesses":[
-
-         ],
-         "translations":[
-
-         ],
-         "userAccesses":[
-
-         ],
          "categories":[
             {
                "id":"GLevLNI9wkl"
@@ -179,32 +105,15 @@
       {
          "code":"default",
          "created":"2017-05-18T10:33:54.325",
-         "lastUpdated":"2017-05-18T10:33:54.423",
          "name":"default",
          "id":"xYerKDKCefk",
          "shortName":"default",
-         "publicAccess":"--------",
-         "userGroupAccesses":[
-
-         ],
-         "attributeValues":[
-
-         ],
-         "translations":[
-
-         ],
-         "userAccesses":[
-
-         ],
-         "organisationUnits":[
-
-         ]
+         "publicAccess":"--------"
       }
    ],
    "dataSets":[
       {
          "code":"DS_MONTHLY",
-         "lastUpdated":"2017-05-23T09:48:39.725",
          "id":"lyLU2wR22tC",
          "created":"2012-06-10T00:36:10.036",
          "name":"Test monthly dataset",
@@ -227,9 +136,6 @@
          "categoryCombo":{
             "id":"bjDvmb4bfuf"
          },
-         "lastUpdatedBy":{
-            "id":"M5zQapPyTZI"
-         },
          "user":{
             "id":"M5zQapPyTZI"
          },
@@ -246,15 +152,6 @@
                }
             }
          ],
-         "compulsoryDataElementOperands":[
-
-         ],
-         "translations":[
-
-         ],
-         "dataInputPeriods":[
-
-         ],
          "organisationUnits":[
             {
                "id":"fFAyEuFkaI4"
@@ -262,27 +159,11 @@
             {
                "id":"MScLzvZ6VKt"
             }
-         ],
-         "userGroupAccesses":[
-
-         ],
-         "attributeValues":[
-
-         ],
-         "indicators":[
-
-         ],
-         "userAccesses":[
-
-         ],
-         "legendSets":[
-
          ]
       }
    ],
    "dataElements":[
       {
-         "lastUpdated":"2017-06-19T11:26:03.786",
          "id":"PlqoWGqTHUS",
          "created":"2017-05-18T11:12:17.394",
          "name":"Test monthly data element A",
@@ -294,9 +175,6 @@
          "zeroIsSignificant":false,
          "categoryCombo":{
             "id":"bjDvmb4bfuf"
-         },
-         "lastUpdatedBy":{
-            "id":"M5zQapPyTZI"
          },
          "user":{
             "id":"M5zQapPyTZI"
@@ -312,22 +190,7 @@
                "locale":"fr",
                "value":"Qux"
             }
-         ],
-         "userGroupAccesses":[
-
-         ],
-         "attributeValues":[
-
-         ],
-         "userAccesses":[
-
-         ],
-         "legendSets":[
-
-         ],
-         "aggregationLevels":[
-
          ]
       }
-   ]   
+   ]
 }
