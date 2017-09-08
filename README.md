@@ -71,6 +71,8 @@ Run tests overriding the default API endpoint:
 $ export DHIS2_BASE_URL=https://play.dhis2.org/demo
 ```
 
+Run tests:
+
 ```sh
 $ npm test
 ```
