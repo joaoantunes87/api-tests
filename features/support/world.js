@@ -36,17 +36,21 @@ defineSupportCode(function ({ registerHandler, Given, When, Then, Before }) {
   });
 
   registerHandler('BeforeFeatures', function () {
-    dhis2.debug('BEFORE FEATURES');
-    const filePath = path.join(path.resolve('.'), '/data/metadata.json');
-    const metadata = JSON.parse(fs.readFileSync(filePath, 'utf8'));
-    return dhis2.sendApiRequest({
-      url: dhis2.generateUrlForResourceType(dhis2.resourceTypes.META_DATA),
-      requestData: metadata,
-      method: 'post',
-      onSuccess: function (response) {
-        // TODO assert metadata
-      }
-    });
+    // Known env, we can load metadata
+    // needed to allow local runs
+    if (dhis2.apiEndpoint === 'http://web:8080') {
+      dhis2.debug('BEFORE FEATURES');
+      const filePath = path.join(path.resolve('.'), '/data/metadata.json');
+      const metadata = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+      return dhis2.sendApiRequest({
+        url: dhis2.generateUrlForResourceType(dhis2.resourceTypes.META_DATA),
+        requestData: metadata,
+        method: 'post',
+        onSuccess: function (response) {
+          // TODO assert metadata
+        }
+      });
+    }
   });
 
   Then(/^I should receive an error message equal to: (.+).$/, function (errorMessage) {
