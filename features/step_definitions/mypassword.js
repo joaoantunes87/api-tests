@@ -28,7 +28,10 @@ defineSupportCode(function ({Given, When, Then, Before, After}) {
       requestData: this.requestData,
       method: 'post',
       onSuccess: function (response) {
-        assert.equal(response.status, 200, 'Status should be 200');
+        // FIXME API returns a 200 with a JSON message where status property is OK
+        // FIXME status code should be 201
+        // assert.equal(response.status, 201, 'Status should be 201');
+        assert.equal(response.data.status, 'OK', 'Message status property should be OK');
       }
     });
   });
@@ -109,10 +112,20 @@ defineSupportCode(function ({Given, When, Then, Before, After}) {
   Given(/^My username is (.+)$/, function (username) {
     assert.equal(this.userUsername, username, 'Username should be: ' + username);
   });
+
+  Then(/^I should receive a conflict error message (.+)$/, function (errorMessage) {
+    checkForConflictErrorMessage(errorMessage, this);
+  });
 });
 
 const checkForErrorMessage = (message, world) => {
   assert.equal(world.responseStatus, 400, 'Status should be 400');
+  assert.equal(world.responseData.status, 'ERROR', 'Status should be ERROR');
+  assert.equal(world.responseData.message, message);
+};
+
+const checkForConflictErrorMessage = (message, world) => {
+  assert.equal(world.responseStatus, 409, 'Status should be 409');
   assert.equal(world.responseData.status, 'ERROR', 'Status should be ERROR');
   assert.equal(world.responseData.message, message);
 };

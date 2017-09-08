@@ -44,7 +44,7 @@ They are used to collect data at assigned organisation units.
         When I update an existing dataset
         And I change the expiry days to <expiryDays>
         And I submit the dataset
-        # A 500 status code is expected here
+        # FIXME Checking for a  500 status code. In the future it should be changed to a 40X.
         Then I should receive a 500 error message equal to: <errorMessage>.
         Examples:
         | expiryDays | errorMessage |
