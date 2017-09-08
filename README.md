@@ -50,7 +50,7 @@ $ ./run.sh # or run.bat for Windows
 ```
 
 ## Local Execution
-A local execution should not be used since it will not guarantee an expected state of DHIS2 Web Application for the tests. However, you can use it following these directions.
+A local execution should not be used since it will not guarantee an expected state of DHIS2 Web Application for the tests. However, you might use it following these directions:
 
 Make sure you have the required NPM dependencies installed:
 
@@ -65,14 +65,14 @@ $ npm test
 ```
 
 Run tests overriding the default API endpoint:
-Set the environment `DHIS2_BASE_URL` to desired DHIS2 Web endpoint:
+<br>Set the environment `DHIS2_BASE_URL` to desired DHIS2 Web endpoint:
 
 ```sh
 $ export DHIS2_BASE_URL=https://play.dhis2.org/demo
 ```
 
-All environment variables mentioned before might be used.
-
 ```sh
 $ npm test
 ```
+
+All environment variables mentioned before might be used.
