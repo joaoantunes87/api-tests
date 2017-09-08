@@ -16,7 +16,7 @@ defineSupportCode(function ({Given, When, Then}) {
           'Not Authorized to manage apps'
         );
       }
-    });
+    }, this);
   });
 
   Given(/^I have an application file at "(.+)"$/, function (filename) {
@@ -48,7 +48,7 @@ defineSupportCode(function ({Given, When, Then}) {
         assert.equal(response.data.length, 1, 'It should have found one application');
         assert.equal(response.data[0].name, applicationName, 'App found should be called ' + applicationName);
       }
-    });
+    }, this);
   });
 
   Then(/^I should be informed that the application is invalid$/, function () {
@@ -79,6 +79,6 @@ defineSupportCode(function ({Given, When, Then}) {
         assert.equal(response.status, 200, 'Http Status Code should be 200');
         assert.equal(response.data.length, 0, 'It should have found no applications');
       }
-    });
+    }, this);
   });
 });
