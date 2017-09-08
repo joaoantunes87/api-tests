@@ -17,7 +17,7 @@ defineSupportCode(function ({Given, When, Then}) {
           'Not Authorized to create Data Element'
         );
       }
-    });
+    }, this);
   });
 
   When(/^I want to create a new data element$/, function () {
@@ -50,6 +50,7 @@ defineSupportCode(function ({Given, When, Then}) {
 
   Then(/^the data element has the same properties as those I supplied.$/, function () {
     const world = this;
+
     return dhis2.sendApiRequest({
       url: dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.DATA_ELEMENT, world.resourceId),
       onSuccess: function (response) {
@@ -57,7 +58,7 @@ defineSupportCode(function ({Given, When, Then}) {
           assert.equal(response.data[propertyKey], world.updatedDataToAssert[propertyKey], propertyKey + ' is wrong');
         });
       }
-    });
+    }, world);
   });
 
   When(/^I want to update an existing data element$/, function () {
@@ -89,7 +90,7 @@ defineSupportCode(function ({Given, When, Then}) {
         assert.equal(error.response.status, 404, 'Status should be 404');
       },
       preventDefaultOnError: true
-    });
+    }, this);
   });
 
   When(/^submit the request to the server$/, function () {
@@ -103,6 +104,7 @@ defineSupportCode(function ({Given, When, Then}) {
   When(/^I translate the name of the data element for (.+) with (.+) as (.+)$/,
     function (language, locale, translationValue) {
       const world = this;
+
       world.locale = locale;
       world.translationValue = translationValue;
 
@@ -127,9 +129,9 @@ defineSupportCode(function ({Given, When, Then}) {
             onSuccess: function (response) {
               assert.equal(response.status, 200, 'Data Element was not updated');
             }
-          });
+          }, world);
         }
-      });
+      }, world);
     }
   );
 
@@ -139,7 +141,7 @@ defineSupportCode(function ({Given, When, Then}) {
       onSuccess: function (response) {
         assert.equal(response.data.displayName, translationValue, 'Name is not translated');
       }
-    });
+    }, this);
   });
 
   When(/^I search for data elements by a (.+) which has a (.+)$/, function (property, value) {
@@ -193,6 +195,6 @@ defineSupportCode(function ({Given, When, Then}) {
         world.requestData = response.data;
         world.method = 'put';
       }
-    });
+    }, world);
   };
 });
