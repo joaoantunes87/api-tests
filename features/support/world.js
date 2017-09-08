@@ -55,6 +55,12 @@ defineSupportCode(function ({ setWorldConstructor, registerHandler, Given, When,
     assert.equal(this.responseData.message, errorMessage, 'Error message should be ' + errorMessage);
   });
 
+  Then(/^I should receive a ([\d]{3}) error message equal to: (.*?).$/, function (statusCode, errorMessage) {
+    assert.equal(this.responseStatus, statusCode, 'It should have returned error status of ' + statusCode);
+    assert.equal(this.responseData.status, 'ERROR', 'It should have returned error status');
+    assert.equal(this.responseData.message, errorMessage, 'Error message should be ' + errorMessage);
+  });
+
   Then(/^I should be informed that the (.+) was updated$/, function (resourceType) {
     assert.equal(this.responseStatus, 200, 'The ' + resourceType + ' should have been updated');
   });
@@ -82,6 +88,6 @@ defineSupportCode(function ({ setWorldConstructor, registerHandler, Given, When,
         );
         world.organisationUnits = response.data.organisationUnits;
       }
-    });
+    }, world);
   });
 });
