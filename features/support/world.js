@@ -1,26 +1,22 @@
 const { defineSupportCode } = require('cucumber');
 const chai = require('chai');
 const dhis2 = require('./utils.js');
+const fs = require('fs');
 const reporter = require('cucumber-html-reporter');
+const path = require('path');
 
 const assert = chai.assert;
 
-function CustomWorld ({ parameters }) {
-  if (parameters.hasOwnProperty('baseUrl')) {
-    dhis2.baseUrl(parameters.baseUrl);
-  }
-
-  if (parameters.hasOwnProperty('apiVersion')) {
-    dhis2.apiVersion(parameters.apiVersion);
-  }
-
-  if (parameters.hasOwnProperty('generateHtmlReport')) {
-    dhis2.generateHtmlReport(parameters.generateHtmlReport);
-  }
-}
-
-defineSupportCode(function ({ setWorldConstructor, registerHandler, Given, When, Then }) {
-  setWorldConstructor(CustomWorld);
+defineSupportCode(function ({ registerHandler, Given, When, Then, Before }) {
+  Before(function () {
+    // auxiliar var for assertions
+    this.requestData = {};                // body request
+    this.resourceId = null;               // id of resource for test
+    this.updatedDataToAssert = {};        // information to be asserted in later steps
+    this.responseStatus = null;           // http status returned on previous request
+    this.responseData = {};               // http response body returned on previous request
+    this.method = null;                   // http method to be used in later request
+  });
 
   // html reports
   registerHandler('AfterFeatures', function (features, callback) {
@@ -37,6 +33,24 @@ defineSupportCode(function ({ setWorldConstructor, registerHandler, Given, When,
     }
 
     callback();
+  });
+
+  registerHandler('BeforeFeatures', function () {
+    // Known env, we can load metadata
+    // needed to allow local runs
+    if (dhis2.apiEndpoint === 'http://web:8080') {
+      dhis2.debug('BEFORE FEATURES');
+      const filePath = path.join(path.resolve('.'), '/data/metadata.json');
+      const metadata = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+      return dhis2.sendApiRequest({
+        url: dhis2.generateUrlForResourceType(dhis2.resourceTypes.META_DATA),
+        requestData: metadata,
+        method: 'post',
+        onSuccess: function (response) {
+          // TODO assert metadata
+        }
+      });
+    }
   });
 
   Then(/^I should receive an error message equal to: (.+).$/, function (errorMessage) {

@@ -6,16 +6,16 @@ const assert = chai.assert;
 
 defineSupportCode(function ({Given, When, Then, Before, After}) {
   Before({tags: '@createUser'}, function () {
-    this.resourceId = dhis2.generateUniqIds();
+    this.userId = dhis2.generateUniqIds();
     this.requestData = {
-      id: this.resourceId,
+      id: this.userId,
       firstName: 'Bobby',
       surname: 'Tables',
       userCredentials: {
         username: 'bobby',
-        password: '!BobbyTables1',
+        password: '!XPTOqwerty1',
         userInfo: {
-          id: this.resourceId
+          id: this.userId
         }
       }
     };
@@ -28,7 +28,7 @@ defineSupportCode(function ({Given, When, Then, Before, After}) {
       requestData: this.requestData,
       method: 'post',
       onSuccess: function (response) {
-        assert.equal(response.status, 201, 'Status should be 201');
+        assert.equal(response.status, 200, 'Status should be 200');
       }
     });
   });
@@ -37,12 +37,12 @@ defineSupportCode(function ({Given, When, Then, Before, After}) {
     const world = this;
 
     return dhis2.sendApiRequest({
-      url: dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.USER, world.resourceId),
+      url: dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.USER, world.userId),
       method: 'delete',
       onSuccess: function (response) {
         assert.equal(response.status, 200, 'Status should be 200');
         return dhis2.sendApiRequest({
-          url: dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.USER, world.resourceId),
+          url: dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.USER, world.userId),
           onError: function (error) {
             assert.equal(error.response.status, 404, 'Status should be 404');
           }
@@ -53,29 +53,56 @@ defineSupportCode(function ({Given, When, Then, Before, After}) {
 
   When(/^I change my password to (.+)$/, function (password) {
     const world = this;
+    world.oldPassword = world.userPassword;
+    world.newPassword = password;
 
     return dhis2.sendApiRequest({
-      url: dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.USER, world.resourceId),
-      authentication: {
-        username: world.userUsername,
-        password: world.userPassword
-      },
+      url: dhis2.apiEndpoint() + '/me',
       onSuccess: function (response) {
         assert.equal(response.status, 200, 'Status should be 200');
         world.requestData = response.data;
         world.requestData.userCredentials.password = password;
-        world.method = 'put';
-        return submitServerRequest(world);
+        return dhis2.sendApiRequest({
+          url: dhis2.apiEndpoint() + '/me',
+          requestData: world.requestData,
+          method: 'put',
+          onSuccess: function (response) {
+            world.userPassword = password;
+          },
+          preventDefaultOnError: true
+        }, world);
       }
-    });
+    }, world);
   });
 
-  Then(/^I should see a message that my password was successfully changed.$/, function () {
+  Then(/^I should see a message that my password was successfully changed$/, function () {
     assert.equal(this.responseStatus, 200, 'Status should be 200');
-    assert.equal(this.responseData.status, 'OK', 'Status should be OK');
   });
 
-  Then(/^I should receive error message (.+).$/, function (errorMessage) {
+  Then(/^I should not be able to login using the old password$/, function () {
+    this.userPassword = this.oldPassword;
+
+    return dhis2.sendApiRequest({
+      url: dhis2.apiEndpoint() + '/me',
+      onError: function (error) {
+        assert.equal(error.response.status, 401, 'Authentication should have failed.');
+      }
+    }, this);
+  });
+
+  Then(/^I should be able to login using the new password$/, function () {
+    this.userPassword = this.newPassword;
+
+    return dhis2.sendApiRequest({
+      url: dhis2.apiEndpoint() + '/me',
+      onSuccess: function (response) {
+        assert.equal(response.status, 200, 'Response Status was not ok');
+        assert.isOk(response.data.id, 'User id should have been returned');
+      }
+    }, this);
+  });
+
+  Then(/^I should receive error message (.+)$/, function (errorMessage) {
     checkForErrorMessage(errorMessage, this);
   });
 
@@ -84,17 +111,8 @@ defineSupportCode(function ({Given, When, Then, Before, After}) {
   });
 });
 
-const submitServerRequest = (world) => {
-  return dhis2.sendApiRequest({
-    url: dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.USER, world.resourceId),
-    requestData: world.requestData,
-    method: world.method,
-    preventDefaultOnError: true
-  }, world);
-};
-
 const checkForErrorMessage = (message, world) => {
-  assert.equal(world.responseStatus, 400, 'Status should be 400');
+  assert.equal(world.responseStatus, 409, 'Status should be 409');
   assert.equal(world.responseData.status, 'ERROR', 'Status should be ERROR');
-  assert.equal(world.responseData.typeReports[0].objectReports[0].errorReports[0].message, message);
+  assert.equal(world.responseData.message, message);
 };
