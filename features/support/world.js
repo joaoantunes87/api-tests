@@ -19,8 +19,18 @@ function CustomWorld ({ parameters }) {
   }
 }
 
-defineSupportCode(function ({ setWorldConstructor, registerHandler, Given, When, Then }) {
+defineSupportCode(function ({ setWorldConstructor, registerHandler, Given, When, Then, Before }) {
   setWorldConstructor(CustomWorld);
+
+  Before(function () {
+    // auxiliar var for assertions
+    this.requestData = {};                // body request
+    this.resourceId = null;               // id of resource for test
+    this.updatedDataToAssert = {};        // information to be asserted in later steps
+    this.responseStatus = null;           // http status returned on previous request
+    this.responseData = {};               // http response body returned on previous request
+    this.method = null;                   // http method to be used in later request
+  });
 
   // html reports
   registerHandler('AfterFeatures', function (features, callback) {
@@ -41,6 +51,12 @@ defineSupportCode(function ({ setWorldConstructor, registerHandler, Given, When,
 
   Then(/^I should receive an error message equal to: (.+).$/, function (errorMessage) {
     assert.equal(this.responseStatus, 400, 'It should have returned error status of 400');
+    assert.equal(this.responseData.status, 'ERROR', 'It should have returned error status');
+    assert.equal(this.responseData.message, errorMessage, 'Error message should be ' + errorMessage);
+  });
+
+  Then(/^I should receive a ([\d]{3}) error message equal to: (.*?).$/, function (statusCode, errorMessage) {
+    assert.equal(this.responseStatus, statusCode, 'It should have returned error status of ' + statusCode);
     assert.equal(this.responseData.status, 'ERROR', 'It should have returned error status');
     assert.equal(this.responseData.message, errorMessage, 'Error message should be ' + errorMessage);
   });
@@ -72,6 +88,6 @@ defineSupportCode(function ({ setWorldConstructor, registerHandler, Given, When,
         );
         world.organisationUnits = response.data.organisationUnits;
       }
-    });
+    }, world);
   });
 });

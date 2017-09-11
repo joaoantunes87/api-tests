@@ -4,7 +4,30 @@ const dhis2 = require('../support/utils.js');
 
 const assert = chai.assert;
 
-defineSupportCode(function ({Given, When, Then}) {
+defineSupportCode(function ({Given, When, Then, Before, After}) {
+  Before({tags: '@createOrganisationUnit'}, function () {
+    this.organisationUnitId = dhis2.generateUniqIds();
+    this.requestData = {
+      id: this.organisationUnitId,
+      name: 'Organisation Unit for Tests' + this.organisationUnitId,  // make it unique
+      shortName: 'ORGT' + this.organisationUnitId,                    // make it unique
+      openingDate: '2017-09-11T00:00:00.000'
+    };
+
+    return dhis2.sendApiRequest({
+      url: dhis2.generateUrlForResourceType(dhis2.resourceTypes.ORGANISATION_UNIT),
+      requestData: this.requestData,
+      method: 'post',
+      onSuccess: function (response) {
+        assert.equal(response.data.httpStatusCode, 201, 'Message http status code should be 201');
+        assert.equal(response.status, 201, 'Status should be 201');
+        assert.equal(response.data.status, 'OK', 'Message status property should be OK');
+        assert.equal(response.data.httpStatus, 'Created', 'Message http status property should be Created');
+        assert.isOk(response.data.response.uid, 'Organisation Unit Id was not returned');
+      }
+    }, this);
+  });
+
   const generatedOrganisationUnitId = dhis2.generateUniqIds();
   let organisationUnitWasCreated = false;
 
@@ -17,7 +40,7 @@ defineSupportCode(function ({Given, When, Then}) {
           'Not Authorized to create OrganisationUnit'
         );
       }
-    });
+    }, this);
   });
 
   Given(/^that I want to create a new organisation unit$/, function () {
@@ -38,6 +61,10 @@ defineSupportCode(function ({Given, When, Then}) {
 
   When(/^I submit the organisation unit$/, function () {
     return submitServerRequest(this);
+  });
+
+  When(/^I should be informed I have no permission to do that operation.$/, function () {
+    assert.equal(this.responseStatus, 403, 'Status should be 403');
   });
 
   Then(/^I should be informed that the organisation unit was created$/, function () {
@@ -76,7 +103,7 @@ defineSupportCode(function ({Given, When, Then}) {
           }
         });
       }
-    });
+    }, world);
   });
 
   Given(/^I got the existing organisation unit to update$/, function () {
@@ -93,7 +120,7 @@ defineSupportCode(function ({Given, When, Then}) {
         world.requestData = response.data;
         world.method = 'put';
       }
-    });
+    }, world);
   });
 
   When(/^an existing parent organisation unit exists$/, function () {
@@ -171,7 +198,7 @@ defineSupportCode(function ({Given, When, Then}) {
           }
         });
       }
-    });
+    }, world);
   });
 
   Then(/^I should be able to view the translated name.$/, function () {
@@ -182,7 +209,7 @@ defineSupportCode(function ({Given, When, Then}) {
       onSuccess: function (response) {
         assert.equal(response.data.displayName, world.translationValue, 'Name is not translated');
       }
-    });
+    }, world);
   });
 
   When(/^there is a dataset in the system$/, function () {
@@ -203,6 +230,66 @@ defineSupportCode(function ({Given, When, Then}) {
     this.requestData.dataSets = dataSets;
     this.updatedDataToAssert.dataSets = dataSets;
     this.method = 'put';
+  });
+
+  When(/^I change the parent organisation unit to itself$/, function () {
+    const world = this;
+
+    return dhis2.sendApiRequest({
+      url: dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.ORGANISATION_UNIT, world.organisationUnitId),
+      onSuccess: function (response) {
+        world.requestData = response.data;
+        world.requestData.parent = {
+          id: world.organisationUnitId
+        };
+        world.resourceId = world.organisationUnitId;
+        world.method = 'put';
+      }
+    }, world);
+  });
+
+  When(/^I create an organisation unit with parent as scenario organisation unit and with data:$/, function (data) {
+    const world = this;
+    const properties = data.rawTable[0];
+    const values = data.rawTable[1];
+
+    properties.forEach(function (propertyKey, index) {
+      this.requestData[propertyKey] = values[index];
+    }, this);
+
+    this.requestData.parent = {
+      id: this.organisationUnitId
+    };
+
+    return dhis2.sendApiRequest({
+      url: dhis2.generateUrlForResourceType(dhis2.resourceTypes.ORGANISATION_UNIT),
+      requestData: world.requestData,
+      method: 'post',
+      onSuccess: function (response) {
+        assert.equal(response.data.httpStatusCode, 201, 'Message http status code should be 201');
+        assert.equal(response.status, 201, 'Status should be 201');
+        assert.equal(response.data.status, 'OK', 'Message status property should be OK');
+        assert.equal(response.data.httpStatus, 'Created', 'Message http status property should be Created');
+        assert.isOk(response.data.response.uid, 'Organisation Unit Id was not returned');
+        world.createdOrganisationUnitId = response.data.response.uid;
+      }
+    }, world);
+  });
+
+  When(/^I change the parent of scenario organisation unit to the created one$/, function () {
+    const world = this;
+
+    return dhis2.sendApiRequest({
+      url: dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.ORGANISATION_UNIT, world.organisationUnitId),
+      onSuccess: function (response) {
+        world.requestData = response.data;
+        world.requestData.parent = {
+          id: world.createdOrganisationUnitId
+        };
+        world.resourceId = world.organisationUnitId;
+        world.method = 'put';
+      }
+    }, world);
   });
 });
 

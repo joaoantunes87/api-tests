@@ -181,6 +181,11 @@ module.exports = (() => {
       if (!options.authenticationNotNeeded) {         // authentication needed
         if (options.authentication) {                 // not default auth
           authentication = options.authentication;
+        } else if (world && world.userUsername && world.userPassword) {
+          authentication = {
+            username: world.userUsername,
+            password: world.userPassword
+          };
         } else {                                      // default auth
           authentication = AUTH_REQUEST_OBJECT;
         }
@@ -193,7 +198,7 @@ module.exports = (() => {
       }
 
       debug('URL: ' + options.url);
-      debug('METHOD: ' + options.method);
+      debug('METHOD: ' + options.method || 'get');
       debug('REQUEST DATA: ' + JSON.stringify(requestData, null, 2));
       debug('AUTH: ' + JSON.stringify(authentication, null, 2));
 
@@ -218,8 +223,10 @@ module.exports = (() => {
         if (error && error.response) {
           debug('RESPONSE STATUS: ' + error.response.status);
           debug('RESPONSE DATA: ' + JSON.stringify(error.response.data, null, 2));
-        } else {
+        } else if (error) {
           throw error;
+        } else {
+          throw new Error('No error response returned.');
         }
 
         if (world) {
