@@ -119,3 +119,15 @@ I want to be able to add and manage organisation units
         And I submit the organisation unit
         Then I should be informed that the organisation unit was updated
         And The current organisation unit data is the same as submitted.
+
+      Scenario: Assign an organisation unit to itself as a parent
+        When I change the parent organisation unit of an organisation unit to itself
+        And I submit the organisation unit
+        Then I should be informed that an organisation unit cannot be its own parent. 
+
+      Scenario: Create a circular reference of organisation units
+        Given there are at least two organisation units in the system
+        And one of the organisation units is a child of the other
+        When I change the parent's parent organisation unit to the child's organisation unit
+        And I submit the organisation unit
+        Then I should be informed that an organisation unit's child cannot be its parent. 
