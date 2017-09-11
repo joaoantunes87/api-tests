@@ -19,25 +19,25 @@ Repository for DHIS2 API Testing.
 
 ## Tests Execution
 
-Set the environment variable `DHIS2_GENERATE_HTML_REPORT` to `false` to skip the HTML report generation:
+Set the environment variable `DHIS2_GENERATE_HTML_REPORT` to `true` if you want an html report to be generated. Default value is 'false':
 
 ```sh
-$ export DHIS2_GENERATE_HTML_REPORT=false
+$ export DHIS2_GENERATE_HTML_REPORT=true
 ```
 
-Define the environment variable `DHIS2_FEATURE` to only execute a specific feature file:
+Define the environment variable `DHIS2_FEATURE` to only execute a specific feature file. If not defined it will execute all feature files:
 
 ```sh
 $ export DHIS2_FEATURE=features/users/users.feature
 ```
 
-Set the environment `DHIS2_LOG_MODE` to `debug` to log debug messages:
+Set the environment `DHIS2_LOG_MODE` to `debug` to log debug messages. If not defined debug messages will not be printed:
 
 ```sh
 $ export DHIS2_LOG_MODE=debug
 ```
 
-Set the environment `DHIS2_API_VERSION` to desired api version to be tested:
+Set the environment `DHIS2_API_VERSION` to desired api version to be tested. Default value is `27`:
 
 ```sh
 $ export DHIS2_API_VERSION=27
@@ -58,14 +58,7 @@ Make sure you have the required NPM dependencies installed:
 $ npm install
 ```
 
-Run tests with the default API endpoint:
-
-```sh
-$ npm test
-```
-
-Run tests overriding the default API endpoint:
-<br>Set the environment `DHIS2_BASE_URL` to desired DHIS2 Web endpoint:
+Set the environment `DHIS2_BASE_URL` to desired DHIS2 Web endpoint. If not defined it will use default endpoint as `https://play.dhis2.org/demo`:
 
 ```sh
 $ export DHIS2_BASE_URL=https://play.dhis2.org/demo
