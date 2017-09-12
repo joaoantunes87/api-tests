@@ -17,52 +17,30 @@ Repository for DHIS2 API Testing.
 1. Create a [Gherkin](https://cucumber.io/docs/reference) file inside `features` folder. A new folder should be created for each individual module (e.g. `/features/organisation_units` for organisation unit related test cases)
 2. Create a JavaScript file inside  `step_definitions` folder to execute the steps defined on the previous point. Check [Cucumber.js documentation](https://github.com/cucumber/cucumber-js) for more details
 
-## Run tests locally
+## Tests Execution
 
-Make sure you have the required NPM dependencies installed:
-
-```sh
-$ npm install
-```
-
-Run tests with the default API endpoint:
+Set the environment variable `DHIS2_GENERATE_HTML_REPORT` to `true` if you want an html report to be generated. Default value is 'false':
 
 ```sh
-$ npm test
+$ export DHIS2_GENERATE_HTML_REPORT=true
 ```
 
-Run tests overriding the default API endpoint:
-
-```sh
-$ npm test -- --world-parameters "{\"baseUrl\":\"https://play.dhis2.org/demo\",\"apiVersion\":27, \"generateHtmlReport\":false}"
-```
-
-Available parameters are:
-
-| Name | Default value | Description |
-| --- | --- | --- |
-| `baseUrl` | Defined inside `utils.js` file | The API host to use to run the tests  |
-| `apiVersion` | Defined inside `utils.js` file | The API version to use to run the tests  |
-| `generateHtmlReport` | `true` | Whether an HTML report should be generated or not |
-
-## Run tests with Docker
-
-Set the environment variable `DHIS2_GENERATE_HTML_REPORT` to `false` to skip the HTML report generation:
-
-```sh
-$ export DHIS2_GENERATE_HTML_REPORT=false
-```
-
-Define the environment variable `DHIS2_FEATURE` to only execute a specific feature file:
+Define the environment variable `DHIS2_FEATURE` to only execute a specific feature file. If not defined it will execute all feature files:
 
 ```sh
 $ export DHIS2_FEATURE=features/users/users.feature
 ```
 
-Set the environment `DHIS2_LOG_MODE` to `debug` to log debug messages:
+Set the environment `DHIS2_LOG_MODE` to `debug` to log debug messages. If not defined debug messages will not be printed:
 
 ```sh
 $ export DHIS2_LOG_MODE=debug
+```
+
+Set the environment `DHIS2_API_VERSION` to desired api version to be tested. Default value is `27`:
+
+```sh
+$ export DHIS2_API_VERSION=27
 ```
 
 Start tests execution:
@@ -70,3 +48,26 @@ Start tests execution:
 ```sh
 $ ./run.sh # or run.bat for Windows
 ```
+
+## Local Execution
+A local execution should not be used since it will not guarantee an expected state of DHIS2 Web Application for the tests. However, you might use it following these directions:
+
+Make sure you have the required NPM dependencies installed:
+
+```sh
+$ npm install
+```
+
+Set the environment `DHIS2_BASE_URL` to desired DHIS2 Web endpoint. If not defined it will use default endpoint as `https://play.dhis2.org/demo`:
+
+```sh
+$ export DHIS2_BASE_URL=https://play.dhis2.org/demo
+```
+
+Run tests:
+
+```sh
+$ npm test
+```
+
+All environment variables mentioned before might be used.

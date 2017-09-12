@@ -1,27 +1,13 @@
 const { defineSupportCode } = require('cucumber');
 const chai = require('chai');
 const dhis2 = require('./utils.js');
+const fs = require('fs');
 const reporter = require('cucumber-html-reporter');
+const path = require('path');
 
 const assert = chai.assert;
 
-function CustomWorld ({ parameters }) {
-  if (parameters.hasOwnProperty('baseUrl')) {
-    dhis2.baseUrl(parameters.baseUrl);
-  }
-
-  if (parameters.hasOwnProperty('apiVersion')) {
-    dhis2.apiVersion(parameters.apiVersion);
-  }
-
-  if (parameters.hasOwnProperty('generateHtmlReport')) {
-    dhis2.generateHtmlReport(parameters.generateHtmlReport);
-  }
-}
-
-defineSupportCode(function ({ setWorldConstructor, registerHandler, Given, When, Then, Before }) {
-  setWorldConstructor(CustomWorld);
-
+defineSupportCode(function ({ registerHandler, Given, When, Then, Before }) {
   Before(function () {
     // auxiliar var for assertions
     this.requestData = {};                // body request
@@ -47,6 +33,24 @@ defineSupportCode(function ({ setWorldConstructor, registerHandler, Given, When,
     }
 
     callback();
+  });
+
+  registerHandler('BeforeFeatures', function () {
+    // Known env, we can load metadata
+    // needed to allow local runs
+    if (dhis2.isDockerEnv()) {
+      dhis2.debug('BEFORE FEATURES');
+      const filePath = path.join(path.resolve('.'), '/data/metadata.json');
+      const metadata = JSON.parse(fs.readFileSync(filePath, 'utf8'));
+      return dhis2.sendApiRequest({
+        url: dhis2.generateUrlForResourceType(dhis2.resourceTypes.META_DATA),
+        requestData: metadata,
+        method: 'post',
+        onSuccess: function (response) {
+          // TODO assert metadata
+        }
+      });
+    }
   });
 
   Then(/^I should receive an error message equal to: (.+).$/, function (errorMessage) {
