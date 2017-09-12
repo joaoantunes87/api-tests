@@ -38,7 +38,7 @@ defineSupportCode(function ({ registerHandler, Given, When, Then, Before }) {
   registerHandler('BeforeFeatures', function () {
     // Known env, we can load metadata
     // needed to allow local runs
-    if (dhis2.apiEndpoint === 'http://web:8080') {
+    if (dhis2.isDockerEnv()) {
       dhis2.debug('BEFORE FEATURES');
       const filePath = path.join(path.resolve('.'), '/data/metadata.json');
       const metadata = JSON.parse(fs.readFileSync(filePath, 'utf8'));

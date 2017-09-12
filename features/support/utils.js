@@ -118,6 +118,9 @@ module.exports = (() => {
     apiVersion: () => {
       return apiVersion;
     },
+    isDockerEnv: () => {
+      return baseUrl === 'http://web:8080';
+    },
     defaultBasicAuth: AUTH_REQUEST_OBJECT,
     apiEndpoint: apiEndpoint,
     generateHtmlReport: () => {
