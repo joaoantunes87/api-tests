@@ -4,9 +4,18 @@ I want to be able to add and manage data elements
 
     Background:
       Given that I am logged in
-      And that I have the necessary permissions to add a data element
+
+      @createUser
+      Scenario: Add a data element without permissions
+        When I want to create a new data element
+        And I fill in the fields for the data element like:
+        | name            | shortName       | domainType | valueType    | aggregationType   |
+        | Foo data element| FOO             | AGGREGATE  | NUMBER       | SUM               |
+        And I submit the data element to the server
+        Then I should be informed I have no permission to do that operation.
 
       Scenario: Add a data element
+        Given that I have the necessary permissions to add a data element
         When I want to create a new data element
         And I fill in the fields for the data element like:
         | name            | shortName       | domainType | valueType    | aggregationType   |
@@ -16,6 +25,7 @@ I want to be able to add and manage data elements
         And the data element has the same properties as those I supplied.
 
       Scenario: Update an existing data element
+        Given that I have the necessary permissions to add a data element
         When I want to update an existing data element
         And I fill in the fields for the data element like:
         | name                    | shortName       | valueType |
@@ -25,6 +35,7 @@ I want to be able to add and manage data elements
         And the data element has the same properties as those I supplied.
 
       Scenario Outline: Translate a data element
+        Given that I have the necessary permissions to add a data element
         When I want to translate an existing data element
         And I translate the name of the data element for <language> with <locale> as <translation>
         And I select the correct <locale>
@@ -44,6 +55,7 @@ I want to be able to add and manage data elements
           | aggregationType | SUM |
 
       Scenario: Delete an existing data element
+          Given that I have the necessary permissions to add a data element
           When I want to delete an existing data element
           And submit the request to the server
           Then I should be informed the data element was deleted

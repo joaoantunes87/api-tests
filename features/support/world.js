@@ -38,7 +38,7 @@ defineSupportCode(function ({ registerHandler, Given, When, Then, Before }) {
   registerHandler('BeforeFeatures', function () {
     // Known env, we can load metadata
     // needed to allow local runs
-    if (dhis2.apiEndpoint === 'http://web:8080') {
+    if (dhis2.isDockerEnv()) {
       dhis2.debug('BEFORE FEATURES');
       const filePath = path.join(path.resolve('.'), '/data/metadata.json');
       const metadata = JSON.parse(fs.readFileSync(filePath, 'utf8'));
@@ -55,6 +55,12 @@ defineSupportCode(function ({ registerHandler, Given, When, Then, Before }) {
 
   Then(/^I should receive an error message equal to: (.+).$/, function (errorMessage) {
     assert.equal(this.responseStatus, 400, 'It should have returned error status of 400');
+    assert.equal(this.responseData.status, 'ERROR', 'It should have returned error status');
+    assert.equal(this.responseData.message, errorMessage, 'Error message should be ' + errorMessage);
+  });
+
+  Then(/^I should receive a ([\d]{3}) error message equal to: (.*?).$/, function (statusCode, errorMessage) {
+    assert.equal(this.responseStatus, statusCode, 'It should have returned error status of ' + statusCode);
     assert.equal(this.responseData.status, 'ERROR', 'It should have returned error status');
     assert.equal(this.responseData.message, errorMessage, 'Error message should be ' + errorMessage);
   });
@@ -86,6 +92,6 @@ defineSupportCode(function ({ registerHandler, Given, When, Then, Before }) {
         );
         world.organisationUnits = response.data.organisationUnits;
       }
-    });
+    }, world);
   });
 });

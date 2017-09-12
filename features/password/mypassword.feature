@@ -75,4 +75,4 @@ I want to be able manage my own password
       And I change my password to !XPTOqwerty24
       And I change my password to !XPTOqwerty25
       And I change my password to !XPTOqwerty25
-      Then I should receive error message Password must not be one of the previous 24 passwords
+      Then I should receive a conflict error message Password must not be one of the previous 24 passwords

@@ -48,7 +48,7 @@ defineSupportCode(function ({Given, When, Then}) {
       onError: function (error) {
         throw error;
       }
-    });
+    }, this);
   });
 
   When(/^I request a grant type password token from the server$/, function () {
