@@ -40,6 +40,8 @@ services:
     depends_on:
       web:
         condition: service_healthy
+    volumes:
+      - ./volume:/usr/src/app/reports
     environment:
       PGUSER: dhis
       PGPASSWORD: dhis
