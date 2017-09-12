@@ -17,7 +17,7 @@ defineSupportCode(function ({Given, When, Then}) {
           'Not Authorized to create Dataset'
         );
       }
-    });
+    }, this);
   });
 
   Given(/^that I want to create a new dataset$/, function () {
@@ -78,7 +78,7 @@ defineSupportCode(function ({Given, When, Then}) {
           }
         });
       }
-    });
+    }, world);
   });
 
   When(/^I update an existing dataset$/, function () {
@@ -93,17 +93,9 @@ defineSupportCode(function ({Given, When, Then}) {
     this.updatedDataToAssert.expiryDays = value;
   });
 
-  Given(/^I got the existing dataset to update$/, function () {
-    return checkAndFetchCreatedDataSetToBeUpdated(this);
-  });
-
   When(/^I change the periodType to (.+)$/, function (value) {
     this.requestData.periodType = value;
     this.updatedDataToAssert.periodType = value;
-  });
-
-  Given(/^there is already a data set$/, function () {
-    return checkAndFetchCreatedDataSetToBeUpdated(this);
   });
 
   Given(/^there is a category combination with a dimension of type attribute$/, function () {
@@ -149,7 +141,6 @@ defineSupportCode(function ({Given, When, Then}) {
     }];
     this.requestData.dataSetElements = dataSetElements;
     this.updatedDataToAssert.dataSetElements = dataSetElements;
-    this.method = 'put';
   });
 
   When(/^there are some indicators in the system$/, function () {
@@ -171,7 +162,6 @@ defineSupportCode(function ({Given, When, Then}) {
     }];
     this.requestData.indicators = indicators;
     this.updatedDataToAssert.indicators = indicators;
-    this.method = 'put';
   });
 
   When(/^I add some organisation units to the dataset$/, function () {
@@ -180,7 +170,6 @@ defineSupportCode(function ({Given, When, Then}) {
     }];
     this.requestData.organisationUnits = organisationUnits;
     this.updatedDataToAssert.organisationUnits = organisationUnits;
-    this.method = 'put';
   });
 
   When(/^I set the data input periods for the dataset:$/, function (data) {
@@ -215,20 +204,6 @@ defineSupportCode(function ({Given, When, Then}) {
     assert.equal(this.responseData.status, 'ERROR', 'It should have returned error status');
     assert.equal(this.responseData.message, errorMessage, 'Error message should be ' + errorMessage);
   });
-
-  const checkAndFetchCreatedDataSetToBeUpdated = (world) => {
-    assert.equal(datasetWasCreated, true, 'Dataset does not exist');
-    assert.isOk(generatedDatasetId, 'Dataset Id does not exist');
-
-    return dhis2.sendApiRequest({
-      url: dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.DATASET, generatedDatasetId),
-      onSuccess: function (response) {
-        assert.equal(response.status, 200, 'Status should be 200');
-        world.requestData = response.data;
-        world.method = 'put';
-      }
-    });
-  };
 });
 
 const submitServerRequest = (world) => {

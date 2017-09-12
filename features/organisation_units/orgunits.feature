@@ -119,3 +119,19 @@ I want to be able to add and manage organisation units
         And I submit the organisation unit
         Then I should be informed that the organisation unit was updated
         And The current organisation unit data is the same as submitted.
+
+      @createOrganisationUnit
+      Scenario: Assign an organisation unit to itself as a parent
+        Given that I have the necessary permissions to add an organisation unit
+        When I change the parent organisation unit to itself
+        And I submit the organisation unit
+        Then I should receive a conflict error message Organisation Unit can not be parent of itself
+
+      @createOrganisationUnit
+      Scenario: Create a circular reference of organisation units
+        Given I create an organisation unit with parent as scenario organisation unit and with data:
+        | name            | shortName       | openingDate |
+        | Organization 3  | ORG3            | 2016-09-23T00:00:00.000  |
+        And I change the parent of scenario organisation unit to the created one
+        And I submit the organisation unit
+        Then I should receive a conflict error message Organisation unit's child cannot be its parent

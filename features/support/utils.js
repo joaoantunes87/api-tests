@@ -216,6 +216,8 @@ module.exports = (() => {
         if (error && error.response) {
           debug('RESPONSE STATUS: ' + error.response.status);
           debug('RESPONSE DATA: ' + JSON.stringify(error.response.data, null, 2));
+        } else if (error) {
+          throw error;
         } else {
           throw new Error('No error response returned.');
         }
