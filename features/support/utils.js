@@ -169,7 +169,12 @@ module.exports = (() => {
       return isAuthorisedTo('M_dhis-web-maintenance-appmanager', userRoles);
     },
     sendApiRequest: (options, world) => {
-      if (!options.url) {
+      const url = options.url;
+      const requestHeaders = options.headers || {};
+      const requestMethod = options.method || 'get';
+      let requestData = {};
+
+      if (!url) {
         throw new Error('Url is required!');
       }
 
@@ -187,21 +192,20 @@ module.exports = (() => {
         }
       }
 
-      let requestData = {};
       if (options.requestData) {
         requestData = options.multipartFormRequest
           ? querystring.stringify(options.requestData) : options.requestData;
       }
 
-      debug('URL: ' + options.url);
-      debug('METHOD: ' + options.method || 'get');
+      debug('URL: ' + url);
+      debug('METHOD: ' + requestMethod);
       debug('REQUEST DATA: ' + JSON.stringify(requestData, null, 2));
       debug('AUTH: ' + JSON.stringify(authentication, null, 2));
 
       return axios({
-        headers: options.headers || {},
-        method: options.method || 'get',
-        url: options.url,
+        headers: requestHeaders,
+        method: requestMethod,
+        url: url,
         data: requestData,
         auth: authentication
       }).then(function (response) {
@@ -216,18 +220,15 @@ module.exports = (() => {
           return options.onSuccess(response);
         }
       }).catch(function (error) {
+        debug('ERROR WAS CAUGHT: ' + url);
         if (error && error.response) {
           debug('RESPONSE STATUS: ' + error.response.status);
           debug('RESPONSE DATA: ' + JSON.stringify(error.response.data, null, 2));
-        } else if (error) {
-          throw error;
-        } else {
-          throw new Error('No error response returned.');
-        }
 
-        if (world) {
-          world.responseData = error.response.data;
-          world.responseStatus = error.response.status;
+          if (world) {
+            world.responseData = error.response.data;
+            world.responseStatus = error.response.status;
+          }
         }
 
         if (options.onError) {
@@ -235,20 +236,17 @@ module.exports = (() => {
         }
 
         if (!options.preventDefaultOnError) {
-          throw error;
+          debug('ERROR WAS THROWN for ' + url + ':' + (error || new Error('Unexpected Error')));
+          throw (error || new Error('Unexpected Error'));
         }
       });
     },
     sendMultipleApiRequests: (options) => {
-      if (!options.requests) {
+      if (!options.requests || options.requests.length === 0) {
         throw new Error('Requests are required!');
+      } else {
+        return axios.all(options.requests.filter(Boolean));
       }
-
-      return axios.all(options.requests).then(function (responses) {
-        if (options.onComplete) {
-          options.onComplete();
-        }
-      });
     },
     generateUniqIds: (numberOfIds) => {
       const alphabet = 'abcdefghijklmnopqrstuvwxyz';

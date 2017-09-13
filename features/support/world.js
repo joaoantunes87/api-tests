@@ -48,6 +48,7 @@ defineSupportCode(function ({ registerHandler, Given, When, Then, Before }) {
         method: 'post',
         onSuccess: function (response) {
           // TODO assert metadata
+          return assertOrganisationUnits(metadata.organisationUnits);
         }
       });
     }
@@ -95,3 +96,51 @@ defineSupportCode(function ({ registerHandler, Given, When, Then, Before }) {
     }, world);
   });
 });
+
+const assertOrganisationUnits = (organisationUnits) => {
+  if (!organisationUnits || organisationUnits.length === 0) {
+    return;
+  }
+  // FIXME move to an accessible place to be reusable
+  const assertOrganisationUnit = (organisationUnit) => {
+    if (!organisationUnit || !organisationUnit.id) {
+      return;
+    }
+
+    return dhis2.sendApiRequest({
+      url: dhis2.generateUrlForResourceTypeWithId(dhis2.resourceTypes.ORGANISATION_UNIT, organisationUnit.id),
+      onSuccess: function (response) {
+        dhis2.debug('ASSERT ORGANISATION UNIT');
+        Object.keys(organisationUnit).forEach(function (propertyKey) {
+          switch (propertyKey) {
+            case 'parent':
+              assert.deepEqual(
+                response.data[propertyKey],
+                organisationUnit[propertyKey],
+                propertyKey + ' is wrong');
+              break;
+            case 'dataSets':
+              assert.sameDeepMembers(
+                response.data[propertyKey],
+                organisationUnit[propertyKey],
+                propertyKey + ' is wrong');
+              break;
+            default:
+              assert.equal(
+                response.data[propertyKey],
+                organisationUnit[propertyKey], propertyKey + ' is wrong'
+              );
+          }
+        });
+      }
+    });
+  };
+
+  const organisationUnitAssertionRequests = organisationUnits.map((organisationUnit) => {
+    return assertOrganisationUnit(organisationUnit);
+  });
+
+  return dhis2.sendMultipleApiRequests({
+    requests: organisationUnitAssertionRequests
+  });
+};
