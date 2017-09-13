@@ -43,10 +43,8 @@ services:
     volumes:
       - ./reports:/usr/src/app/reports
     environment:
-      PGUSER: dhis
-      PGPASSWORD: dhis
-      PGDATABASE: dhis
-      PGHOST: database
-      PGPORT: 5432
+      DHIS2_BASE_URL: http://web:8080
+      DHIS2_API_VERSION: $DHIS2_API_VERSION
       DHIS2_LOG_MODE: $DHIS2_LOG_MODE
-    command: bash -c 'wget http://web:8080/api && psql -a -f db/initial-script.sql && npm test -- $DHIS2_FEATURE --world-parameters "{\"baseUrl\":\"http://web:8080\", \"apiVersion\":27, \"generateHtmlReport\":$DHIS2_GENERATE_HTML_REPORT}"'
+      DHIS2_GENERATE_HTML_REPORT: $DHIS2_GENERATE_HTML_REPORT
+    command: bash -c 'wget http://web:8080/api && npm test -- $DHIS2_FEATURE'
