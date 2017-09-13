@@ -47,7 +47,7 @@ Available parameters are:
 
 ## Run tests with Docker
 
-Set the environment variable `DHIS2_GENERATE_HTML_REPORT` to `true` if you want an html report to be generated at volume folder:
+Set the environment variable `DHIS2_GENERATE_HTML_REPORT` to `true` if you want an html report to be generated at reports folder:
 
 ```sh
 $ export DHIS2_GENERATE_HTML_REPORT=true

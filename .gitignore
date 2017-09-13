@@ -54,6 +54,3 @@ reports/*
 
 # Environment
 .env
-
-# volume
-volume/*
