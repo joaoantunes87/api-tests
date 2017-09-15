@@ -24,11 +24,13 @@ module.exports = (() => {
     INDICATOR: 'indicator',
     INDICATOR_TYPE: 'indicator type',
     CATEGORY_OPTION: 'category option',
+    CATEGORY_OPTION_COMBO: 'category option combo',
     CATEGORY: 'category',
     USER_ROLE: 'user role',
     USER: 'user',
     APPLICATION: 'application',
-    META_DATA: 'metadata'
+    META_DATA: 'metadata',
+    ORGANISATION_UNIT_LEVEL: 'organisation unit level'
   };
 
   const AUTH_REQUEST_OBJECT = {
@@ -87,6 +89,9 @@ module.exports = (() => {
       case RESOURCE_TYPES.CATEGORY_OPTION:
         endpoint = apiEndpoint() + '/categoryOptions';
         break;
+      case RESOURCE_TYPES.CATEGORY_OPTION_COMBO:
+        endpoint = apiEndpoint() + '/categoryOptionCombos';
+        break;
       case RESOURCE_TYPES.CATEGORY:
         endpoint = apiEndpoint() + '/categories';
         break;
@@ -101,6 +106,9 @@ module.exports = (() => {
         break;
       case RESOURCE_TYPES.META_DATA:
         endpoint = apiEndpoint() + '/metadata';
+        break;
+      case RESOURCE_TYPES.ORGANISATION_UNIT_LEVEL:
+        endpoint = apiEndpoint() + '/organisationUnitLevels';
         break;
       default:
         throw new Error('There is no resource type defined for: ' + resourceType);
