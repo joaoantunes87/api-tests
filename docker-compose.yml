@@ -40,6 +40,8 @@ services:
     depends_on:
       web:
         condition: service_healthy
+    volumes:
+      - ./reports:/usr/src/app/reports
     environment:
       DHIS2_BASE_URL: http://web:8080
       DHIS2_API_VERSION: $DHIS2_API_VERSION
